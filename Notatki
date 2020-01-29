@@ -1,0 +1,10 @@
+Algorytm sortowania węzłów
+
+Dla każdego węzła w liście głównych węzłów
+    - Odszukujemy wszystkie dzieci ww węzła
+    - Dodajemy je do tymczasowej listy
+    - Sortujemy tymczasową listę
+    - Każdy węzeł z listy tymczasowej dodajemy do drzewka
+Powtarzamy dla każdego węzła listy głównej
+
+Kiedy lista główna będzie pusta 

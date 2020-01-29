@@ -1,0 +1,126 @@
+Autor ikony: Vitaly Gorbachev
+
+v 0.0.4.6
+- Dodanie pola nazwy bazy danych.
+
+v 0.0.4.5
+- Dodanie daty dostawy przy zakładniu nowego atestu.
+- W generatorze raportów można wyświetlić tylko atesty do których nie było
+    dostawy.
+- PKD dodanie opcji zapisywania plików ścieżce wybranej przez
+  użytkownika.
+- Dodanie opcji zmiany daty dostawy w ateście.
+- Tabela z plikami atestów - usnięto kolumnę ze ścieżką
+- Dodanie opcji otworzenia folderu z atestm w tabeli plików atestów.
+- Dodanie opcji wyświetlenia okna z ścieżką do atestu w tabeli plików atestów.
+- Dodanie sortowania do drzewka kontraktów.
+
+v 0.044
+- Dodanie możliwości kopiowania i wklejania atestów pod materiały.
+
+v 0.043
+- Zmiana sposobu zapisywania raportu.
+
+v 0.042
+- Poprawki w GUI.
+- Wyłączenie edycji w tabelach.
+- Okno programu po uruchomieniu ma maksymalny rozmiar.
+
+v 0.041
+
+- Dodanie kopiowania i wklejania materiałów z BOMów.
+- Wyłączenie edycji komórek tabelach.
+
+v 0.040
+
+- Dodanie sortowania w tabelch z wynikami wyszukiwania atestów.
+- Dodanie do tabeli przyporządkowywania atestów - kolumny z datą dodania atestu.
+- Drzewko z kontraktami w zakładce materiały nie zwija się po zmianie zakładki.
+
+v 0.039
+
+- Zmiany ustawienia przycisków w zakładce materiały.
+- Usunięcie przycisku czyszczenie tabeli. Dodanie funkcjonalności przycisku
+  pod menu kontekstowe.
+- Dodanie formatki umożliwiającej przyporządkowanie atestu pod wiele materiałów
+  z boma.
+
+v 0.038
+
+- Dodanie okna raportów. Dodanie możliwości generowania raportu z brakującymi
+  atestami.
+- Dodanie możliwości wygenerowania pliku excela z raportem o atestach.
+
+v 0.037
+
+- Dodanie podstawowej funkcjonalności do zakładki PKD.
+
+v 0.036
+
+- Poprawiono błąd uniemożliwiający dodanie atestu znalezionego wg materiału 
+  w oknie przyporządkowania atestu.
+- Zastąpienie rozpoczęcia wyszukiwania atestów z naciśnięcia dowolnego klawisza
+  na naciśnięcie przycisku szukaj.
+- Dodanie obsługi klawisza Enter w zakładce Atesty podczas wyszukiwania atestów.
+- Dodanie obsługi klawisza Enter podczas wyszukiwania atestu w oknie
+  przyporządkowania atestów.
+
+v 0.035
+
+- Zmieniono kolejność sortowania materiałów.
+- Wyszukiwanie atestów po kliknięciu w przycisk szukaj.
+- Zmiany w zakładce PKD
+
+v 0.034
+
+- Dodanie wyszukiwania atestów wg kryteriów.
+- Dodanie filtru wyszukiwania materiałów.
+- Drzewko materiałów zajmuje całą długość okna.
+- Materiały w zakłądce atestów sortowane są alfabetycznie.
+
+v 0.033a
+
+- Poprawki błędów.
+
+v 0.033
+
+- Naprawiono błąd uniemożliwiający otwarcie atestu w BOM.
+- Dodanie pola wyboru bazy danych w ustawieniach.
+- Atesty nie posiadające plików wyświetlane są w czerwonym kolorze.
+- Kolor czcionki materiałów, które mają braki w atestach jest czerwony.
+
+v 0.032
+
+- Dodanie do tabeli zawierającej pliki atestów kolumny "nazwa".
+- Dodanie możliwości wyboru wielu plików podczas zakładania nowego atestu.
+- Wiersze z brakami w tabeli atestów zaznaczane są na czerwono.
+
+v 0.031
+
+- Naprawiono błąd powodujący niepoprawny zapis Boma jeżeli między materiałami
+  był pusty wiersz.
+- Dodano przycisk umożliwiający wyczyszczenie tabeli importu boma z excela.
+- Dodano możliwość wielokrotnego dodawania danych z tabli importu do tabeli 
+  boma.
+- Reorganizacja wyglądu zakładki atesty.
+- Naprawiono błąd powodujący, że długa nazwa pliku z atestem rozszeżała główne
+  okno programu poza ekran.
+
+v 0.03
+
+- Oprogramowanie przycisku 'zakończ' z górnej belki.
+- Dodanie danych do atestu: zp, pkd, dostawcy.
+- Dodanie usuwania i zmiany nazwy węzła w drzewku kontraktów.
+
+v 0.02
+
+- Uniemożliwienie dodania materiału bez nazwy.
+- Nazwa materiału dodana do bazy będzie zapisana wielkimi literami.
+- Nazwa materiału po jego zmianie zpaisywana jest wielkimi literami.
+- Dodanie możliwości usunięcia wszystkich materiałów z boma.
+- Dodanie opcji dopisywania nowych materiałów do Boma.
+- Dodanie możliwości wyszukiwania atestów wg materiału.
+
+v 0.01
+
+- Podstawowa funkcjonalność programu.
