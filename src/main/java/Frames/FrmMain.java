@@ -683,6 +683,7 @@ public class FrmMain extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
 
@@ -1089,6 +1090,7 @@ public class FrmMain extends javax.swing.JFrame {
             }
         ));
         tblAtesty.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblAtesty.setShowGrid(false);
         tblAtesty.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tblAtestyMousePressed(evt);
@@ -1803,6 +1805,7 @@ public class FrmMain extends javax.swing.JFrame {
         });
 
         cbDb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "KPRM", "KPRM_test", "local", "Italy" }));
+        cbDb.setSelectedIndex(1);
         cbDb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbDbActionPerformed(evt);
@@ -1986,6 +1989,14 @@ public class FrmMain extends javax.swing.JFrame {
             }
         });
         jMenu3.add(jMenuItem5);
+
+        jMenuItem3.setText("Kreator ZP");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem3);
 
         jMenuBar1.add(jMenu3);
 
@@ -2196,6 +2207,8 @@ public class FrmMain extends javax.swing.JFrame {
 
     private void jPanelAtestyComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanelAtestyComponentShown
 
+        jScrollPane2.setVerticalScrollBarPolicy(jScrollPane1.VERTICAL_SCROLLBAR_ALWAYS);
+        
         try {
             AtestManager.getInstance().readMaterialsFromDB(treeMaterialy, null);
         } catch (SQLException ex) {
@@ -2517,6 +2530,12 @@ public class FrmMain extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfDataDostawyActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        FrmZpCreator frmZpCreator = new FrmZpCreator();
+        frmZpCreator.show();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     private void setDatabase() {
         switch (cbDb.getSelectedIndex()) {
             case 2:
@@ -2640,6 +2659,7 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
