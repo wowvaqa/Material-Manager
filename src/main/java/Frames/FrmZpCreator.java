@@ -150,7 +150,7 @@ public class FrmZpCreator extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.out.println("Test funkcji");
         try {
-            ZpCreatorManager.getInstance().testOtwarciaExcela(tblKontrakty);
+            ZpCreatorManager.getInstance().testOtwarciaExcela2(tblKontrakty);
         } catch (IOException ex) {
             Logger.getLogger(FrmZpCreator.class.getName()).log(Level.SEVERE, null, ex);
         }
