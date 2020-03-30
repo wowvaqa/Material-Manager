@@ -9,21 +9,71 @@ package MyClasses;
  */
 public class ExcelRow {
     // Numer kontraktu
-    private String Contract;    
+    private String contract;
+    // Obiekt
+    private String contractObject;    
+    // Symbol łożyska (np. ESO-EG0-057-S00-A00)
+    private String bearingSymbol;
 
     /**
-     * 
+     * Tworzy instancje wiersza z akusza Excela
+     * @param contract Numer kontrakut
+     * @param contractObject Obiekt kontraktu
+     * @param bearingSymbol Symbol łożyska
+     */
+    public ExcelRow(String contract, String contractObject, String bearingSymbol) {
+        this.contract = contract;
+        this.contractObject = contractObject;
+        this.bearingSymbol = bearingSymbol;
+    }   
+
+    /**
+     * Zwraca numer kontraktu
      * @return Numer kontraktu
      */
     public String getContract() {
-        return Contract;
+        return contract;
     }
 
     /**
-     * Ustawienie numeru kontraktu
-     * @param Contract 
+     * Zapisuje numer kontraktu
+     * @param contract Numer kontraktu
      */
-    public void setContract(String Contract) {
-        this.Contract = Contract;
+    public void setContract(String contract) {
+        this.contract = contract;
     }
+    
+    /**
+     * Zwraca obiekt kotraktu.
+     * @return Obiekt kontraktu
+     */
+    public String getContractObject() {
+        return contractObject;
+    }
+
+    /**'
+     * Ustala obiekt kontraktu
+     * @param contractObject Obiekt kontraktu
+     */
+    public void setContractObject(String contractObject) {
+        this.contractObject = contractObject;
+    }
+
+    /**
+     * Zwraca symbol łożyska
+     * @return Symbol łożyska
+     */
+    public String getBearingSymbol() {
+        return bearingSymbol;
+    }
+
+    /**
+     * Zapisuje symbol łożyska
+     * @param bearingSymbol symbol łożyska
+     */
+    public void setBearingSymbol(String bearingSymbol) {
+        this.bearingSymbol = bearingSymbol;
+    }
+    
+    
 }

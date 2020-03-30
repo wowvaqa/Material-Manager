@@ -3,12 +3,14 @@
  */
 package com.kprm.materialmanager;
 
+import MyClasses.ExcelRow;
 import com.monitorjbl.xlsx.StreamingReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -26,7 +28,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class ZpCreatorManager {
 
+    /* Lista przechowująca wszystkie wiersze z wczytanego pliku Excela */
+    private final ArrayList<ExcelRow> excelRows;
+
     private ZpCreatorManager() {
+        excelRows = new ArrayList<>();
     }
 
     public static ZpCreatorManager getInstance() {
@@ -38,82 +44,106 @@ public class ZpCreatorManager {
         private static final ZpCreatorManager INSTANCE = new ZpCreatorManager();
     }
 
-    public void testOtwarciaExcela2(JTable tblKontrakty) throws FileNotFoundException, IOException {
+    /**
+     * Wczytuje plik Excela, wiersze z pliku dodaje do listy z wierszami
+     * zawierającymi dane łożysk - nr kontraktu, obiekt i symbol łożyska.
+     *
+     * @param filePath Ścieżka pliku excela.
+     * @param sheets Numery arkuszy z pliku excela z których mają zostać pobrane
+     * dane
+     * @throws java.io.FileNotFoundException
+     */
+    public void readExcel(String filePath, int[] sheets) throws FileNotFoundException, IOException {
+        this.excelRows.clear();
+
         try (
-                InputStream is = new FileInputStream(new File("d:rl.xlsx"));
-                Workbook workbook = StreamingReader.builder().open(is);) {
+                 InputStream is = new FileInputStream(new File("e:rl.xlsx"));  Workbook workbook = StreamingReader.builder().open(is);) {
+
             DataFormatter dataFormatter = new DataFormatter();
-            
-            Sheet sheet = workbook.getSheetAt(7);
-            
-            //for (Sheet sheet : workbook) {
-                System.out.println("Processing sheet: " + sheet.getSheetName());
+
+            for (int i : sheets) {
+                Sheet sheet = workbook.getSheetAt(i);
+                System.out.println("Przetwarzam arkusz: " + sheet.getSheetName());
                 for (Row row : sheet) {
-                    for (Cell cell : row) {
-                        String value = dataFormatter.formatCellValue(cell);
-                        System.out.print(" Value: " + value + " ");
+                    Cell cellContract = row.getCell(3);
+                    Cell cellSymbol = row.getCell(5);
+                    Cell cellObject = row.getCell(10);
+                    String valueContract = dataFormatter.formatCellValue(cellContract);
+                    String valueSymbol = dataFormatter.formatCellValue(cellSymbol);
+                    String valueObject = dataFormatter.formatCellValue(cellObject);
+
+                    if (!"".equals(valueContract)) {
+                        this.excelRows.add(new ExcelRow(valueContract, valueObject, valueSymbol));
                     }
                 }
-            //}
+            }
+
+            System.out.println("liczba wierszy: " + excelRows.size());
         }
     }
 
-    public void testOtwarciaExcela(JTable tblKontrakty) throws FileNotFoundException, IOException {
-
-        /* Ustawienie modelu tabeli, wyczyszczenie tabeli */
+    /**
+     * Wypełnia tabelę danymi z listy łożysk wczytanych z pliku excela.
+     *
+     *
+     * @param tblKontrakty
+     */
+    public void fillTable(JTable tblKontrakty) {
         DefaultTableModel model = (DefaultTableModel) tblKontrakty.getModel();
         ((DefaultTableModel) tblKontrakty.getModel()).setRowCount(0);
 
-        try {
-            FileInputStream file = new FileInputStream(new File("d:rl.xlsx"));
+        Object rowData[] = new Object[3];
 
-            //Create Workbook instance holding reference to .xlsx file
-            XSSFWorkbook workbook = new XSSFWorkbook(file);
-
-            //Get first/desired sheet from the workbook
-            XSSFSheet sheet = workbook.getSheetAt(7);
-
-            //Iterate through each rows one by one
-            Iterator<Row> rowIterator = sheet.iterator();
-
-            Object rowData[] = new Object[2];
-
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-
-                System.out.println("--> ROW NUMBER --> " + row.getRowNum());
-
-                //For each row, iterate through all the columns
-                Iterator<Cell> cellIterator = row.cellIterator();
-
-//                while (cellIterator.hasNext()) 
-//                {
-//                    Cell cell = cellIterator.next();
-//                    //Check the cell type and format accordingly
-//                    System.out.print("CN-> " + cell.getColumnIndex() + " ");
-//                    switch (cell.getCellType()) 
-//                    {
-//                        case NUMERIC:                            
-//                            System.out.print(cell.getNumericCellValue() + " ");
-//                            break;
-//                        case STRING:
-//                            
-//                            if (cell.getColumnIndex() == 3){
-//                                rowData[0] = cell.getStringCellValue();
-//                                rowData[1] = true;
-//                                //model.addRow(rowData);
-//                            }                         
-//                            
-//                            System.out.print(cell.getStringCellValue() + " ");
-//                            break;
-//                    }
-//                }                
-                System.out.println("");
-            }
-            file.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (ExcelRow excelRow : this.excelRows) {
+            rowData[0] = excelRow.getContract();
+            rowData[1] = excelRow.getContractObject();
+            rowData[2] = excelRow.getBearingSymbol();
+            model.addRow(rowData);
         }
     }
 
+    /**
+     * Filtruje zawartość tabeli wg zadanych parametrem filtrów.
+     *
+     * @param contractNubmer Numer kontraktu
+     * @param objectNumber Numer obiektu
+     * @param tblTable Tabela do przefiltrowania.
+     */
+    public void filterTable(String contractNubmer, String objectNumber, JTable tblTable) {
+        DefaultTableModel model = (DefaultTableModel) tblTable.getModel();
+        ((DefaultTableModel) tblTable.getModel()).setRowCount(0);
+
+        Object rowData[] = new Object[3];
+
+        for (ExcelRow excelRow : this.excelRows) {
+            if (excelRow.getContract().toLowerCase().contains(contractNubmer.toLowerCase()) 
+                    && excelRow.getContractObject().toLowerCase().contains(objectNumber.toLowerCase())) {
+                rowData[0] = excelRow.getContract();
+                rowData[1] = excelRow.getContractObject();
+                rowData[2] = excelRow.getBearingSymbol();
+                model.addRow(rowData);
+            }
+        }
+    }
+
+    /**
+     * Otwiera plik excela i zapisuje dane pobrane z jego zawartości do listy
+     * wierszy excela
+     *
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public void openFileAndFillTable() throws FileNotFoundException, IOException {
+        int[] sheets = {5, 6, 7};
+        readExcel("e:rl.xlsx", sheets);
+    }
+
+    /**
+     * Zwraca listę z wierszami załadowanymi z pliku excela.
+     *
+     * @return Lista wierszy łożysk.
+     */
+    public ArrayList<ExcelRow> getExcelRows() {
+        return excelRows;
+    }
 }
