@@ -3,6 +3,8 @@
  */
 package com.kprm.materialmanager;
 
+import Frames.FrmWaiting;
+import Frames.FrmZpCreator;
 import MyClasses.ExcelRow;
 import com.monitorjbl.xlsx.StreamingReader;
 import java.io.File;
@@ -11,16 +13,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -54,10 +54,10 @@ public class ZpCreatorManager {
      * @throws java.io.FileNotFoundException
      */
     public void readExcel(String filePath, int[] sheets) throws FileNotFoundException, IOException {
-        this.excelRows.clear();
+        ZpCreatorManager.getInstance().getExcelRows().clear();
 
         try (
-                 InputStream is = new FileInputStream(new File("e:rl.xlsx"));  Workbook workbook = StreamingReader.builder().open(is);) {
+                InputStream is = new FileInputStream(new File(filePath)); Workbook workbook = StreamingReader.builder().open(is);) {
 
             DataFormatter dataFormatter = new DataFormatter();
 
@@ -73,19 +73,16 @@ public class ZpCreatorManager {
                     String valueObject = dataFormatter.formatCellValue(cellObject);
 
                     if (!"".equals(valueContract)) {
-                        this.excelRows.add(new ExcelRow(valueContract, valueObject, valueSymbol));
+                        ZpCreatorManager.getInstance().getExcelRows().add(new ExcelRow(valueContract, valueObject, valueSymbol));
                     }
                 }
             }
-
-            System.out.println("liczba wierszy: " + excelRows.size());
+            //System.out.println("liczba wierszy: " + excelRows.size());
         }
     }
 
     /**
      * Wypełnia tabelę danymi z listy łożysk wczytanych z pliku excela.
-     *
-     *
      * @param tblKontrakty
      */
     public void fillTable(JTable tblKontrakty) {
@@ -116,7 +113,7 @@ public class ZpCreatorManager {
         Object rowData[] = new Object[3];
 
         for (ExcelRow excelRow : this.excelRows) {
-            if (excelRow.getContract().toLowerCase().contains(contractNubmer.toLowerCase()) 
+            if (excelRow.getContract().toLowerCase().contains(contractNubmer.toLowerCase())
                     && excelRow.getContractObject().toLowerCase().contains(objectNumber.toLowerCase())) {
                 rowData[0] = excelRow.getContract();
                 rowData[1] = excelRow.getContractObject();
@@ -130,12 +127,49 @@ public class ZpCreatorManager {
      * Otwiera plik excela i zapisuje dane pobrane z jego zawartości do listy
      * wierszy excela
      *
+     * @param tblTable Tabela w której wyświetlone będą wyniki.
+     * @param frmZpCreator Forma podrzędna, która zostanie dezaktywowana na czas
+     * odczytu danych z pliku *.xlsx
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public void openFileAndFillTable() throws FileNotFoundException, IOException {
+    public void openFileAndFillTable(JTable tblTable, FrmZpCreator frmZpCreator) throws FileNotFoundException, IOException {
         int[] sheets = {5, 6, 7};
-        readExcel("e:rl.xlsx", sheets);
+        
+        // Dezaktywacja formy 
+        frmZpCreator.setEnabled(false);
+        
+        // Utworzenie i wywołanie formy informującej o oczekiwaniu na odczyt
+        // pliku *.xlsx
+        FrmWaiting frm = new FrmWaiting();
+        frm.setAlwaysOnTop(true);
+        frm.show();
+        
+        /* Uruchomienie swing workera odpowiadającego za wykonanie odczytu
+        pliku *.xlsx w tle. Brak blokowania działania GUI, dzięki temu możliwość
+        wyświetlenia formy informującej o oczekiwaniu na odczyt z pliku.
+        */
+        SwingWorker sw = new SwingWorker(){
+            
+            /* Działania w tle swing workera */
+            @Override            
+            protected Object doInBackground() throws Exception {                
+                readExcel("d:rl.xlsx", sheets);
+                String res = "Finish!";
+                return res;
+            }            
+
+            /* Funkcja uruchamia się po zakończeniu działań w tle swing 
+            workera */
+            @Override
+            protected void done() {
+                ZpCreatorManager.getInstance().fillTable(tblTable);
+                frmZpCreator.setEnabled(true);
+                frm.dispose();
+                super.done(); //To change body of generated methods, choose Tools | Templates.                
+            }            
+        };        
+        sw.execute();
     }
 
     /**

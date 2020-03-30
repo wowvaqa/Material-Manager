@@ -21,6 +21,12 @@ public class FrmZpCreator extends javax.swing.JFrame {
      */
     public FrmZpCreator() {
         initComponents();
+        
+        try {
+            ZpCreatorManager.getInstance().openFileAndFillTable(tblKontrakty, this);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmZpCreator.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -165,15 +171,14 @@ public class FrmZpCreator extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pack();
+        setSize(new java.awt.Dimension(1114, 546));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        System.out.println("Test funkcji");
         try {
-            ZpCreatorManager.getInstance().openFileAndFillTable();
-            ZpCreatorManager.getInstance().fillTable(tblKontrakty);
+            ZpCreatorManager.getInstance().openFileAndFillTable(tblKontrakty, this);
         } catch (IOException ex) {
             Logger.getLogger(FrmZpCreator.class.getName()).log(Level.SEVERE, null, ex);
         }
