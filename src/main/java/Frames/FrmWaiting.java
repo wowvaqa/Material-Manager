@@ -35,6 +35,7 @@ public class FrmWaiting extends javax.swing.JFrame {
         setTitle("Proszę czekać...");
         setAlwaysOnTop(true);
         setEnabled(false);
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
         setResizable(false);
         setType(java.awt.Window.Type.POPUP);
 

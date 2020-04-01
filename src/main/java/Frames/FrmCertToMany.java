@@ -74,6 +74,7 @@ public class FrmCertToMany extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setTitle("Przyporządkuj atest do kilku pozycji");
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);

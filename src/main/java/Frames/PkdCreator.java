@@ -28,6 +28,7 @@ public class PkdCreator extends javax.swing.JFrame {
     private void initComponents() {
 
         setTitle("Tworzenie nowego PKD");
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

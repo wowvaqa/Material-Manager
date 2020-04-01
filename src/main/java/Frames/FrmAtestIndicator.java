@@ -63,6 +63,7 @@ public class FrmAtestIndicator extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         setTitle("Przyporządkuj atest");
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
         tblOutput.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

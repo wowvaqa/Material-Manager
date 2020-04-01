@@ -49,6 +49,7 @@ public class Raports extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
 
         setTitle("Raporty");
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
         jLabel1.setText("Wybierz kryterium wyszukiwania:");
 
