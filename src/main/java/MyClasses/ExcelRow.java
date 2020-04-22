@@ -14,6 +14,8 @@ public class ExcelRow {
     private String contractObject;    
     // Symbol łożyska (np. ESO-EG0-057-S00-A00)
     private String bearingSymbol;
+    // Podpora łożyska
+    private String pillar;
 
     /**
      * Tworzy instancje wiersza z akusza Excela
@@ -74,6 +76,20 @@ public class ExcelRow {
     public void setBearingSymbol(String bearingSymbol) {
         this.bearingSymbol = bearingSymbol;
     }
-    
-    
+
+    /**
+     * Zwraca podporę łożyska
+     * @return Podpora łożyska
+     */
+    public String getPillar() {
+        return pillar;
+    }
+
+    /**
+     * Zapisuje podporę łożyska
+     * @param pillar Podpora łożyska.
+     */
+    public void setPillar(String pillar) {
+        this.pillar = pillar;
+    }
 }

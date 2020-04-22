@@ -96,6 +96,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem6">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Kreator Protoko&#x142;u Przekazania &#x141;o&#x17c;ysk"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem6ActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu2">
@@ -2415,7 +2423,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="tfBearingRegistryPath">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="\u005c\u005c\u005c\u005c10.0.0.12\u005c\u005cprojects\u005c\u005cKPRM\u005c\u005c00_REJESTRY\u005c\u005cREJESTR &#x141;O&#x17b;YSK.xlsx" containsInvalidXMLChars="true"/>
+                    <Property name="text" type="java.lang.String" value="C:\u005cUsers\u005cl.wawrzyniak\u005cDesktop\u005cKopia REJESTR &#x141;O&#x17b;YSK.xlsx" containsInvalidXMLChars="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

@@ -26,7 +26,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
- *
+ * Klasa odpowiada za:
+ * Import danych z pliku zawierającego rejestr łożysk.
+ * Podliczenie ilości elastomerów zbrojonych w wskazanch przez użytkownika
+ * łożyskach.
  * @author Łukasz Wawrzyniak
  */
 public class ZpCreatorManager {
@@ -68,7 +71,7 @@ public class ZpCreatorManager {
 
       for (int i : sheets) {
         Sheet sheet = workbook.getSheetAt(i);
-        System.out.println("Przetwarzam arkusz: " + sheet.getSheetName());
+        //System.out.println("Przetwarzam arkusz: " + sheet.getSheetName());
         for (Row row : sheet) {
           Cell cellContract = row.getCell(3);
           Cell cellSymbol = row.getCell(5);
