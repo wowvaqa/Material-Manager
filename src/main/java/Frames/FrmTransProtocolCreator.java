@@ -5,6 +5,11 @@
  */
 package Frames;
 
+import com.kprm.materialmanager.TransProtocolCreatorManager;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author l.wawrzyniak
@@ -17,11 +22,11 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
     public FrmTransProtocolCreator() {
         initComponents();
         
-//        try {
-//            ZpCreatorManager.getInstance().openFileAndFillTable(tblKontrakty, this);
-//        } catch (IOException ex) {
-//            Logger.getLogger(FrmZpCreator.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            TransProtocolCreatorManager.getInstance().openFileAndFillTable(tblKontrakty, this);
+        } catch (IOException ex) {
+            Logger.getLogger(TransProtocolCreatorManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -33,8 +38,6 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblKontrakty = new javax.swing.JTable();
         tfContractNumber = new javax.swing.JTextField();
         tfObjectNumber = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -50,23 +53,14 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         tfObjectNumber1 = new javax.swing.JTextField();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblKontrakty = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblZp = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1007, 636));
-
-        tblKontrakty.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        tblKontrakty.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Kontrakt", "Obiekt", "Podpora", "Symbol"
-            }
-        ));
-        tblKontrakty.setRowHeight(20);
-        jScrollPane1.setViewportView(tblKontrakty);
 
         tfContractNumber.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         tfContractNumber.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -100,7 +94,7 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
         jLabel3.setText("Filtr");
 
         jButton2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton2.setText(">>");
+        jButton2.setText("Dodaj");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -108,7 +102,7 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
         });
 
         jButton3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton3.setText("<<");
+        jButton3.setText("Usuń");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -122,7 +116,7 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
         jLabel5.setText("Protokół przekazania łożysk mostowych");
 
         jButton4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton4.setText("*");
+        jButton4.setText("Wyczyść");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -139,47 +133,63 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
             }
         });
 
+        jSplitPane1.setDividerLocation(500);
+
+        tblKontrakty.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        tblKontrakty.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Kontrakt", "Obiekt", "Podpora", "Numer", "Typ", "Rodzaj", "Opis 1", "Opis 2", "Symbol", "Przesów"
+            }
+        ));
+        tblKontrakty.setRowHeight(20);
+        jScrollPane1.setViewportView(tblKontrakty);
+        if (tblKontrakty.getColumnModel().getColumnCount() > 0) {
+            tblKontrakty.getColumnModel().getColumn(0).setMaxWidth(100);
+            tblKontrakty.getColumnModel().getColumn(1).setMinWidth(150);
+            tblKontrakty.getColumnModel().getColumn(3).setMaxWidth(75);
+            tblKontrakty.getColumnModel().getColumn(4).setMaxWidth(50);
+            tblKontrakty.getColumnModel().getColumn(5).setMaxWidth(50);
+        }
+
+        jSplitPane1.setLeftComponent(jScrollPane1);
+
         tblZp.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         tblZp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Kontrakt", "Obiekt", "Podpora", "Numer", "Typ", "Rodzaj", "Opis 1", "Opis 2"
+                "Kontrakt", "Obiekt", "Podpora", "Numer", "Typ", "Rodzaj", "Opis 1", "Opis 2", "Symbol", "Przesuw"
             }
         ));
         jScrollPane2.setViewportView(tblZp);
+        if (tblZp.getColumnModel().getColumnCount() > 0) {
+            tblZp.getColumnModel().getColumn(0).setMaxWidth(100);
+            tblZp.getColumnModel().getColumn(1).setMinWidth(150);
+            tblZp.getColumnModel().getColumn(3).setMaxWidth(75);
+            tblZp.getColumnModel().getColumn(4).setMaxWidth(50);
+            tblZp.getColumnModel().getColumn(5).setMaxWidth(50);
+        }
+
+        jSplitPane1.setRightComponent(jScrollPane2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(0, 79, Short.MAX_VALUE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-                    .addComponent(jSeparator1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 968, Short.MAX_VALUE)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tfContractNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -190,8 +200,21 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tfObjectNumber1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(tfObjectNumber1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton3)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1)
+                            .addComponent(jButton4)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel5)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -210,21 +233,17 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2))
-                .addGap(18, 18, 18)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -236,51 +255,27 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
 
     private void tfContractNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfContractNumberKeyReleased
         // TODO add your handling code here:
-        ZpCreatorManager.getInstance().filterTable(tfContractNumber.getText(), tfObjectNumber.getText(), tblKontrakty);
     }//GEN-LAST:event_tfContractNumberKeyReleased
 
     private void tfObjectNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfObjectNumberKeyReleased
         // TODO add your handling code here:
-        ZpCreatorManager.getInstance().filterTable(tfContractNumber.getText(), tfObjectNumber.getText(), tblKontrakty);
+        
     }//GEN-LAST:event_tfObjectNumberKeyReleased
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        try {
-            ZpCreatorManager.getInstance().openFileAndFillTable(tblKontrakty, this);
-        } catch (IOException ex) {
-            Logger.getLogger(FrmZpCreator.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        if (tblKontrakty.getSelectedRows().length > 0) {
-            ZpCreatorManager.getInstance().copyAmongTabels(tblKontrakty, tblZp, tblFinalAmount);
-        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel modelFrom;
-        modelFrom = (DefaultTableModel) tblZp.getModel();
-
-        if (tblZp.getSelectedRow() != -1)
-        modelFrom.removeRow(tblZp.getSelectedRow());
-
-        if (tblZp.getRowCount() > 0) {
-            ZpCreatorManager.getInstance().fillFinalAmountTable(tblZp, tblFinalAmount);
-        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model;
-        model = (DefaultTableModel) tblZp.getModel();
-        model.setRowCount(0);
 
-        model = (DefaultTableModel) tblFinalAmount.getModel();
-        model.setRowCount(0);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void tfObjectNumber1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfObjectNumber1KeyReleased
@@ -338,6 +333,7 @@ public class FrmTransProtocolCreator extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTable tblKontrakty;
     private javax.swing.JTable tblZp;
     private javax.swing.JTextField tfContractNumber;

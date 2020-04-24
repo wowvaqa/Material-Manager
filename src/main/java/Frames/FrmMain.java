@@ -5,6 +5,7 @@
  */
 package Frames;
 
+import MyClasses.ExcelManager;
 import MyClasses.MyTreeRenderer;
 import MyClasses.PkdNumber;
 import MyClasses.TableAtestyHeaderMouseListener;
@@ -2568,13 +2569,14 @@ public class FrmMain extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
-        ZpCreatorManager.getInstance().setBearingRegistryPath(tfBearingRegistryPath.getText());
+        ExcelManager.getInstance().setBearingRegistryPath(tfBearingRegistryPath.getText());
         FrmZpCreator frmZpCreator = new FrmZpCreator();
         frmZpCreator.show();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         // TODO add your handling code here:
+        ExcelManager.getInstance().setBearingRegistryPath(tfBearingRegistryPath.getText());
         FrmTransProtocolCreator frmTransProtocolCreator = new FrmTransProtocolCreator();
         frmTransProtocolCreator.show();
     }//GEN-LAST:event_jMenuItem6ActionPerformed

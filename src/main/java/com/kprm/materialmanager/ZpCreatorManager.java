@@ -5,6 +5,7 @@ package com.kprm.materialmanager;
 
 import Frames.FrmWaiting;
 import Frames.FrmZpCreator;
+import MyClasses.ExcelManager;
 import MyClasses.ExcelRow;
 import com.monitorjbl.xlsx.StreamingReader;
 import java.io.File;
@@ -12,7 +13,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -32,15 +32,9 @@ import org.apache.poi.ss.usermodel.Workbook;
  * łożyskach.
  * @author Łukasz Wawrzyniak
  */
-public class ZpCreatorManager {
+public class ZpCreatorManager {  
 
-  /* Lista przechowująca wszystkie wiersze z wczytanego pliku Excela */
-  private final ArrayList<ExcelRow> excelRows;
-  private String bearingRegistryPath;
-
-  private ZpCreatorManager() {
-    excelRows = new ArrayList<>();
-    bearingRegistryPath = null;
+  private ZpCreatorManager() {    
   }
 
   public static ZpCreatorManager getInstance() {
@@ -62,7 +56,7 @@ public class ZpCreatorManager {
    * @throws java.io.FileNotFoundException
    */
   public void readExcel(String filePath, int[] sheets) throws FileNotFoundException, IOException {
-    ZpCreatorManager.getInstance().getExcelRows().clear();
+    ExcelManager.getInstance().getExcelRows().clear();
 
     try (
              InputStream is = new FileInputStream(new File(filePath));  Workbook workbook = StreamingReader.builder().open(is);) {
@@ -81,7 +75,7 @@ public class ZpCreatorManager {
           String valueObject = dataFormatter.formatCellValue(cellObject);
 
           if (!"".equals(valueContract)) {
-            ZpCreatorManager.getInstance().getExcelRows().add(
+            ExcelManager.getInstance().getExcelRows().add(
                     new ExcelRow(valueContract, valueObject, valueSymbol));
           }
         }
@@ -105,7 +99,7 @@ public class ZpCreatorManager {
 
     Object rowData[] = new Object[3];
 
-    for (ExcelRow excelRow : this.excelRows) {
+    for (ExcelRow excelRow : ExcelManager.getInstance().getExcelRows()) {
       rowData[0] = excelRow.getContract();
       rowData[1] = excelRow.getContractObject();
       rowData[2] = excelRow.getBearingSymbol();
@@ -126,7 +120,7 @@ public class ZpCreatorManager {
 
     Object rowData[] = new Object[3];
 
-    for (ExcelRow excelRow : this.excelRows) {
+    for (ExcelRow excelRow : ExcelManager.getInstance().getExcelRows()) {
       if (excelRow.getContract().toLowerCase().contains(contractNubmer.toLowerCase())
               && excelRow.getContractObject().toLowerCase().contains(objectNumber.toLowerCase())) {
         rowData[0] = excelRow.getContract();
@@ -148,7 +142,7 @@ public class ZpCreatorManager {
    * @throws IOException
    */
   public void openFileAndFillTable(JTable tblTable, FrmZpCreator frmZpCreator) throws FileNotFoundException, IOException {
-    int[] sheets = {5, 6, 7};
+    int[] sheets = {6, 7};
 
     // Dezaktywacja formy 
     frmZpCreator.setEnabled(false);
@@ -168,7 +162,7 @@ public class ZpCreatorManager {
       /* Działania w tle swing workera */
       @Override
       protected Object doInBackground() throws Exception {
-        readExcel(ZpCreatorManager.getInstance().getBearingRegistryPath(), sheets);
+        readExcel(ExcelManager.getInstance().getBearingRegistryPath(), sheets);
         String res = "Finish!";
         return res;
       }
@@ -348,32 +342,5 @@ public class ZpCreatorManager {
       default:
         return "nieznany symbol";
     }
-  }
-
-  /**
-   * Zwraca listę z wierszami załadowanymi z pliku excela.
-   *
-   * @return Lista wierszy łożysk.
-   */
-  public ArrayList<ExcelRow> getExcelRows() {
-    return excelRows;
-  }
-
-  /**
-   * Zwraca lokalizację pliku z rejestrem łożysk
-   *
-   * @return Ścieżka do pliku z rejestrem łożysk
-   */
-  public String getBearingRegistryPath() {
-    return bearingRegistryPath;
-  }
-
-  /**
-   * Ustawia ścieżkę do pliku do z rejestrem łożysk
-   *
-   * @param bearingRegistryPath Ścieżka pliku rejestru łożysk
-   */
-  public void setBearingRegistryPath(String bearingRegistryPath) {
-    this.bearingRegistryPath = bearingRegistryPath;
   }
 }
