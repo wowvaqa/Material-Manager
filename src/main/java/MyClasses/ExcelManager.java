@@ -7,17 +7,34 @@ package MyClasses;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 /**
- * Klasa do zarządzania plikiem excela.
+ * Klasa do zarządzania plikiem excela oraz przechowywania danych z pliku.
  *
  * @author Łukasz Wawrzyniak
  */
 public class ExcelManager {
+    
+    /* Lista przechowująca wszystkie wiersze z wczytanego pliku Excela */
+    private final ArrayList<ExcelRow> excelRows;
+    /* Ścieżka do pliku Excela */
+    private String bearingRegistryPath;
+    
+    private ExcelManager() {
+        excelRows = new ArrayList<>();
+        bearingRegistryPath = null;
+    }
+
+    public static ExcelManager getInstance() {
+        return ExcelManagerHolder.INSTANCE;
+    }
+
+    private static class ExcelManagerHolder {
+
+        private static final ExcelManager INSTANCE = new ExcelManager();
+    }
 
     /**
      * Zwraca ilość kolumn w zadanym parametrze arkuszu excela
@@ -82,15 +99,27 @@ public class ExcelManager {
         return rowTotal;
     }
 
-    private ExcelManager() {
+    /**
+     * Lista danych wczytanych z rejestru łożysk
+     * @return Dane z rejestru łożysk w formie listy
+     */
+    public ArrayList<ExcelRow> getExcelRows() {
+        return excelRows;
     }
 
-    public static ExcelManager getInstance() {
-        return ExcelManagerHolder.INSTANCE;
+    /**
+     * Ścieżka do pliku z Excela
+     * @return Ścieżka do pliku Excela
+     */
+    public String getBearingRegistryPath() {
+        return bearingRegistryPath;
     }
 
-    private static class ExcelManagerHolder {
-
-        private static final ExcelManager INSTANCE = new ExcelManager();
+    /**
+     * Ustala ścieżkę do pliku Excela.
+     * @param bearingRegistryPath Ściezka do pliku Excela.
+     */
+    public void setBearingRegistryPath(String bearingRegistryPath) {
+        this.bearingRegistryPath = bearingRegistryPath;
     }
 }

@@ -12,8 +12,16 @@ public class ExcelRow {
     private String contract;
     // Obiekt
     private String contractObject;    
+    // Podpora łożyska
+    private String objectPillar;
     // Symbol łożyska (np. ESO-EG0-057-S00-A00)
     private String bearingSymbol;
+    // Numer seryjny łożyska
+    private String serialNumber;
+    // Typ łożyska
+    private String bearingType;
+    // Rodzaj łożyska
+    private String bearingKind;
 
     /**
      * Tworzy instancje wiersza z akusza Excela
@@ -25,7 +33,19 @@ public class ExcelRow {
         this.contract = contract;
         this.contractObject = contractObject;
         this.bearingSymbol = bearingSymbol;
-    }   
+    }
+    
+    public ExcelRow(String contract, String contractObject, String objectPillar,
+            String bearingSymbol, String serialNumber, String bearingType,
+            String bearingKind){
+        this.contract = contract;
+        this.contractObject = contractObject;
+        this.objectPillar = objectPillar;
+        this.bearingSymbol = bearingSymbol;
+        this.serialNumber = serialNumber;
+        this.bearingType = bearingType;
+        this.bearingKind = bearingKind;
+    }
 
     /**
      * Zwraca numer kontraktu
@@ -74,6 +94,44 @@ public class ExcelRow {
     public void setBearingSymbol(String bearingSymbol) {
         this.bearingSymbol = bearingSymbol;
     }
-    
-    
+
+    /**
+     * Zwraca podporę łożyska
+     * @return Podpora łożyska
+     */
+    public String getObjectPillar() {
+        return objectPillar;
+    }
+
+    /**
+     * Zapisuje podporę łożyska
+     * @param pillar Podpora łożyska.
+     */
+    public void setObjectPillar(String pillar) {
+        this.objectPillar = pillar;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public String getBearingType() {
+        return bearingType;
+    }
+
+    public void setBearingType(String bearingType) {
+        this.bearingType = bearingType;
+    }
+
+    public String getBearingKind() {
+        return bearingKind;
+    }
+
+    public void setBearingKind(String bearingKind) {
+        this.bearingKind = bearingKind;
+    }   
 }
