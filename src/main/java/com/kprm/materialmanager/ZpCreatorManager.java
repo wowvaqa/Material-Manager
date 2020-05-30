@@ -307,7 +307,7 @@ public class ZpCreatorManager {
    * @param symbol Symoble boku elastomeru - info T. Głogowski
    * @return Zwraca wymiar boku elastomeru w milimetrach.
    */
-  private String getSymbolDimension(String symbol) {
+  public String getSymbolDimension(String symbol) {
     switch (symbol) {
       case "Z":
         return "100";
