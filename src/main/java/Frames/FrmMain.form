@@ -104,6 +104,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem6ActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem7">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Kreator Kart Kontroli"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem7ActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu2">
@@ -2423,7 +2431,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="tfBearingRegistryPath">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="C:\u005cUsers\u005cl.wawrzyniak\u005cDesktop\u005cKopia REJESTR &#x141;O&#x17b;YSK.xlsx" containsInvalidXMLChars="true"/>
+                    <Property name="text" type="java.lang.String" value="C:\u005crl.xlsx" containsInvalidXMLChars="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
