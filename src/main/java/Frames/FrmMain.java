@@ -15,12 +15,12 @@ import com.kprm.materialmanager.BomManager;
 import com.kprm.materialmanager.DatabaseManager;
 import com.kprm.materialmanager.NodeManager;
 import com.kprm.materialmanager.PkdMgr;
-import com.kprm.materialmanager.ZpCreatorManager;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -34,6 +34,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.xml.stream.XMLStreamException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
@@ -88,12 +89,25 @@ public class FrmMain extends javax.swing.JFrame {
         return c;
       }
     });
+    
+    SettingsManager.getInstance().createMmConfigFolder();
+    SettingsManager.getInstance().createConfigFile();
+    
+    try {
+      SettingsManager.getInstance().readBearingRegistryPath(tfBearingRegistryPath);
+    } catch (FileNotFoundException ex) {
+      Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+      JOptionPane.showMessageDialog(null, "Błąd odczytu pliku konfiguracyjnego");
+    } catch (XMLStreamException ex) {
+      Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+      JOptionPane.showMessageDialog(null, "Błąd odczytu ścieżki pliku rejestru łożysk. Ustaw i zapisz ścieżkę do pliku w zakładce Ustawienia");
+    }
 
     try {
       connectDatabase();
-      System.out.println("Połączenie z bazą danych zakończone sukcesem.");
     } catch (ClassNotFoundException | SQLException ex) {
       Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+      JOptionPane.showMessageDialog(null, "Błąd połączenia z bazą danych, " + ex);
     }
 
     SettingsManager.getInstance().readCertDirectory(tfCertPath);
@@ -679,6 +693,8 @@ public class FrmMain extends javax.swing.JFrame {
     jButton17 = new javax.swing.JButton();
     jPanel20 = new javax.swing.JPanel();
     tfBearingRegistryPath = new javax.swing.JTextField();
+    jButton3 = new javax.swing.JButton();
+    jButton10 = new javax.swing.JButton();
     jPanel19 = new javax.swing.JPanel();
     lblStatus = new javax.swing.JLabel();
     jMenuBar1 = new javax.swing.JMenuBar();
@@ -694,7 +710,7 @@ public class FrmMain extends javax.swing.JFrame {
     jMenuItem2 = new javax.swing.JMenuItem();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("Material Manager v. 0.0.5.6");
+    setTitle("Material Manager v. 0.0.5.7");
     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
@@ -1907,7 +1923,7 @@ public class FrmMain extends javax.swing.JFrame {
             .addComponent(jButton17)
             .addGap(5, 5, 5)
             .addComponent(jButton15)))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap(437, Short.MAX_VALUE))
     );
     jPanel15Layout.setVerticalGroup(
       jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1926,6 +1942,20 @@ public class FrmMain extends javax.swing.JFrame {
 
     tfBearingRegistryPath.setText("C:\\rl.xlsx");
 
+    jButton3.setText("Wskaż plik rejestru łożysk");
+    jButton3.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton3ActionPerformed(evt);
+      }
+    });
+
+    jButton10.setText("Zapisz");
+    jButton10.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton10ActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
     jPanel20.setLayout(jPanel20Layout);
     jPanel20Layout.setHorizontalGroup(
@@ -1933,13 +1963,20 @@ public class FrmMain extends javax.swing.JFrame {
       .addGroup(jPanel20Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(tfBearingRegistryPath, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jButton3)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jButton10)
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel20Layout.setVerticalGroup(
       jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel20Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(tfBearingRegistryPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(tfBearingRegistryPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jButton3)
+          .addComponent(jButton10))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -1964,7 +2001,7 @@ public class FrmMain extends javax.swing.JFrame {
         .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(176, Short.MAX_VALUE))
+        .addContainerGap(157, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("Ustawienia", jPanelUstawienia);
@@ -2597,6 +2634,27 @@ public class FrmMain extends javax.swing.JFrame {
     frmKKCreator.show();
   }//GEN-LAST:event_jMenuItem7ActionPerformed
 
+  /**
+   * Ustawia ścieżkę pliku rejestru łożysk.
+   * @param evt Zdarzenie kliknięcia
+   */  
+  private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    SettingsManager.getInstance().setupBearingRegistryPath(tfBearingRegistryPath);
+  }//GEN-LAST:event_jButton3ActionPerformed
+
+  /**
+   * Zapisuje ścieżkę do pliku z rejestrem łożysk do pliku konfiguracyjnego.
+   * @param evt Zdarzenie kliknięcia.
+   */
+  private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    try {
+      // TODO add your handling code here:
+      SettingsManager.getInstance().saveBearingRegistryPath(tfBearingRegistryPath);
+    } catch (XMLStreamException | FileNotFoundException ex) {
+      Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);      
+    }
+  }//GEN-LAST:event_jButton10ActionPerformed
+
   private void setDatabase() {
     switch (cbDb.getSelectedIndex()) {
       case 2:
@@ -2668,6 +2726,7 @@ public class FrmMain extends javax.swing.JFrame {
   private javax.swing.JComboBox<String> cbDb;
   private javax.swing.JComboBox<String> cbPkdMode;
   private javax.swing.JButton jButton1;
+  private javax.swing.JButton jButton10;
   private javax.swing.JButton jButton11;
   private javax.swing.JButton jButton12;
   private javax.swing.JButton jButton13;
@@ -2681,6 +2740,7 @@ public class FrmMain extends javax.swing.JFrame {
   private javax.swing.JButton jButton20;
   private javax.swing.JButton jButton21;
   private javax.swing.JButton jButton22;
+  private javax.swing.JButton jButton3;
   private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
   private javax.swing.JButton jButton6;
