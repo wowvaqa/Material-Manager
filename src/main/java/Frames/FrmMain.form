@@ -134,7 +134,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="Material Manager v. 0.0.5.7"/>
+    <Property name="title" type="java.lang.String" value="Material Manager v. 0.0.5.8"/>
     <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
       <Color id="Default Cursor"/>
     </Property>
@@ -2202,12 +2202,12 @@
                                       <Component id="tfDb" alignment="0" max="32767" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="tfLogin" min="-2" pref="115" max="-2" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="tfPassword" min="-2" pref="109" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="tfPassword" max="32767" attributes="0"/>
                                       </Group>
                                       <Component id="jButton2" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="tfDBadress" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="tfDBadress" alignment="0" pref="236" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="cbDb" min="-2" max="-2" attributes="0"/>
@@ -2218,7 +2218,7 @@
                                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="697" max="32767" attributes="0"/>
+                          <EmptySpace pref="695" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2270,11 +2270,6 @@
                     <Property name="text" type="java.lang.String" value="Has&#x142;o:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="tfPassword">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="rasengan"/>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JButton" name="jButton2">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Po&#x142;&#x105;cz"/>
@@ -2322,6 +2317,11 @@
                 <Component class="javax.swing.JTextField" name="tfDb">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="materials"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JPasswordField" name="tfPassword">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="tere7-67CS2"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -2416,8 +2416,6 @@
                           <Component id="tfBearingRegistryPath" min="-2" pref="414" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jButton3" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jButton10" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -2429,7 +2427,6 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tfBearingRegistryPath" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jButton10" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -2448,14 +2445,6 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="jButton10">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Zapisz"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton10ActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

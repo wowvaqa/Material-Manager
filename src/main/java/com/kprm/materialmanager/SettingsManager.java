@@ -1,5 +1,6 @@
 package com.kprm.materialmanager;
 
+import MyClasses.Settings;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -78,24 +79,24 @@ public class SettingsManager {
    */
   public void createMmConfigFolder() {
     String homePath = System.getProperty("user.home");
-    System.out.println("Home Path: " + homePath);
+    //System.out.println("Home Path: " + homePath);
 
     File dir = new File(homePath + "\\materialManager");
 
     if (dir.exists()) {
-      System.out.println("Katalog konfiguracyjny istnieje");
+      //System.out.println("Katalog konfiguracyjny istnieje");
     } else {
       try {
         dir.mkdir();
-        System.out.println("Utworzono katalog konfiguracyjny programu.");
+        //System.out.println("Utworzono katalog konfiguracyjny programu.");
       } catch (Exception e) {
-        System.out.println("Nie można utworzyć katalogu konfiguracji programu, " + e);
+        //System.out.println("Nie można utworzyć katalogu konfiguracji programu, " + e);
       }
     }
   }
 
   /**
-   * Tworzy plik konfiguracyjny INI dla GUI programu
+   * Tworzy plik konfiguracyjny XML do przechowywania ustawień programu.
    *
    * @return 1 jeżeli plik istnieje, 0 jeżeli plik został utworzony, -1 jeżeli
    * wystąpił błąd podczas tworzenia pliku konfiguracyjnego.
@@ -106,7 +107,7 @@ public class SettingsManager {
     File configFile = new File(configPath + "\\config.xml");
 
     if (configFile.exists()) {
-      System.out.println("Plik konfiguracyjny istnieje");
+      //System.out.println("Plik konfiguracyjny istnieje");
       return 1;
     } else {
       try {
@@ -114,7 +115,7 @@ public class SettingsManager {
         guiConfig = true;
         return 0;
       } catch (IOException ex) {
-        System.out.println("Nie można utworzyć pliku konfiguracji, ");
+        //System.out.println("Nie można utworzyć pliku konfiguracji, ");
         Logger.getLogger(SettingsManager.class.getName()).log(Level.SEVERE, null, ex);
         return -1;
       }
@@ -147,14 +148,15 @@ public class SettingsManager {
                 .equals("bearingRegistry")) {
           event = eventReader.nextEvent();
           tfBearingRegistryPath.setText(event.asCharacters().getData());
-          System.out.println("Ścieżka do pliku: " + event.asCharacters().getData());
+          Settings.getInstance().setBearingRegistryPath(tfBearingRegistryPath.getText());
+          //System.out.println("Ścieżka do pliku: " + event.asCharacters().getData());
         }
       }
     }
   }
 
   /**
-   * Ustawia ścieżkę do pliku rejestru łożysk.
+   * Ustawia ścieżkę do pliku rejestru łożysk. 
    *
    * @param tfBearingRegistryPath Pole w ustawieniach z ścieżką do pliku
    * rejestru łożysk
@@ -170,6 +172,11 @@ public class SettingsManager {
       String sciezka;
       sciezka = fileChooser.getSelectedFile().toString().replaceAll("\\\\", "/");
       tfBearingRegistryPath.setText(sciezka);
+      try {
+        saveBearingRegistryPath(tfBearingRegistryPath);
+      } catch (XMLStreamException | FileNotFoundException ex) {
+        Logger.getLogger(SettingsManager.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
   }
 

@@ -679,13 +679,13 @@ public class FrmMain extends javax.swing.JFrame {
     tfLogin = new javax.swing.JTextField();
     jLabel3 = new javax.swing.JLabel();
     jLabel4 = new javax.swing.JLabel();
-    tfPassword = new javax.swing.JTextField();
     jButton2 = new javax.swing.JButton();
     jLabel12 = new javax.swing.JLabel();
     tfDBadress = new javax.swing.JTextField();
     cbDb = new javax.swing.JComboBox<>();
     jLabel24 = new javax.swing.JLabel();
     tfDb = new javax.swing.JTextField();
+    tfPassword = new javax.swing.JPasswordField();
     jPanel15 = new javax.swing.JPanel();
     jLabel11 = new javax.swing.JLabel();
     tfCertPath = new javax.swing.JTextField();
@@ -694,7 +694,6 @@ public class FrmMain extends javax.swing.JFrame {
     jPanel20 = new javax.swing.JPanel();
     tfBearingRegistryPath = new javax.swing.JTextField();
     jButton3 = new javax.swing.JButton();
-    jButton10 = new javax.swing.JButton();
     jPanel19 = new javax.swing.JPanel();
     lblStatus = new javax.swing.JLabel();
     jMenuBar1 = new javax.swing.JMenuBar();
@@ -710,7 +709,7 @@ public class FrmMain extends javax.swing.JFrame {
     jMenuItem2 = new javax.swing.JMenuItem();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("Material Manager v. 0.0.5.7");
+    setTitle("Material Manager v. 0.0.5.8");
     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
@@ -1808,8 +1807,6 @@ public class FrmMain extends javax.swing.JFrame {
 
     jLabel4.setText("Hasło:");
 
-    tfPassword.setText("rasengan");
-
     jButton2.setText("Połącz");
     jButton2.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1837,6 +1834,8 @@ public class FrmMain extends javax.swing.JFrame {
 
     tfDb.setText("materials");
 
+    tfPassword.setText("tere7-67CS2");
+
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
     jPanel3Layout.setHorizontalGroup(
@@ -1850,18 +1849,18 @@ public class FrmMain extends javax.swing.JFrame {
               .addComponent(tfDb, javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                 .addComponent(tfLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfPassword))
               .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(tfDBadress, javax.swing.GroupLayout.Alignment.LEADING))
+              .addComponent(tfDBadress, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(cbDb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
           .addGroup(jPanel3Layout.createSequentialGroup()
             .addComponent(jLabel3)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jLabel4)))
-        .addContainerGap(697, Short.MAX_VALUE))
+        .addContainerGap(695, Short.MAX_VALUE))
     );
     jPanel3Layout.setVerticalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1949,13 +1948,6 @@ public class FrmMain extends javax.swing.JFrame {
       }
     });
 
-    jButton10.setText("Zapisz");
-    jButton10.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton10ActionPerformed(evt);
-      }
-    });
-
     javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
     jPanel20.setLayout(jPanel20Layout);
     jPanel20Layout.setHorizontalGroup(
@@ -1965,8 +1957,6 @@ public class FrmMain extends javax.swing.JFrame {
         .addComponent(tfBearingRegistryPath, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(jButton3)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jButton10)
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel20Layout.setVerticalGroup(
@@ -1975,8 +1965,7 @@ public class FrmMain extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(tfBearingRegistryPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton3)
-          .addComponent(jButton10))
+          .addComponent(jButton3))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -2642,19 +2631,6 @@ public class FrmMain extends javax.swing.JFrame {
     SettingsManager.getInstance().setupBearingRegistryPath(tfBearingRegistryPath);
   }//GEN-LAST:event_jButton3ActionPerformed
 
-  /**
-   * Zapisuje ścieżkę do pliku z rejestrem łożysk do pliku konfiguracyjnego.
-   * @param evt Zdarzenie kliknięcia.
-   */
-  private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-    try {
-      // TODO add your handling code here:
-      SettingsManager.getInstance().saveBearingRegistryPath(tfBearingRegistryPath);
-    } catch (XMLStreamException | FileNotFoundException ex) {
-      Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);      
-    }
-  }//GEN-LAST:event_jButton10ActionPerformed
-
   private void setDatabase() {
     switch (cbDb.getSelectedIndex()) {
       case 2:
@@ -2726,7 +2702,6 @@ public class FrmMain extends javax.swing.JFrame {
   private javax.swing.JComboBox<String> cbDb;
   private javax.swing.JComboBox<String> cbPkdMode;
   private javax.swing.JButton jButton1;
-  private javax.swing.JButton jButton10;
   private javax.swing.JButton jButton11;
   private javax.swing.JButton jButton12;
   private javax.swing.JButton jButton13;
@@ -2861,7 +2836,7 @@ public class FrmMain extends javax.swing.JFrame {
   private javax.swing.JTextField tfNazwaWezla;
   private javax.swing.JTextField tfNrWZ;
   private javax.swing.JTextField tfNrZamowienia;
-  private javax.swing.JTextField tfPassword;
+  private javax.swing.JPasswordField tfPassword;
   private javax.swing.JTextField tfPkd;
   private javax.swing.JTextField tfPkdData;
   private javax.swing.JTextField tfPkdFilter;
