@@ -1,9 +1,9 @@
-package com.kprm.materialmanager;
+package ControlCard;
 
-import Frames.FrmKKCreator;
 import Frames.FrmWaiting;
 import MyClasses.ExcelManager;
 import MyClasses.ExcelRow;
+import com.kprm.materialmanager.ZpCreatorManager;
 import com.monitorjbl.xlsx.StreamingReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -229,120 +229,100 @@ public class KKCreatorManager {
 
     switch (kindString) {
       case "s":
-        return "wielokierunkowe";
+        if ("00".equals(elastomerSymbol.substring(
+                elastomerSymbol.length() - 2, elastomerSymbol.length()))) {
+          return "Wielokierunkowe";
+        } else {
+          return "Wielokierunkowe oblachowane";
+        }
       case "f":
-        return "stałe";
+        return "Stałe";
       case "g":
-        return "jednokierunkowe";
+        return "Jednokierunkowe";
     }
 
     return "(!) TYP NIEZNANY (!)";
   }
 
   /**
-   * Tworzy i zapisuje kartę kontroli dla łożyska wielokierunkowego niekotwionego
+   * Tworzy i zapisuje kartę kontroli dla łożyska wielokierunkowego
+   * niekotwionego
+   *
    * @param tblTable Tabela z łożyskami
    * @param destPath Ścieżka zapisu pliku karty kontroli
    * @throws FileNotFoundException
-   * @throws IOException 
+   * @throws IOException
    */
-  public void modifyKKexcelWielokierunek(JTable tblTable, String destPath) throws FileNotFoundException, IOException{
-     File file = new File(".\\data\\wzor_01.xlsx");
+  public void modifyKKexcelManyWayBearing(JTable tblTable, String destPath)
+          throws FileNotFoundException, IOException {
+
+    File file = new File(".\\data\\wzor_01.xlsx");
     FileInputStream fileInputStream = new FileInputStream(file);
 
-    if (file.isFile() && file.exists()) {
-      System.out.println("openworkbook.xlsx file open successfully.");
-    } else {
-      System.out.println("Error to open openworkbook.xlsx file.");
-    }
-    
     //Get the workbook instance for XLSX file 
     XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
-
     XSSFSheet spreadsheet = workbook.getSheetAt(0);
-    
-    int row = tblTable.getSelectedRow();
-    String contract = tblTable.getModel().getValueAt(row, 0).toString();
-    String serialNumber = tblTable.getModel().getValueAt(row, 1).toString();
-    String symbol = tblTable.getModel().getValueAt(row, 2).toString();
-    String type = "Łożysko elastomerowe";
-    String kind = tblTable.getModel().getValueAt(row, 4).toString();
-    String object = tblTable.getModel().getValueAt(row, 5).toString();
-    String pillar = tblTable.getModel().getValueAt(row, 6).toString();
-    String capacity = tblTable.getModel().getValueAt(row, 7).toString();
-    String pass = tblTable.getModel().getValueAt(row, 8).toString();
 
-    // Modyfikacja arkusza
-    spreadsheet.getRow(3).getCell(0).setCellValue(contract);
-    spreadsheet.getRow(3).getCell(1).setCellValue(serialNumber);
-    spreadsheet.getRow(3).getCell(2).setCellValue(symbol);
-    spreadsheet.getRow(3).getCell(3).setCellValue(type);
-    spreadsheet.getRow(3).getCell(4).setCellValue(kind);
-    spreadsheet.getRow(3).getCell(5).setCellValue(object);
-    spreadsheet.getRow(3).getCell(6).setCellValue(pillar);
-    spreadsheet.getRow(3).getCell(7).setCellValue(capacity);
-    spreadsheet.getRow(3).getCell(8).setCellValue(pass);
-    
+    // Obiekt przechowujący dane nagłówka
+    KKExcelHeader excelHeader = new KKExcelHeader();
+    // Pobranie danych do obiektu
+    excelHeader.getExcelHeader(tblTable);
+
+    excelHeader.modifyKKSpreadsheetHeader(spreadsheet);
+
     /* Wymiary elastomeru ****************************************************/
     spreadsheet.getRow(20).getCell(4).setCellValue(
-            getElastomerHeight(symbol));
+            getElastomerHeight(excelHeader.getSymbol()));
     spreadsheet.getRow(20).getCell(3).setCellValue(
-            getElastomerLength(symbol));
+            getElastomerLength(excelHeader.getSymbol()));
     spreadsheet.getRow(20).getCell(2).setCellValue(
-            getElastomerWidth(symbol));
-    
+            getElastomerWidth(excelHeader.getSymbol()));
+
     // Naroża ***
     spreadsheet.getRow(20).getCell(6).setCellValue(
-            getElastomerHeight(symbol));
+            getElastomerHeight(excelHeader.getSymbol()));
     spreadsheet.getRow(20).getCell(7).setCellValue(
-            getElastomerHeight(symbol));
-    
+            getElastomerHeight(excelHeader.getSymbol()));
+
     /* Rzeczywiste zmierzone wartości *****************************************/
-    
     // Wysokość elastomeru    
     spreadsheet.getRow(22).getCell(4).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerHeight(symbol)) 
+            Float.toString(Float.parseFloat(getElastomerHeight(
+                    excelHeader.getSymbol()))
                     + getRandomNumber(0, 2, 10)));
     // Długość elastomeru
     spreadsheet.getRow(22).getCell(3).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerLength(symbol)) 
+            Float.toString(Float.parseFloat(getElastomerLength(
+                    excelHeader.getSymbol()))
                     + getRandomNumber(-2, 4, 10)));
     // Szerokość elastomeru
     spreadsheet.getRow(22).getCell(2).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerWidth(symbol)) 
+            Float.toString(Float.parseFloat(getElastomerWidth(
+                    excelHeader.getSymbol()))
                     + getRandomNumber(-2, 4, 10)));
-    
+
     // Naroża ***
     spreadsheet.getRow(22).getCell(6).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerHeight(symbol)) 
+            Float.toString(Float.parseFloat(getElastomerHeight(
+                    excelHeader.getSymbol()))
                     + getRandomNumber(0, 1, 10)));
     spreadsheet.getRow(22).getCell(7).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerHeight(symbol)) 
+            Float.toString(Float.parseFloat(getElastomerHeight(
+                    excelHeader.getSymbol()))
                     + getRandomNumber(0, 1, 10)));
-    
+
     // Twardość Shora***    
     spreadsheet.getRow(22).getCell(8).setCellValue(
             Float.toString(getRandomNumber(60, 65, 1)));
-    
+
     /* Tabela materiałów ******************************************************/
-    
     spreadsheet.getRow(25).getCell(5).setCellValue("brak");
     spreadsheet.getRow(26).getCell(5).setCellValue("brak");
-    
-    /**
-     * Zapis pliku
-     */
-    String filename = symbol + " Łożysko elastomerowe " + kind + " " + pillar;
-    filename = filename.replaceAll("[^łŁŻżźŻŚśĆćÓóąę \\w.-]", "_");
 
-    try ( FileOutputStream out = new FileOutputStream(new File(destPath
-            + filename + ".xlsx"))) {
-
-      workbook.write(out);
-      System.out.println("Excel written successfully..");      
-    }
+    /* Zapis pliku ************************************************************/
+    saveWorkbook(workbook, excelHeader, destPath);
   }
-  
+
   /**
    * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zpaisuje
    * nową kartę do pliku.
@@ -355,44 +335,23 @@ public class KKCreatorManager {
    * @throws FileNotFoundException
    * @throws IOException
    */
-  public void modifyKKexcel(JTable tblTable, String a, String h,
+  public void modifyKKexcelOneWayBaring(JTable tblTable, String a, String h,
           String bottomPlateDimension, String destPath) throws FileNotFoundException, IOException {
 
     File file = new File(".\\data\\wzor_00.xlsx");
     FileInputStream fileInputStream = new FileInputStream(file);
 
-    if (file.isFile() && file.exists()) {
-      System.out.println("openworkbook.xlsx file open successfully.");
-    } else {
-      System.out.println("Error to open openworkbook.xlsx file.");
-    }
-
     //Get the workbook instance for XLSX file 
     XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
-
     XSSFSheet spreadsheet = workbook.getSheetAt(0);
 
-    int row = tblTable.getSelectedRow();
-    String contract = tblTable.getModel().getValueAt(row, 0).toString();
-    String serialNumber = tblTable.getModel().getValueAt(row, 1).toString();
-    String symbol = tblTable.getModel().getValueAt(row, 2).toString();
-    String type = "Łożysko elastomerowe";
-    String kind = tblTable.getModel().getValueAt(row, 4).toString();
-    String object = tblTable.getModel().getValueAt(row, 5).toString();
-    String pillar = tblTable.getModel().getValueAt(row, 6).toString();
-    String capacity = tblTable.getModel().getValueAt(row, 7).toString();
-    String pass = tblTable.getModel().getValueAt(row, 8).toString();
+    // Obiekt przechowujący dane nagłówka
+    KKExcelHeader excelHeader = new KKExcelHeader();
+    // Pobranie danych do obiektu
+    excelHeader.getExcelHeader(tblTable);
 
     // Modyfikacja arkusza
-    spreadsheet.getRow(3).getCell(0).setCellValue(contract);
-    spreadsheet.getRow(3).getCell(1).setCellValue(serialNumber);
-    spreadsheet.getRow(3).getCell(2).setCellValue(symbol);
-    spreadsheet.getRow(3).getCell(3).setCellValue(type);
-    spreadsheet.getRow(3).getCell(4).setCellValue(kind);
-    spreadsheet.getRow(3).getCell(5).setCellValue(object);
-    spreadsheet.getRow(3).getCell(6).setCellValue(pillar);
-    spreadsheet.getRow(3).getCell(7).setCellValue(capacity);
-    spreadsheet.getRow(3).getCell(8).setCellValue(pass);
+    excelHeader.modifyKKSpreadsheetHeader(spreadsheet);
 
     float floatA = Float.parseFloat(a);
     float floatH = Float.parseFloat(h);
@@ -400,7 +359,7 @@ public class KKCreatorManager {
     float floatG1 = floatBottomPlate + 3;
     float floatG = floatG1 + 1;
 
-    switch (getElastomerKind(symbol)) {
+    switch (getElastomerKind(excelHeader.getSymbol())) {
       case "stałe":
         spreadsheet.getRow(15).getCell(1).setCellValue(Float.toString(floatA));
         spreadsheet.getRow(15).getCell(2).setCellValue("---");
@@ -432,11 +391,11 @@ public class KKCreatorManager {
      * Wymiary elastomeru ***************************************************
      */
     spreadsheet.getRow(15).getCell(7).setCellValue(
-            getElastomerHeight(symbol));
+            getElastomerHeight(excelHeader.getSymbol()));
     spreadsheet.getRow(15).getCell(5).setCellValue(
-            getElastomerLength(symbol));
+            getElastomerLength(excelHeader.getSymbol()));
     spreadsheet.getRow(15).getCell(6).setCellValue(
-            getElastomerWidth(symbol));
+            getElastomerWidth(excelHeader.getSymbol()));
 
     /**
      * Rzeczywiste zmierzone wartości ***************************************
@@ -445,7 +404,7 @@ public class KKCreatorManager {
     spreadsheet.getRow(18).getCell(1).setCellValue(
             Float.toString(floatA + getRandomNumber(-2, 4, 10)));
 
-    switch (getElastomerKind(symbol)) {
+    switch (getElastomerKind(excelHeader.getSymbol())) {
       case "stałe":
         spreadsheet.getRow(18).getCell(2).setCellValue("---");
         spreadsheet.getRow(18).getCell(3).setCellValue("---");
@@ -470,19 +429,20 @@ public class KKCreatorManager {
             Float.toString(floatH + getRandomNumber(0, 4, 10)));
     // Wysokość elastomeru    
     spreadsheet.getRow(18).getCell(7).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerHeight(symbol)) + getRandomNumber(0, 2, 10)));
+            Float.toString(Float.parseFloat(getElastomerHeight(
+                    excelHeader.getSymbol())) + getRandomNumber(0, 2, 10)));
     // Długość elastomeru
     spreadsheet.getRow(18).getCell(5).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerLength(symbol)) + getRandomNumber(-2, 4, 10)));
+            Float.toString(Float.parseFloat(getElastomerLength(
+                    excelHeader.getSymbol())) + getRandomNumber(-2, 4, 10)));
     // Szerokość elastomeru
     spreadsheet.getRow(18).getCell(6).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerWidth(symbol)) + getRandomNumber(-2, 4, 10)));
+            Float.toString(Float.parseFloat(getElastomerWidth(
+                    excelHeader.getSymbol())) + getRandomNumber(-2, 4, 10)));
 
-    /**
-     * Tabela materiałów
-     */
-    switch (getElastomerKind(symbol)) {
-      case ("stałe"):
+    /* Tabela materiałów ******************************************************/
+    switch (getElastomerKind(excelHeader.getSymbol())) {
+      case ("Stałe"):
         spreadsheet.getRow(26).getCell(5).setCellValue("brak");
         spreadsheet.getRow(27).getCell(5).setCellValue("n.d.");
         spreadsheet.getRow(28).getCell(5).setCellValue("brak");
@@ -490,28 +450,42 @@ public class KKCreatorManager {
         spreadsheet.getRow(30).getCell(5).setCellValue("brak");
         spreadsheet.getRow(31).getCell(5).setCellValue("n.d.");
         break;
-      case ("jednokierunkowe"):
+      case ("Jednokierunkowe"):
         spreadsheet.getRow(26).getCell(5).setCellValue("brak");
         spreadsheet.getRow(27).getCell(5).setCellValue("brak");
         spreadsheet.getRow(28).getCell(5).setCellValue("brak");
         spreadsheet.getRow(29).getCell(5).setCellValue("brak");
         spreadsheet.getRow(30).getCell(5).setCellValue("brak");
         spreadsheet.getRow(31).getCell(5).setCellValue("brak");
-        break;
-      case ("wielokierunkowe"):
+        break;      
+      case ("Wielokierunkowe oblachowane"):
         spreadsheet.getRow(26).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(27).getCell(5).setCellValue("brak");
+        spreadsheet.getRow(27).getCell(5).setCellValue("n.d.");
         spreadsheet.getRow(28).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(29).getCell(5).setCellValue("brak");
+        spreadsheet.getRow(29).getCell(5).setCellValue("n.d.");
         spreadsheet.getRow(30).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(31).getCell(5).setCellValue("brak");
+        spreadsheet.getRow(31).getCell(5).setCellValue("n.d.");
         break;
     }
 
-    /**
-     * Zapis pliku
-     */
-    String filename = symbol + " Łożysko elastomerowe " + kind + " " + pillar;
+    /* Zapis pliku ************************************************************/
+    saveWorkbook(workbook, excelHeader, destPath);
+  }
+
+  /**
+   * Zapisuje zmodyfikowany dokument Excel karty kontroli
+   *
+   * @param workbook Pilk excela
+   * @param excelHeader Dane zawierające nagłówek
+   * @param destPath Ścieżka zapisu.
+   * @throws FileNotFoundException
+   * @throws IOException
+   */
+  private void saveWorkbook(XSSFWorkbook workbook, KKExcelHeader excelHeader,
+          String destPath) throws FileNotFoundException, IOException {
+
+    String filename = excelHeader.getSymbol() + " Łożysko elastomerowe "
+            + excelHeader.getKind() + " " + excelHeader.getPillar();
     filename = filename.replaceAll("[^łŁŻżźŻŚśĆćÓóąę \\w.-]", "_");
 
     try ( FileOutputStream out = new FileOutputStream(new File(destPath

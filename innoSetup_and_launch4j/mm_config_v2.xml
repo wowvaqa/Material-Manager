@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\wakan\Dropbox\java\MaterialManager\target\MaterialManager-0.0.5.5.jar</jar>
+  <jar>C:\Users\wakan\Dropbox\java\MaterialManager\target\MaterialManager-0.0.5.7.jar</jar>
   <outfile>C:\Users\wakan\Dropbox\java\MaterialManager\exe\MaterialManager-0.042.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>

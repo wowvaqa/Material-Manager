@@ -164,7 +164,7 @@ public class SettingsManager {
   public void setupBearingRegistryPath(JTextField tfBearingRegistryPath) {
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setCurrentDirectory(new java.io.File("."));
-    fileChooser.setDialogTitle("Wybierz folder");
+    fileChooser.setDialogTitle("Wybierz plik rejestru łożysk");
     fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     fileChooser.setAcceptAllFileFilterUsed(false);
 
@@ -178,6 +178,25 @@ public class SettingsManager {
         Logger.getLogger(SettingsManager.class.getName()).log(Level.SEVERE, null, ex);
       }
     }
+  }
+  
+  /**
+   * Ustawia w zadanym polu tekstowym wybraną przez użytkownika ścieżkę do
+   * folderu zapisu kart kontroli.
+   * @param tfCCSavePath Pole tekstowe zawierające ścieżkę do zapisu kart kontroli
+   */
+  public void setupControlCardSavePath(JTextField tfCCSavePath){
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setCurrentDirectory(new java.io.File("."));
+    fileChooser.setDialogTitle("Wybierz folder zapisu kart kontroli");
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    fileChooser.setAcceptAllFileFilterUsed(false);
+    
+    if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+      String sciezka;
+      sciezka = fileChooser.getSelectedFile().toString().replaceAll("\\\\", "/");
+      tfCCSavePath.setText(sciezka + "/");
+    }    
   }
 
   /**
