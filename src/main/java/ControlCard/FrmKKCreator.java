@@ -61,6 +61,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
     tfDestPath = new javax.swing.JTextField();
     btnGenerateCard = new javax.swing.JButton();
     btnChooseFolder = new javax.swing.JButton();
+    cbGenMesure = new javax.swing.JCheckBox();
 
     setTitle("Kreator Karty kontroli dla łożysk elastomerowych");
     setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
@@ -195,6 +196,9 @@ public class FrmKKCreator extends javax.swing.JFrame {
       }
     });
 
+    cbGenMesure.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    cbGenMesure.setText("Generuj pomiary");
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -207,6 +211,8 @@ public class FrmKKCreator extends javax.swing.JFrame {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(btnChooseFolder)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(cbGenMesure)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(btnGenerateCard)
         .addContainerGap())
     );
@@ -218,7 +224,8 @@ public class FrmKKCreator extends javax.swing.JFrame {
           .addComponent(btnGenerateCard)
           .addComponent(tfDestPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel7)
-          .addComponent(btnChooseFolder))
+          .addComponent(btnChooseFolder)
+          .addComponent(cbGenMesure))
         .addContainerGap())
     );
 
@@ -291,21 +298,22 @@ public class FrmKKCreator extends javax.swing.JFrame {
           case 0: // Łożysko jednokierunkowe
             KKCreatorManager.getInstance().modifyKKexcelOneWayBaring(
                     tblKontrakty, tfA.getText(), tfH.getText(),
-                    tfBottomPlate.getText(), tfDestPath.getText());
+                    tfBottomPlate.getText(), tfDestPath.getText(), 
+                    cbGenMesure.isSelected());
             break;
           case 1: // Łożysko stałe
-            KKCreatorManager.getInstance().modifyKKexcelOneWayBaring(
+            KKCreatorManager.getInstance().modifyKKexcelConstantBearing(
                     tblKontrakty, tfA.getText(), tfH.getText(),
-                    tfBottomPlate.getText(), tfDestPath.getText());
+                    tfDestPath.getText(), cbGenMesure.isSelected());
             break;
           case 2: // Łożysko wielokierunkowe
             KKCreatorManager.getInstance().modifyKKexcelManyWayBearing(
-                    tblKontrakty, tfDestPath.getText());
+                    tblKontrakty, tfDestPath.getText(), cbGenMesure.isSelected());
             break;
           case 3: // Łożysko wielokierunkowe oblachowane
-            KKCreatorManager.getInstance().modifyKKexcelOneWayBaring(
+            KKCreatorManager.getInstance().modifyKKexcelConstantBearing(
                     tblKontrakty, tfA.getText(), tfH.getText(),
-                    tfBottomPlate.getText(), tfDestPath.getText());
+                    tfDestPath.getText(), cbGenMesure.isSelected());
             break;
           case 4: // Nieznany rodzaj łożyska
             JOptionPane.showMessageDialog(null, "Nieznany rodzaj łożyska", "Nie można wygenerować karty", JOptionPane.ERROR_MESSAGE);
@@ -352,7 +360,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
 
   private void btnChooseFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseFolderActionPerformed
     // TODO add your handling code here:
-    SettingsManager.getInstance().setupControlCardSavePath(tfDestPath);    
+    SettingsManager.getInstance().setupControlCardSavePath(tfDestPath);
   }//GEN-LAST:event_btnChooseFolderActionPerformed
 
   /**
@@ -385,8 +393,8 @@ public class FrmKKCreator extends javax.swing.JFrame {
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-          new FrmKKCreator().setVisible(true);
-        
+        new FrmKKCreator().setVisible(true);
+
       }
     });
   }
@@ -395,6 +403,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
   private javax.swing.JButton btnChooseFolder;
   private javax.swing.JButton btnGenerateCard;
   private javax.swing.JComboBox<String> cbBearingKind;
+  private javax.swing.JCheckBox cbGenMesure;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;

@@ -3,6 +3,7 @@ package ControlCard;
 import Frames.FrmWaiting;
 import MyClasses.ExcelManager;
 import MyClasses.ExcelRow;
+import MyClasses.Settings;
 import com.kprm.materialmanager.ZpCreatorManager;
 import com.monitorjbl.xlsx.StreamingReader;
 import java.io.File;
@@ -250,13 +251,15 @@ public class KKCreatorManager {
    *
    * @param tblTable Tabela z łożyskami
    * @param destPath Ścieżka zapisu pliku karty kontroli
+   * @param genMesure Jeżeli TRUE funkcja generuje pomiary
    * @throws FileNotFoundException
    * @throws IOException
    */
-  public void modifyKKexcelManyWayBearing(JTable tblTable, String destPath)
+  public void modifyKKexcelManyWayBearing(JTable tblTable, String destPath,
+          boolean genMesure)
           throws FileNotFoundException, IOException {
 
-    File file = new File(".\\data\\wzor_01.xlsx");
+    File file = new File(Settings.ELASTOMER_BEARING_MANY_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
 
     //Get the workbook instance for XLSX file 
@@ -285,39 +288,71 @@ public class KKCreatorManager {
             getElastomerHeight(excelHeader.getSymbol()));
 
     /* Rzeczywiste zmierzone wartości *****************************************/
-    // Wysokość elastomeru    
-    spreadsheet.getRow(22).getCell(4).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerHeight(
-                    excelHeader.getSymbol()))
-                    + getRandomNumber(0, 2, 10)));
+    // Wysokość elastomeru
+    if (genMesure) {
+      spreadsheet.getRow(22).getCell(4).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerHeight(
+                      excelHeader.getSymbol()))
+                      + getRandomNumber(0, 2, 10)));
+    } else {
+      spreadsheet.getRow(22).getCell(4).setCellValue(" ");
+    }
+
     // Długość elastomeru
-    spreadsheet.getRow(22).getCell(3).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerLength(
-                    excelHeader.getSymbol()))
-                    + getRandomNumber(-2, 4, 10)));
+    if (genMesure) {
+      spreadsheet.getRow(22).getCell(3).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerLength(
+                      excelHeader.getSymbol()))
+                      + getRandomNumber(-2, 4, 10)));
+    } else {
+      spreadsheet.getRow(22).getCell(3).setCellValue(" ");
+    }
+
     // Szerokość elastomeru
-    spreadsheet.getRow(22).getCell(2).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerWidth(
-                    excelHeader.getSymbol()))
-                    + getRandomNumber(-2, 4, 10)));
+    if (genMesure) {
+      spreadsheet.getRow(22).getCell(2).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerWidth(
+                      excelHeader.getSymbol()))
+                      + getRandomNumber(-2, 4, 10)));
+    } else {
+      spreadsheet.getRow(22).getCell(2).setCellValue(" ");
+    }
 
     // Naroża ***
-    spreadsheet.getRow(22).getCell(6).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerHeight(
-                    excelHeader.getSymbol()))
-                    + getRandomNumber(0, 1, 10)));
-    spreadsheet.getRow(22).getCell(7).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerHeight(
-                    excelHeader.getSymbol()))
-                    + getRandomNumber(0, 1, 10)));
+    if (genMesure) {
+      spreadsheet.getRow(22).getCell(6).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerHeight(
+                      excelHeader.getSymbol()))
+                      + getRandomNumber(0, 1, 10)));
+    } else {
+      spreadsheet.getRow(22).getCell(6).setCellValue(" ");
+    }
 
-    // Twardość Shora***    
-    spreadsheet.getRow(22).getCell(8).setCellValue(
-            Float.toString(getRandomNumber(60, 65, 1)));
+    if (genMesure) {
+      spreadsheet.getRow(22).getCell(7).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerHeight(
+                      excelHeader.getSymbol()))
+                      + getRandomNumber(0, 1, 10)));
+    } else {
+      spreadsheet.getRow(22).getCell(7).setCellValue(" ");
+    }
+
+    // Twardość Shora***   
+    if (genMesure) {
+      spreadsheet.getRow(22).getCell(8).setCellValue(
+              Float.toString(getRandomNumber(60, 65, 1)));
+    } else {
+      spreadsheet.getRow(22).getCell(8).setCellValue(" ");
+    }
 
     /* Tabela materiałów ******************************************************/
-    spreadsheet.getRow(25).getCell(5).setCellValue("brak");
-    spreadsheet.getRow(26).getCell(5).setCellValue("brak");
+    if (genMesure) {
+      spreadsheet.getRow(25).getCell(5).setCellValue("brak");
+      spreadsheet.getRow(26).getCell(5).setCellValue("brak");
+    } else {
+      spreadsheet.getRow(25).getCell(5).setCellValue(" ");
+      spreadsheet.getRow(26).getCell(5).setCellValue(" ");
+    }
 
     /* Zapis pliku ************************************************************/
     saveWorkbook(workbook, excelHeader, destPath);
@@ -327,18 +362,147 @@ public class KKCreatorManager {
    * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zpaisuje
    * nową kartę do pliku.
    *
-   * @param tblTable Tabela z wynikami
+   * @param tblTable Tabela danych z rejestru łożysk
+   * @param a Wymiar A łożyska
+   * @param h Wysokość łożyska
+   * @param destPath Ścieżka zapisu karty kontroli
+   * @param genMesure Jeżeli TRUE funkcja generuje pomiary
+   * @throws FileNotFoundException
+   * @throws IOException
+   */
+  public void modifyKKexcelConstantBearing(JTable tblTable, String a, String h,
+          String destPath, boolean genMesure) throws FileNotFoundException, IOException {
+
+    File file = new File(Settings.ELASTOMER_BEARING_ONE_WAY_PATH);
+    FileInputStream fileInputStream = new FileInputStream(file);
+
+    //Get the workbook instance for XLSX file 
+    XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+    XSSFSheet spreadsheet = workbook.getSheetAt(0);
+
+    // Obiekt przechowujący dane nagłówka
+    KKExcelHeader excelHeader = new KKExcelHeader();
+    // Pobranie danych do obiektu
+    excelHeader.getExcelHeader(tblTable);
+    // Modyfikacja arkusza
+    excelHeader.modifyKKSpreadsheetHeader(spreadsheet);
+
+    float floatA = Float.parseFloat(a);
+    float floatH = Float.parseFloat(h);
+
+    spreadsheet.getRow(15).getCell(1).setCellValue(Float.toString(floatA));
+    spreadsheet.getRow(15).getCell(8).setCellValue(Float.toString(floatH));
+
+    spreadsheet.getRow(15).getCell(2).setCellValue("---");
+    spreadsheet.getRow(15).getCell(3).setCellValue("---");
+    spreadsheet.getRow(15).getCell(4).setCellValue("---");
+
+    spreadsheet.getRow(18).getCell(2).setCellValue("---");
+    spreadsheet.getRow(18).getCell(3).setCellValue("---");
+    spreadsheet.getRow(18).getCell(4).setCellValue("---");
+
+    // Chropowatość
+    spreadsheet.getRow(23).getCell(2).setCellValue("---");
+    // pow. malarska
+    if (genMesure) {
+      spreadsheet.getRow(23).getCell(6).setCellValue(Float.toString(
+              getRandomNumber(280, 350, 1)));
+    } else {
+      spreadsheet.getRow(23).getCell(6).setCellValue(" ");
+    }
+
+    /**
+     * Wymiary elastomeru ***************************************************
+     */
+    spreadsheet.getRow(15).getCell(7).setCellValue(
+            getElastomerHeight(excelHeader.getSymbol()));
+    spreadsheet.getRow(15).getCell(5).setCellValue(
+            getElastomerLength(excelHeader.getSymbol()));
+    spreadsheet.getRow(15).getCell(6).setCellValue(
+            getElastomerWidth(excelHeader.getSymbol()));
+
+    /**
+     * Rzeczywiste zmierzone wartości ***************************************
+     */
+    // Wymiar A
+    if (genMesure) {
+      spreadsheet.getRow(18).getCell(1).setCellValue(
+              Float.toString(floatA + getRandomNumber(-2, 4, 10)));
+    } else {
+      spreadsheet.getRow(18).getCell(1).setCellValue(" ");
+    }
+
+    spreadsheet.getRow(18).getCell(2).setCellValue("---");
+    spreadsheet.getRow(18).getCell(3).setCellValue("---");
+    spreadsheet.getRow(18).getCell(4).setCellValue("---");
+
+    // Wygenerowanie wymiarów jeżeli odpowiednia opcja została zaznaczona
+    if (genMesure) {
+      // Wymiar H
+      spreadsheet.getRow(18).getCell(8).setCellValue(
+              Float.toString(floatH + getRandomNumber(0, 4, 10)));
+
+      // Wysokość elastomeru    
+      spreadsheet.getRow(18).getCell(7).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerHeight(
+                      excelHeader.getSymbol())) + getRandomNumber(0, 2, 10)));
+      // Długość elastomeru
+      spreadsheet.getRow(18).getCell(5).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerLength(
+                      excelHeader.getSymbol())) + getRandomNumber(-2, 4, 10)));
+      // Szerokość elastomeru
+      spreadsheet.getRow(18).getCell(6).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerWidth(
+                      excelHeader.getSymbol())) + getRandomNumber(-2, 4, 10)));
+    } else {
+      spreadsheet.getRow(18).getCell(8).setCellValue(" ");
+      spreadsheet.getRow(18).getCell(7).setCellValue(" ");
+      spreadsheet.getRow(18).getCell(5).setCellValue(" ");
+      spreadsheet.getRow(18).getCell(6).setCellValue(" ");
+    }
+
+    /* Tabela materiałów ******************************************************/
+    if (genMesure) {
+      spreadsheet.getRow(26).getCell(5).setCellValue("brak");
+    } else {
+      spreadsheet.getRow(26).getCell(5).setCellValue(" ");
+    }
+    spreadsheet.getRow(27).getCell(5).setCellValue("n.d.");
+    if (genMesure) {
+      spreadsheet.getRow(28).getCell(5).setCellValue("brak");
+    } else {
+      spreadsheet.getRow(28).getCell(5).setCellValue(" ");
+    }
+    spreadsheet.getRow(29).getCell(5).setCellValue("n.d.");
+    if (genMesure) {
+      spreadsheet.getRow(30).getCell(5).setCellValue("brak");
+    } else {
+      spreadsheet.getRow(30).getCell(5).setCellValue(" ");
+    }
+    spreadsheet.getRow(31).getCell(5).setCellValue("n.d.");
+
+    /* Zapis pliku ************************************************************/
+    saveWorkbook(workbook, excelHeader, destPath);
+  }
+
+  /**
+   * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zpaisuje
+   * nową kartę do pliku.
+   *
+   * @param tblTable Tabela danych z rejestru łożysk
    * @param a Wysokość A łożyska
    * @param h Wysokość H łożyska
    * @param bottomPlateDimension Wymiar płyty dolnej.
    * @param destPath Ścieżka zapisu pliku karty
+   * @param genMesure Jeżeli TRUE funkcja generuje pomiary
    * @throws FileNotFoundException
    * @throws IOException
    */
   public void modifyKKexcelOneWayBaring(JTable tblTable, String a, String h,
-          String bottomPlateDimension, String destPath) throws FileNotFoundException, IOException {
+          String bottomPlateDimension, String destPath, boolean genMesure)
+          throws FileNotFoundException, IOException {
 
-    File file = new File(".\\data\\wzor_00.xlsx");
+    File file = new File(Settings.ELASTOMER_BEARING_ONE_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
 
     //Get the workbook instance for XLSX file 
@@ -359,32 +523,23 @@ public class KKCreatorManager {
     float floatG1 = floatBottomPlate + 3;
     float floatG = floatG1 + 1;
 
-    switch (getElastomerKind(excelHeader.getSymbol())) {
-      case "stałe":
-        spreadsheet.getRow(15).getCell(1).setCellValue(Float.toString(floatA));
-        spreadsheet.getRow(15).getCell(2).setCellValue("---");
-        spreadsheet.getRow(15).getCell(8).setCellValue(Float.toString(floatH));
-        spreadsheet.getRow(15).getCell(3).setCellValue("---");
-        spreadsheet.getRow(15).getCell(4).setCellValue("---");
-        // Chropowatość
-        spreadsheet.getRow(23).getCell(2).setCellValue(Float.toString(
-                getRandomNumber(0.2f, 0.7f, 10)));
-        // pow. malarska
-        spreadsheet.getRow(23).getCell(6).setCellValue(Float.toString(
-                getRandomNumber(280, 350, 1)));
-        break;
-      default:
-        spreadsheet.getRow(15).getCell(1).setCellValue(Float.toString(floatA));
-        spreadsheet.getRow(15).getCell(2).setCellValue(Float.toString(floatG));
-        spreadsheet.getRow(15).getCell(8).setCellValue(Float.toString(floatH));
-        spreadsheet.getRow(15).getCell(3).setCellValue(Float.toString(floatG1));
-        // Chropowatość
-        spreadsheet.getRow(23).getCell(2).setCellValue(Float.toString(
-                getRandomNumber(0.2f, 0.7f, 10)));
-        // pow. malarska
-        spreadsheet.getRow(23).getCell(6).setCellValue(Float.toString(
-                getRandomNumber(280, 350, 1)));
-        break;
+    spreadsheet.getRow(15).getCell(1).setCellValue(Float.toString(floatA));
+    spreadsheet.getRow(15).getCell(2).setCellValue(Float.toString(floatG));
+    spreadsheet.getRow(15).getCell(8).setCellValue(Float.toString(floatH));
+    spreadsheet.getRow(15).getCell(3).setCellValue(Float.toString(floatG1));
+    // Chropowatość
+    if (genMesure) {
+      spreadsheet.getRow(23).getCell(2).setCellValue(Float.toString(
+              getRandomNumber(0.2f, 0.7f, 10)));
+    } else {
+      spreadsheet.getRow(23).getCell(2).setCellValue(" ");
+    }
+    // pow. malarska
+    if (genMesure) {
+      spreadsheet.getRow(23).getCell(6).setCellValue(Float.toString(
+              getRandomNumber(280, 350, 1)));
+    } else {
+      spreadsheet.getRow(23).getCell(6).setCellValue(" ");
     }
 
     /**
@@ -401,71 +556,84 @@ public class KKCreatorManager {
      * Rzeczywiste zmierzone wartości ***************************************
      */
     // Wymiar A
-    spreadsheet.getRow(18).getCell(1).setCellValue(
-            Float.toString(floatA + getRandomNumber(-2, 4, 10)));
+    if (genMesure) {
+      spreadsheet.getRow(18).getCell(1).setCellValue(
+              Float.toString(floatA + getRandomNumber(-2, 4, 10)));
+    } else {
+      spreadsheet.getRow(18).getCell(1).setCellValue(" ");
+    }
 
-    switch (getElastomerKind(excelHeader.getSymbol())) {
-      case "stałe":
-        spreadsheet.getRow(18).getCell(2).setCellValue("---");
-        spreadsheet.getRow(18).getCell(3).setCellValue("---");
-        spreadsheet.getRow(18).getCell(4).setCellValue("---");
-        break;
-      default:
-        // Wymiar G
-        float rndG = getRandomNumber(-0.5f, 0, 10);
-        String str = Float.toString(floatG + rndG);
-        String newStr = str.replaceAll("[.]", ",");
-        spreadsheet.getRow(18).getCell(2).setCellValue(newStr);
-        // Wymiar G1
-        float rndG1 = getRandomNumber(-0.2f, 0.3f, 10);
-        str = Float.toString(floatG1 + rndG1);
-        newStr = str.replaceAll("[.]", ",");
-        spreadsheet.getRow(18).getCell(3).setCellValue(newStr);
-        break;
+    // Wymiar G
+    if (genMesure) {
+      float rndG = getRandomNumber(-0.5f, 0, 10);
+      String str = Float.toString(floatG + rndG);
+      String newStr = str.replaceAll("[.]", ",");
+      spreadsheet.getRow(18).getCell(2).setCellValue(newStr);
+    } else {
+      spreadsheet.getRow(18).getCell(2).setCellValue(" ");
+    }
+    // Wymiar G1
+    if (genMesure) {
+      float rndG1 = getRandomNumber(-0.2f, 0.3f, 10);
+      String str = Float.toString(floatG1 + rndG1);
+      String newStr = str.replaceAll("[.]", ",");
+      spreadsheet.getRow(18).getCell(3).setCellValue(newStr);
+    } else {
+      spreadsheet.getRow(18).getCell(3).setCellValue(" ");
+    }
+
+    // Wymiar G - G1
+    if (!genMesure) {
+      spreadsheet.getRow(18).getCell(4).setCellValue(" ");
     }
 
     // Wymiar H
-    spreadsheet.getRow(18).getCell(8).setCellValue(
-            Float.toString(floatH + getRandomNumber(0, 4, 10)));
-    // Wysokość elastomeru    
-    spreadsheet.getRow(18).getCell(7).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerHeight(
-                    excelHeader.getSymbol())) + getRandomNumber(0, 2, 10)));
-    // Długość elastomeru
-    spreadsheet.getRow(18).getCell(5).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerLength(
-                    excelHeader.getSymbol())) + getRandomNumber(-2, 4, 10)));
-    // Szerokość elastomeru
-    spreadsheet.getRow(18).getCell(6).setCellValue(
-            Float.toString(Float.parseFloat(getElastomerWidth(
-                    excelHeader.getSymbol())) + getRandomNumber(-2, 4, 10)));
+    if (genMesure) {
+      spreadsheet.getRow(18).getCell(8).setCellValue(
+              Float.toString(floatH + getRandomNumber(0, 4, 10)));
+    } else {
+      spreadsheet.getRow(18).getCell(8).setCellValue(" ");
+    }
 
-    /* Tabela materiałów ******************************************************/
-    switch (getElastomerKind(excelHeader.getSymbol())) {
-      case ("Stałe"):
-        spreadsheet.getRow(26).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(27).getCell(5).setCellValue("n.d.");
-        spreadsheet.getRow(28).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(29).getCell(5).setCellValue("n.d.");
-        spreadsheet.getRow(30).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(31).getCell(5).setCellValue("n.d.");
-        break;
-      case ("Jednokierunkowe"):
-        spreadsheet.getRow(26).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(27).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(28).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(29).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(30).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(31).getCell(5).setCellValue("brak");
-        break;      
-      case ("Wielokierunkowe oblachowane"):
-        spreadsheet.getRow(26).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(27).getCell(5).setCellValue("n.d.");
-        spreadsheet.getRow(28).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(29).getCell(5).setCellValue("n.d.");
-        spreadsheet.getRow(30).getCell(5).setCellValue("brak");
-        spreadsheet.getRow(31).getCell(5).setCellValue("n.d.");
-        break;
+    // Wysokość elastomeru    
+    if (genMesure) {
+      spreadsheet.getRow(18).getCell(7).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerHeight(
+                      excelHeader.getSymbol())) + getRandomNumber(0, 2, 10)));
+    } else {
+      spreadsheet.getRow(18).getCell(7).setCellValue(" ");
+    }
+    // Długość elastomeru
+    if (genMesure) {
+      spreadsheet.getRow(18).getCell(5).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerLength(
+                      excelHeader.getSymbol())) + getRandomNumber(-2, 4, 10)));
+    } else {
+      spreadsheet.getRow(18).getCell(5).setCellValue(" ");
+    }
+    // Szerokość elastomeru
+    if (genMesure) {
+      spreadsheet.getRow(18).getCell(6).setCellValue(
+              Float.toString(Float.parseFloat(getElastomerWidth(
+                      excelHeader.getSymbol())) + getRandomNumber(-2, 4, 10)));
+    } else {
+      spreadsheet.getRow(18).getCell(6).setCellValue(" ");
+    }
+
+    if (genMesure) {
+      spreadsheet.getRow(26).getCell(5).setCellValue("brak");
+      spreadsheet.getRow(27).getCell(5).setCellValue("brak");
+      spreadsheet.getRow(28).getCell(5).setCellValue("brak");
+      spreadsheet.getRow(29).getCell(5).setCellValue("brak");
+      spreadsheet.getRow(30).getCell(5).setCellValue("brak");
+      spreadsheet.getRow(31).getCell(5).setCellValue("brak");
+    } else {
+      spreadsheet.getRow(26).getCell(5).setCellValue(" ");
+      spreadsheet.getRow(27).getCell(5).setCellValue(" ");
+      spreadsheet.getRow(28).getCell(5).setCellValue(" ");
+      spreadsheet.getRow(29).getCell(5).setCellValue(" ");
+      spreadsheet.getRow(30).getCell(5).setCellValue(" ");
+      spreadsheet.getRow(31).getCell(5).setCellValue(" ");
     }
 
     /* Zapis pliku ************************************************************/

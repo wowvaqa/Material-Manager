@@ -6,6 +6,19 @@ package MyClasses;
  */
 public class Settings {
   
+  /**
+   * Ścieżka dla wzoru dokumentu karty konroli łożyska jednokierunkowego,
+   * stałego, wielokierunkowego oblachowanego
+   */
+  public static final String ELASTOMER_BEARING_ONE_WAY_PATH = 
+          ".\\data\\wzor_00.xlsx";
+  
+  /**
+   * Ścieżka dla wzoru dokumentu karty konroli łożyska wielokierunkowego
+   */
+  public static final String ELASTOMER_BEARING_MANY_WAY_PATH = 
+          ".\\data\\wzor_01.xlsx";
+  
   /* Ścieżka do pliku z rejestrem łożysk. */
   private String bearingRegistryPath;
   
