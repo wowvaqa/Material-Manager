@@ -36,10 +36,10 @@
         </plugins>
     </build>
     <repositories>
-        <repository>
+<!--        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
-        </repository>        
+        </repository>        -->
         <repository>
             <id>unknown-jars-temp-repo</id>
             <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>
@@ -77,11 +77,11 @@
             <artifactId>poi-ooxml</artifactId>
             <version>4.0.0</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>unknown.binary</groupId>
             <artifactId>AbsoluteLayout</artifactId>
             <version>SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
