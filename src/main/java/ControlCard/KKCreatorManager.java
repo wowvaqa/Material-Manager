@@ -106,7 +106,7 @@ public class KKCreatorManager {
     ExcelManager.getInstance().getExcelRows().clear();
 
     try (
-             InputStream is = new FileInputStream(new File(filePath));  Workbook workbook = StreamingReader.builder().open(is);) {
+            InputStream is = new FileInputStream(new File(filePath)); Workbook workbook = StreamingReader.builder().open(is);) {
 
       DataFormatter dataFormatter = new DataFormatter();
 
@@ -247,7 +247,7 @@ public class KKCreatorManager {
 
   /**
    * Tworzy i zapisuje kartę kontroli dla łożyska wielokierunkowego
-   * niekotwionego
+   * niekotwionego, elastomerowego
    *
    * @param tblTable Tabela z łożyskami
    * @param destPath Ścieżka zapisu pliku karty kontroli
@@ -269,9 +269,9 @@ public class KKCreatorManager {
     // Obiekt przechowujący dane nagłówka
     KKExcelHeader excelHeader = new KKExcelHeader();
     // Pobranie danych do obiektu
-    excelHeader.getExcelHeader(tblTable);
+    excelHeader.setupBearingExcelHeaderData(tblTable);
 
-    excelHeader.modifyKKSpreadsheetHeader(spreadsheet);
+    excelHeader.modifyKKSpreadsheetHeaderElastomerBearing(spreadsheet);
 
     /* Wymiary elastomeru ****************************************************/
     spreadsheet.getRow(20).getCell(4).setCellValue(
@@ -355,7 +355,7 @@ public class KKCreatorManager {
     }
 
     /* Zapis pliku ************************************************************/
-    saveWorkbook(workbook, excelHeader, destPath);
+    saveWorkbook(workbook, excelHeader, "Łożysko Elastomerowe", destPath);
   }
 
   /**
@@ -383,9 +383,9 @@ public class KKCreatorManager {
     // Obiekt przechowujący dane nagłówka
     KKExcelHeader excelHeader = new KKExcelHeader();
     // Pobranie danych do obiektu
-    excelHeader.getExcelHeader(tblTable);
+    excelHeader.setupBearingExcelHeaderData(tblTable);
     // Modyfikacja arkusza
-    excelHeader.modifyKKSpreadsheetHeader(spreadsheet);
+    excelHeader.modifyKKSpreadsheetHeaderElastomerBearing(spreadsheet);
 
     float floatA = Float.parseFloat(a);
     float floatH = Float.parseFloat(h);
@@ -482,12 +482,39 @@ public class KKCreatorManager {
     spreadsheet.getRow(31).getCell(5).setCellValue("n.d.");
 
     /* Zapis pliku ************************************************************/
-    saveWorkbook(workbook, excelHeader, destPath);
+    saveWorkbook(workbook, excelHeader, "Łożysko Elastomerowe", destPath);
   }
 
   /**
    * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zpaisuje
-   * nową kartę do pliku.
+   * nową kartę do pliku. Dotyczy łożyska garnkowego jednokierunkowego.
+   * @param tblTable Tabela danych z rejestru łożysk
+   * @param destPath Ścieżka zapisu pliku karty
+   * @throws FileNotFoundException
+   * @throws IOException
+   */
+  public void modifyKKExcelPotOneWayBearing(JTable tblTable, String destPath) 
+          throws FileNotFoundException, IOException {
+    File file = new File(Settings.POT_BEARING_ONE_WAY_PATH);
+    FileInputStream fileInputStream = new FileInputStream(file);
+
+    //Get the workbook instance for XLSX file 
+    XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+    XSSFSheet spreadsheet = workbook.getSheetAt(0);
+
+    // Obiekt przechowujący dane nagłówka
+    KKExcelHeader excelHeader = new KKExcelHeader();
+    // Pobranie danych do obiektu
+    excelHeader.setupBearingExcelHeaderData(tblTable);
+    // Modyfikacja nagłówka arkusza.
+    excelHeader.modifyKKSpreadsheetHeaderPotBearing(spreadsheet);
+    
+    saveWorkbook(workbook, excelHeader, "Łożysko Garnkowe", destPath);
+  }
+
+  /**
+   * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zpaisuje
+   * nową kartę do pliku. Dotyczy łożyska elastomeroweg jednokierunkowego.
    *
    * @param tblTable Tabela danych z rejestru łożysk
    * @param a Wysokość A łożyska
@@ -512,10 +539,10 @@ public class KKCreatorManager {
     // Obiekt przechowujący dane nagłówka
     KKExcelHeader excelHeader = new KKExcelHeader();
     // Pobranie danych do obiektu
-    excelHeader.getExcelHeader(tblTable);
+    excelHeader.setupBearingExcelHeaderData(tblTable);
 
     // Modyfikacja arkusza
-    excelHeader.modifyKKSpreadsheetHeader(spreadsheet);
+    excelHeader.modifyKKSpreadsheetHeaderElastomerBearing(spreadsheet);
 
     float floatA = Float.parseFloat(a);
     float floatH = Float.parseFloat(h);
@@ -637,7 +664,7 @@ public class KKCreatorManager {
     }
 
     /* Zapis pliku ************************************************************/
-    saveWorkbook(workbook, excelHeader, destPath);
+    saveWorkbook(workbook, excelHeader, "Łożysko Elastomerowe" ,destPath);
   }
 
   /**
@@ -650,13 +677,13 @@ public class KKCreatorManager {
    * @throws IOException
    */
   private void saveWorkbook(XSSFWorkbook workbook, KKExcelHeader excelHeader,
-          String destPath) throws FileNotFoundException, IOException {
+          String bearingType, String destPath) throws FileNotFoundException, IOException {
 
-    String filename = excelHeader.getSymbol() + " Łożysko elastomerowe "
+    String filename = excelHeader.getSymbol() + " " + bearingType + " "
             + excelHeader.getKind() + " " + excelHeader.getPillar();
     filename = filename.replaceAll("[^łŁŻżźŻŚśĆćÓóąę \\w.-]", "_");
 
-    try ( FileOutputStream out = new FileOutputStream(new File(destPath
+    try (FileOutputStream out = new FileOutputStream(new File(destPath
             + filename + ".xlsx"))) {
 
       workbook.write(out);

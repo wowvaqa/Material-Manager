@@ -13,11 +13,14 @@ public class Settings {
   public static final String ELASTOMER_BEARING_ONE_WAY_PATH = 
           ".\\data\\wzor_00.xlsx";
   
-  /**
-   * Ścieżka dla wzoru dokumentu karty konroli łożyska wielokierunkowego
-   */
+  /* Ścieżka dla wzoru dokumentu karty konroli łożyska wielokierunkowego */
   public static final String ELASTOMER_BEARING_MANY_WAY_PATH = 
           ".\\data\\wzor_01.xlsx";
+  
+  /* Ścieżki do plików zawierających wzory KK dla łożysk garnkowych */
+  public static final String POT_BEARING_MANY_WAY_PATH = ".\\data\\wzor_PG.xlsx";
+  public static final String POT_BEARING_ONE_WAY_PATH = ".\\data\\wzor_PG.xlsx";
+  public static final String POT_BEARING_CONSTANT_PATH = ".\\data\\wzor_PG.xlsx";
   
   /* Ścieżka do pliku z rejestrem łożysk. */
   private String bearingRegistryPath;
