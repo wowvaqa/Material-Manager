@@ -1,0 +1,9 @@
+kopiowanie atestu:
+
+1. Utworzyć nowy atest (nowe ID) z danymi od skopiowanego atestu. ID materiału 
+    pobrać z materiału do którego atest ma być wklejony.
+    Nastepuje utworzenie nowego rekordu.
+2. Utworzyć nowy plik atestu zawierający lokalizację certyfikatu z danych 
+    kopiowanego atestu.
+    
+

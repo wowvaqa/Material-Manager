@@ -84,7 +84,7 @@ public class FrmMain extends javax.swing.JFrame {
             c.setForeground(Color.white);
           }
         }
-
+       
         //c.setBackground(Color.red);
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         return c;
@@ -197,6 +197,7 @@ public class FrmMain extends javax.swing.JFrame {
     JMenuItem itmTblAtesty05 = new JMenuItem("Zmień numer ZP");
     JMenuItem itmTblAtesty06 = new JMenuItem("Zmień numer PKD");
     JMenuItem itmTblAtesty07 = new JMenuItem("Zmień nazwę dostawcy");
+    JMenuItem itmTblAtesty10 = new JMenuItem("Kopiuj atest");
     JMenuItem itmTblAtesty08 = new JMenuItem("Wytnij atest");
     JMenuItem itmTblAtesty09 = new JMenuItem("Zmień datę dostawy");
 
@@ -261,8 +262,16 @@ public class FrmMain extends javax.swing.JFrame {
         AtestManager.getInstance().editCertSupplier(tblAtesty);
       }
     });
+    
+    // Rozpoczyna proces kopiowania atestu
+    itmTblAtesty10.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        AtestManager.getInstance().cutCert(tblAtesty);
+      }
+    });
 
-    // Zmienia nazwę dostawcy atestu.
+    // Rozpoczyna proces wycinania atestu
     itmTblAtesty08.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -286,6 +295,7 @@ public class FrmMain extends javax.swing.JFrame {
     popTblAtesty.add(itmTblAtesty06);
     popTblAtesty.add(itmTblAtesty07);
     popTblAtesty.add(itmTblAtesty09);
+    popTblAtesty.add(itmTblAtesty10);
     popTblAtesty.add(itmTblAtesty08);
 
     JMenuItem itmTreeMaterialy01 = new JMenuItem("Edytuj nazwę");
