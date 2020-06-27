@@ -289,6 +289,7 @@ public class AtestManager {
      * Pokazuje okno dialogowe z ścieżką do atestu.
      *
      * @param tblPathAtesty Tabela z plikami atestów.
+   * @param mainPath
      */
     public void showCertPath(JTable tblPathAtesty, String mainPath) {
         //certPaths[tblPathAtesty.getSelectedRow()].getPath();
@@ -821,8 +822,7 @@ public class AtestManager {
             return -1;
         }
         AtestManager.getInstance().setClipboard(atesty.get(
-                tblAtesty.getSelectedRow()
-        ));
+                tblAtesty.getSelectedRow()));
 
         System.out.println("Atest: " + AtestManager.getInstance().getClipboard().getNazwa() + " został zapisany w schowku.");
 
