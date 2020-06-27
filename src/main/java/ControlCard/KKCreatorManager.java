@@ -4,6 +4,7 @@ import Frames.FrmWaiting;
 import MyClasses.ExcelManager;
 import MyClasses.ExcelRow;
 import MyClasses.Settings;
+import com.kprm.materialmanager.DatabaseManager;
 import com.kprm.materialmanager.ZpCreatorManager;
 import com.monitorjbl.xlsx.StreamingReader;
 import java.io.File;
@@ -486,7 +487,7 @@ public class KKCreatorManager {
   }
 
   /**
-   * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zpaisuje
+   * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zapisuje
    * nową kartę do pliku. Dotyczy łożyska garnkowego jednokierunkowego.
    * @param tblTable Tabela danych z rejestru łożysk
    * @param destPath Ścieżka zapisu pliku karty
@@ -496,6 +497,60 @@ public class KKCreatorManager {
   public void modifyKKExcelPotOneWayBearing(JTable tblTable, String destPath) 
           throws FileNotFoundException, IOException {
     File file = new File(Settings.POT_BEARING_ONE_WAY_PATH);
+    FileInputStream fileInputStream = new FileInputStream(file);
+
+    //Get the workbook instance for XLSX file 
+    XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+    XSSFSheet spreadsheet = workbook.getSheetAt(0);
+
+    // Obiekt przechowujący dane nagłówka
+    KKExcelHeader excelHeader = new KKExcelHeader();
+    // Pobranie danych do obiektu
+    excelHeader.setupBearingExcelHeaderData(tblTable);
+    // Modyfikacja nagłówka arkusza.
+    excelHeader.modifyKKSpreadsheetHeaderPotBearing(spreadsheet);
+    
+    saveWorkbook(workbook, excelHeader, "Łożysko Garnkowe", destPath);
+  }
+  
+  /**
+   * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zapisuje
+   * nową kartę do pliku. Dotyczy łożyska garnkowego wielokierunkowego.
+   * @param tblTable Tabela danych z rejestru łożysk
+   * @param destPath Ścieżka zapisu pliku karty
+   * @throws FileNotFoundException
+   * @throws IOException
+   */
+  public void modifyKKExcelPotManyWayBearing(JTable tblTable, String destPath) 
+          throws FileNotFoundException, IOException {
+    File file = new File(Settings.POT_BEARING_MANY_WAY_PATH);
+    FileInputStream fileInputStream = new FileInputStream(file);
+
+    //Get the workbook instance for XLSX file 
+    XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+    XSSFSheet spreadsheet = workbook.getSheetAt(0);
+
+    // Obiekt przechowujący dane nagłówka
+    KKExcelHeader excelHeader = new KKExcelHeader();
+    // Pobranie danych do obiektu
+    excelHeader.setupBearingExcelHeaderData(tblTable);
+    // Modyfikacja nagłówka arkusza.
+    excelHeader.modifyKKSpreadsheetHeaderPotBearing(spreadsheet);
+    
+    saveWorkbook(workbook, excelHeader, "Łożysko Garnkowe", destPath);
+  }
+  
+  /**
+   * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zapisuje
+   * nową kartę do pliku. Dotyczy łożyska garnkowego jednokierunkowego.
+   * @param tblTable Tabela danych z rejestru łożysk
+   * @param destPath Ścieżka zapisu pliku karty
+   * @throws FileNotFoundException
+   * @throws IOException
+   */
+  public void modifyKKExcelPotConstantBearing(JTable tblTable, String destPath) 
+          throws FileNotFoundException, IOException {
+    File file = new File(Settings.POT_BEARING_CONSTANT_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
 
     //Get the workbook instance for XLSX file 
@@ -687,7 +742,9 @@ public class KKCreatorManager {
             + filename + ".xlsx"))) {
 
       workbook.write(out);
-      System.out.println("Excel written successfully..");
+      //System.out.println("Excel written successfully..");
+      
+      JOptionPane.showMessageDialog(null, "Karta kontroli zapisana pomyślnie");
     }
   }
 

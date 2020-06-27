@@ -6,9 +6,13 @@
 package ControlCard;
 
 import com.kprm.materialmanager.SettingsManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,6 +27,9 @@ public class FrmKKCreator extends javax.swing.JFrame {
    */
   public FrmKKCreator() {
     initComponents();
+    initPopups();
+
+    tblElastomerInsertDimension.setAutoCreateRowSorter(true);
 
     try {
       KKCreatorManager.getInstance().openFileAndFillTable(tblKontrakty, this);
@@ -40,6 +47,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
+    popTblElastomerType = new javax.swing.JPopupMenu();
     jTabbedPane1 = new javax.swing.JTabbedPane();
     jPanel3 = new javax.swing.JPanel();
     jLabel3 = new javax.swing.JLabel();
@@ -74,15 +82,21 @@ public class FrmKKCreator extends javax.swing.JFrame {
     jLabel11 = new javax.swing.JLabel();
     tfBearingType = new javax.swing.JTextField();
     jLabel12 = new javax.swing.JLabel();
-    tfDImensionD = new javax.swing.JTextField();
+    tfDimensionDe = new javax.swing.JTextField();
     jLabel13 = new javax.swing.JLabel();
-    tfDimensionT = new javax.swing.JTextField();
-    jButton1 = new javax.swing.JButton();
+    tfDimensionTe = new javax.swing.JTextField();
+    btnAddNewElastomerType = new javax.swing.JButton();
 
     setTitle("Kreator Karty kontroli dla łożysk elastomerowych");
     setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
     jTabbedPane1.setFont(new java.awt.Font("Dialog", 3, 14)); // NOI18N
+
+    jPanel3.addComponentListener(new java.awt.event.ComponentAdapter() {
+      public void componentShown(java.awt.event.ComponentEvent evt) {
+        jPanel3ComponentShown(evt);
+      }
+    });
 
     jLabel3.setText("Filtr");
 
@@ -318,6 +332,12 @@ public class FrmKKCreator extends javax.swing.JFrame {
 
     jTabbedPane1.addTab("Kreator Kart Kontroli", jPanel3);
 
+    jPanel4.addComponentListener(new java.awt.event.ComponentAdapter() {
+      public void componentShown(java.awt.event.ComponentEvent evt) {
+        jPanel4ComponentShown(evt);
+      }
+    });
+
     tblElastomerInsertDimension.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
     tblElastomerInsertDimension.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -327,6 +347,19 @@ public class FrmKKCreator extends javax.swing.JFrame {
         "TYP ŁOŻYSKA", "WYMIAR De [mm]", "WYMIAR Te [mm]"
       }
     ));
+    tblElastomerInsertDimension.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    tblElastomerInsertDimension.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    tblElastomerInsertDimension.setShowGrid(true);
+    tblElastomerInsertDimension.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mousePressed(java.awt.event.MouseEvent evt) {
+        tblElastomerInsertDimensionMousePressed(evt);
+      }
+    });
+    tblElastomerInsertDimension.addComponentListener(new java.awt.event.ComponentAdapter() {
+      public void componentShown(java.awt.event.ComponentEvent evt) {
+        tblElastomerInsertDimensionComponentShown(evt);
+      }
+    });
     jScrollPane2.setViewportView(tblElastomerInsertDimension);
 
     jLabel10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -343,18 +376,23 @@ public class FrmKKCreator extends javax.swing.JFrame {
     jLabel12.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
     jLabel12.setText("WYMIAR De [mm]:");
 
-    tfDImensionD.setBackground(new java.awt.Color(224, 255, 255));
-    tfDImensionD.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+    tfDimensionDe.setBackground(new java.awt.Color(224, 255, 255));
+    tfDimensionDe.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
 
     jLabel13.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
     jLabel13.setText("WYMIAR Te [mm]:");
 
-    tfDimensionT.setBackground(new java.awt.Color(224, 255, 255));
-    tfDimensionT.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+    tfDimensionTe.setBackground(new java.awt.Color(224, 255, 255));
+    tfDimensionTe.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
 
-    jButton1.setBackground(new java.awt.Color(0, 153, 0));
-    jButton1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-    jButton1.setText("DODAJ");
+    btnAddNewElastomerType.setBackground(new java.awt.Color(0, 153, 0));
+    btnAddNewElastomerType.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    btnAddNewElastomerType.setText("DODAJ");
+    btnAddNewElastomerType.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnAddNewElastomerTypeActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
     jPanel5.setLayout(jPanel5Layout);
@@ -368,13 +406,13 @@ public class FrmKKCreator extends javax.swing.JFrame {
         .addGap(48, 48, 48)
         .addComponent(jLabel12)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(tfDImensionD, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(tfDimensionDe, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(55, 55, 55)
         .addComponent(jLabel13)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(tfDimensionT, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(tfDimensionTe, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
-        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(btnAddNewElastomerType, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
     jPanel5Layout.setVerticalGroup(
@@ -385,10 +423,10 @@ public class FrmKKCreator extends javax.swing.JFrame {
           .addComponent(jLabel11)
           .addComponent(tfBearingType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel12)
-          .addComponent(tfDImensionD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(tfDimensionDe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel13)
-          .addComponent(tfDimensionT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton1))
+          .addComponent(tfDimensionTe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(btnAddNewElastomerType))
         .addContainerGap())
     );
 
@@ -488,17 +526,20 @@ public class FrmKKCreator extends javax.swing.JFrame {
           case 1:
             switch (cbBearingKind.getSelectedIndex()) {
               case 0: // Łożysko jednokierunkowe
-                  KKCreatorManager.getInstance().modifyKKExcelPotOneWayBearing(
-                          tblKontrakty, tfDestPath.getText());
+                KKCreatorManager.getInstance().modifyKKExcelPotOneWayBearing(
+                        tblKontrakty, tfDestPath.getText());
                 break;
               case 1: // Łożysko stałe
-                
+                KKCreatorManager.getInstance().modifyKKExcelPotConstantBearing(
+                        tblKontrakty, tfDestPath.getText());                
                 break;
               case 2: // Łożysko wielokierunkowe
-                
+                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(
+                        tblKontrakty, tfDestPath.getText());  
                 break;
               case 3: // Łożysko wielokierunkowe oblachowane
-                
+                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(
+                        tblKontrakty, tfDestPath.getText());  
                 break;
               case 4: // Nieznany rodzaj łożyska
                 JOptionPane.showMessageDialog(null, "Nieznany rodzaj łożyska", "Nie można wygenerować karty", JOptionPane.ERROR_MESSAGE);
@@ -569,6 +610,67 @@ public class FrmKKCreator extends javax.swing.JFrame {
     SettingsManager.getInstance().setupControlCardSavePath(tfDestPath);
   }//GEN-LAST:event_btnChooseFolderActionPerformed
 
+  // Dodanie nowego typu elstomeru.
+  private void btnAddNewElastomerTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewElastomerTypeActionPerformed
+    // TODO add your handling code here:
+
+    float type;
+    float deDim;
+    float teDim;
+
+    try {
+      type = Float.valueOf(tfBearingType.getText());
+      deDim = Float.valueOf(tfDimensionDe.getText());
+      teDim = Float.valueOf(tfDimensionTe.getText());
+
+      ElastomerTypeManager.getInstance().addNewElastomerType(
+              type, deDim, teDim);
+
+      ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerInsertDimension);
+    } catch (NumberFormatException ex) {
+      JOptionPane.showMessageDialog(null, "Nipoprawne dane", "Błąd",
+              JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException ex) {
+      Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
+      JOptionPane.showMessageDialog(null, "Błąd odczytu typów wkładów elastomerowych z bazy danych: " + ex, "Błąd",
+              JOptionPane.ERROR_MESSAGE);
+    }
+  }//GEN-LAST:event_btnAddNewElastomerTypeActionPerformed
+
+  // Odświeżenie typów wkładów elastomerowych.
+  private void tblElastomerInsertDimensionComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tblElastomerInsertDimensionComponentShown
+
+  }//GEN-LAST:event_tblElastomerInsertDimensionComponentShown
+
+  private void jPanel4ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel4ComponentShown
+    // TODO add your handling code here:
+    try {
+      // TODO add your handling code here:
+      ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerInsertDimension);
+    } catch (SQLException ex) {
+      JOptionPane.showMessageDialog(null, "Błąd odczytu bazy danych" + ex, "Błąd", JOptionPane.ERROR_MESSAGE);
+      Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  }//GEN-LAST:event_jPanel4ComponentShown
+
+  private void jPanel3ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel3ComponentShown
+    // TODO add your handling code here:
+    try {
+      // TODO add your handling code here:
+      ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerInsertDimension);
+    } catch (SQLException ex) {
+      JOptionPane.showMessageDialog(null, "Błąd odczytu bazy danych" + ex, "Błąd", JOptionPane.ERROR_MESSAGE);
+      Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  }//GEN-LAST:event_jPanel3ComponentShown
+
+  private void tblElastomerInsertDimensionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblElastomerInsertDimensionMousePressed
+    // TODO add your handling code here:
+    if (evt.getButton() == 3) {
+      popTblElastomerType.show(tblElastomerInsertDimension, evt.getX(), evt.getY());
+    }
+  }//GEN-LAST:event_tblElastomerInsertDimensionMousePressed
+
   /**
    * @param args the command line arguments
    */
@@ -606,12 +708,12 @@ public class FrmKKCreator extends javax.swing.JFrame {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton btnAddNewElastomerType;
   private javax.swing.JButton btnChooseFolder;
   private javax.swing.JButton btnGenerateCard;
   private javax.swing.JComboBox<String> cbBearingKind;
   private javax.swing.JComboBox<String> cbBearingType;
   private javax.swing.JCheckBox cbGenMesure;
-  private javax.swing.JButton jButton1;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
@@ -633,16 +735,34 @@ public class FrmKKCreator extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JTabbedPane jTabbedPane1;
+  private javax.swing.JPopupMenu popTblElastomerType;
   private javax.swing.JTable tblElastomerInsertDimension;
   private javax.swing.JTable tblKontrakty;
   private javax.swing.JTextField tfA;
   private javax.swing.JTextField tfBearingType;
   private javax.swing.JTextField tfBottomPlate;
   private javax.swing.JTextField tfContractNumber;
-  private javax.swing.JTextField tfDImensionD;
   private javax.swing.JTextField tfDestPath;
-  private javax.swing.JTextField tfDimensionT;
+  private javax.swing.JTextField tfDimensionDe;
+  private javax.swing.JTextField tfDimensionTe;
   private javax.swing.JTextField tfH;
   private javax.swing.JTextField tfObjectNumber;
   // End of variables declaration//GEN-END:variables
+
+  private void initPopups() {
+    JMenuItem itmTblElastoerType = new JMenuItem("Usuń");
+
+    itmTblElastoerType.addActionListener((ActionEvent e) -> {
+      ElastomerTypeManager.getInstance().removeElastomerType(tblElastomerInsertDimension);
+      try {
+        ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerInsertDimension);
+      } catch (SQLException ex) {
+        Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    });
+
+    popTblElastomerType.add(itmTblElastoerType);
+
+    tblElastomerInsertDimension.add(popTblElastomerType);
+  }
 }
