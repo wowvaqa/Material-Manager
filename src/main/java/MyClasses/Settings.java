@@ -18,9 +18,9 @@ public class Settings {
           ".\\data\\wzor_01.xlsx";
   
   /* Ścieżki do plików zawierających wzory KK dla łożysk garnkowych */
-  public static final String POT_BEARING_MANY_WAY_PATH = ".\\data\\wzor_PG.xlsx";
+  public static final String POT_BEARING_MANY_WAY_PATH = ".\\data\\wzor_PS.xlsx";
   public static final String POT_BEARING_ONE_WAY_PATH = ".\\data\\wzor_PG.xlsx";
-  public static final String POT_BEARING_CONSTANT_PATH = ".\\data\\wzor_PG.xlsx";
+  public static final String POT_BEARING_CONSTANT_PATH = ".\\data\\wzor_PF.xlsx";
   
   /* Ścieżka do pliku z rejestrem łożysk. */
   private String bearingRegistryPath;
