@@ -7,13 +7,13 @@ package ControlCard;
 
 import com.kprm.materialmanager.SettingsManager;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,12 +29,18 @@ public class FrmKKCreator extends javax.swing.JFrame {
     initComponents();
     initPopups();
 
-    tblElastomerInsertDimension.setAutoCreateRowSorter(true);
+    tblElastomerTypeDimension.setAutoCreateRowSorter(true);
+    
+    DefaultTableCellRenderer renderer = new KKTableRenderer();
+    
+    tblElastomerTypeDimension.setDefaultRenderer(Object.class, renderer);
+    tblRejestrLozysk.setDefaultRenderer(Object.class, renderer);
 
     try {
-      KKCreatorManager.getInstance().openFileAndFillTable(tblKontrakty, this);
+      KKCreatorManager.getInstance().openFileAndFillTable(tblRejestrLozysk, this);
     } catch (IOException ex) {
       Logger.getLogger(KKCreatorManager.class.getName()).log(Level.SEVERE, null, ex);
+      JOptionPane.showMessageDialog(null, "Błąd odczytu rejestru łożysk: " + ex, "Błąd", JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -56,7 +62,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
     jLabel2 = new javax.swing.JLabel();
     tfObjectNumber = new javax.swing.JTextField();
     jScrollPane1 = new javax.swing.JScrollPane();
-    tblKontrakty = new javax.swing.JTable();
+    tblRejestrLozysk = new javax.swing.JTable();
     jPanel1 = new javax.swing.JPanel();
     cbBearingKind = new javax.swing.JComboBox<>();
     jLabel8 = new javax.swing.JLabel();
@@ -76,7 +82,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
     cbGenMesure = new javax.swing.JCheckBox();
     jPanel4 = new javax.swing.JPanel();
     jScrollPane2 = new javax.swing.JScrollPane();
-    tblElastomerInsertDimension = new javax.swing.JTable();
+    tblElastomerTypeDimension = new javax.swing.JTable();
     jLabel10 = new javax.swing.JLabel();
     jPanel5 = new javax.swing.JPanel();
     jLabel11 = new javax.swing.JLabel();
@@ -124,9 +130,9 @@ public class FrmKKCreator extends javax.swing.JFrame {
       }
     });
 
-    tblKontrakty.setBorder(new javax.swing.border.MatteBorder(null));
-    tblKontrakty.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-    tblKontrakty.setModel(new javax.swing.table.DefaultTableModel(
+    tblRejestrLozysk.setBorder(new javax.swing.border.MatteBorder(null));
+    tblRejestrLozysk.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+    tblRejestrLozysk.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
 
       },
@@ -134,14 +140,14 @@ public class FrmKKCreator extends javax.swing.JFrame {
         "Kontrakt", "Numer seryjny", "Symbol", "Typ", "Rodzaj", "Obiekt", "Pozycja", "Nośność pionowa", "Zakres przesuwów"
       }
     ));
-    tblKontrakty.setRowHeight(20);
-    tblKontrakty.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-    tblKontrakty.addMouseListener(new java.awt.event.MouseAdapter() {
+    tblRejestrLozysk.setRowHeight(20);
+    tblRejestrLozysk.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    tblRejestrLozysk.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mousePressed(java.awt.event.MouseEvent evt) {
-        tblKontraktyMousePressed(evt);
+        tblRejestrLozyskMousePressed(evt);
       }
     });
-    jScrollPane1.setViewportView(tblKontrakty);
+    jScrollPane1.setViewportView(tblRejestrLozysk);
 
     jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -338,8 +344,8 @@ public class FrmKKCreator extends javax.swing.JFrame {
       }
     });
 
-    tblElastomerInsertDimension.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-    tblElastomerInsertDimension.setModel(new javax.swing.table.DefaultTableModel(
+    tblElastomerTypeDimension.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+    tblElastomerTypeDimension.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
 
       },
@@ -347,20 +353,20 @@ public class FrmKKCreator extends javax.swing.JFrame {
         "TYP ŁOŻYSKA", "WYMIAR De [mm]", "WYMIAR Te [mm]"
       }
     ));
-    tblElastomerInsertDimension.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-    tblElastomerInsertDimension.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-    tblElastomerInsertDimension.setShowGrid(true);
-    tblElastomerInsertDimension.addMouseListener(new java.awt.event.MouseAdapter() {
+    tblElastomerTypeDimension.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    tblElastomerTypeDimension.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    tblElastomerTypeDimension.setShowGrid(true);
+    tblElastomerTypeDimension.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mousePressed(java.awt.event.MouseEvent evt) {
-        tblElastomerInsertDimensionMousePressed(evt);
+        tblElastomerTypeDimensionMousePressed(evt);
       }
     });
-    tblElastomerInsertDimension.addComponentListener(new java.awt.event.ComponentAdapter() {
+    tblElastomerTypeDimension.addComponentListener(new java.awt.event.ComponentAdapter() {
       public void componentShown(java.awt.event.ComponentEvent evt) {
-        tblElastomerInsertDimensionComponentShown(evt);
+        tblElastomerTypeDimensionComponentShown(evt);
       }
     });
-    jScrollPane2.setViewportView(tblElastomerInsertDimension);
+    jScrollPane2.setViewportView(tblElastomerTypeDimension);
 
     jLabel10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
     jLabel10.setText("Wymiary wkładów elastomerowych");
@@ -480,41 +486,37 @@ public class FrmKKCreator extends javax.swing.JFrame {
 
   private void tfContractNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfContractNumberKeyReleased
     // TODO add your handling code here:
-    KKCreatorManager.getInstance().filterTable(tfContractNumber.getText(), tfObjectNumber.getText(), tblKontrakty);
+    KKCreatorManager.getInstance().filterTable(tfContractNumber.getText(), tfObjectNumber.getText(), tblRejestrLozysk);
 
   }//GEN-LAST:event_tfContractNumberKeyReleased
 
   private void tfObjectNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfObjectNumberKeyReleased
     // TODO add your handling code here:
-    KKCreatorManager.getInstance().filterTable(tfContractNumber.getText(), tfObjectNumber.getText(), tblKontrakty);
+    KKCreatorManager.getInstance().filterTable(tfContractNumber.getText(), tfObjectNumber.getText(), tblRejestrLozysk);
   }//GEN-LAST:event_tfObjectNumberKeyReleased
 
   private void btnGenerateCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateCardActionPerformed
 
     try {
-      if (tblKontrakty.getSelectedRow() != -1) {
+      if (tblRejestrLozysk.getSelectedRow() != -1) {
         switch (cbBearingType.getSelectedIndex()) {
           /* Typ łożyska - ELASTOMEROWE */
           case 0:
             switch (cbBearingKind.getSelectedIndex()) {
               case 0: // Łożysko jednokierunkowe
-                KKCreatorManager.getInstance().modifyKKexcelOneWayBaring(
-                        tblKontrakty, tfA.getText(), tfH.getText(),
+                KKCreatorManager.getInstance().modifyKKexcelOneWayBaring(tblRejestrLozysk, tfA.getText(), tfH.getText(),
                         tfBottomPlate.getText(), tfDestPath.getText(),
                         cbGenMesure.isSelected());
                 break;
               case 1: // Łożysko stałe
-                KKCreatorManager.getInstance().modifyKKexcelConstantBearing(
-                        tblKontrakty, tfA.getText(), tfH.getText(),
+                KKCreatorManager.getInstance().modifyKKexcelConstantBearing(tblRejestrLozysk, tfA.getText(), tfH.getText(),
                         tfDestPath.getText(), cbGenMesure.isSelected());
                 break;
               case 2: // Łożysko wielokierunkowe
-                KKCreatorManager.getInstance().modifyKKexcelManyWayBearing(
-                        tblKontrakty, tfDestPath.getText(), cbGenMesure.isSelected());
+                KKCreatorManager.getInstance().modifyKKexcelManyWayBearing(tblRejestrLozysk, tfDestPath.getText(), cbGenMesure.isSelected());
                 break;
               case 3: // Łożysko wielokierunkowe oblachowane
-                KKCreatorManager.getInstance().modifyKKexcelConstantBearing(
-                        tblKontrakty, tfA.getText(), tfH.getText(),
+                KKCreatorManager.getInstance().modifyKKexcelConstantBearing(tblRejestrLozysk, tfA.getText(), tfH.getText(),
                         tfDestPath.getText(), cbGenMesure.isSelected());
                 break;
               case 4: // Nieznany rodzaj łożyska
@@ -526,20 +528,16 @@ public class FrmKKCreator extends javax.swing.JFrame {
           case 1:
             switch (cbBearingKind.getSelectedIndex()) {
               case 0: // Łożysko jednokierunkowe
-                KKCreatorManager.getInstance().modifyKKExcelPotOneWayBearing(
-                        tblKontrakty, tfDestPath.getText());
+                KKCreatorManager.getInstance().modifyKKExcelPotOneWayBearing(tblRejestrLozysk, tfDestPath.getText());
                 break;
               case 1: // Łożysko stałe
-                KKCreatorManager.getInstance().modifyKKExcelPotConstantBearing(
-                        tblKontrakty, tfDestPath.getText());                
+                KKCreatorManager.getInstance().modifyKKExcelPotConstantBearing(tblRejestrLozysk, tfDestPath.getText());                
                 break;
               case 2: // Łożysko wielokierunkowe
-                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(
-                        tblKontrakty, tfDestPath.getText());  
+                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(tblRejestrLozysk, tfDestPath.getText());  
                 break;
               case 3: // Łożysko wielokierunkowe oblachowane
-                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(
-                        tblKontrakty, tfDestPath.getText());  
+                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(tblRejestrLozysk, tfDestPath.getText());  
                 break;
               case 4: // Nieznany rodzaj łożyska
                 JOptionPane.showMessageDialog(null, "Nieznany rodzaj łożyska", "Nie można wygenerować karty", JOptionPane.ERROR_MESSAGE);
@@ -563,13 +561,13 @@ public class FrmKKCreator extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_btnGenerateCardActionPerformed
 
-  private void tblKontraktyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKontraktyMousePressed
+  private void tblRejestrLozyskMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRejestrLozyskMousePressed
     // TODO add your handling code here:
     System.out.println(cbBearingKind.getSelectedItem().toString());
 
-    DefaultTableModel model = (DefaultTableModel) tblKontrakty.getModel();
+    DefaultTableModel model = (DefaultTableModel) tblRejestrLozysk.getModel();
 
-    switch ((model.getValueAt(tblKontrakty.getSelectedRow(), 3)).toString()) {
+    switch ((model.getValueAt(tblRejestrLozysk.getSelectedRow(), 3)).toString()) {
       case "1":
         cbBearingType.setSelectedIndex(2);
         break;
@@ -583,7 +581,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
         cbBearingType.setSelectedIndex(3);
     }
 
-    switch ((model.getValueAt(tblKontrakty.getSelectedRow(), 4)).toString()) {
+    switch ((model.getValueAt(tblRejestrLozysk.getSelectedRow(), 4)).toString()) {
       case "Jednokierunkowe":
         cbBearingKind.setSelectedIndex(0);
         break;
@@ -601,9 +599,9 @@ public class FrmKKCreator extends javax.swing.JFrame {
 
     }
 
-    System.out.println("Rodzaj: " + model.getValueAt(tblKontrakty.getSelectedRow(), 4));
+    System.out.println("Rodzaj: " + model.getValueAt(tblRejestrLozysk.getSelectedRow(), 4));
 
-  }//GEN-LAST:event_tblKontraktyMousePressed
+  }//GEN-LAST:event_tblRejestrLozyskMousePressed
 
   private void btnChooseFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseFolderActionPerformed
     // TODO add your handling code here:
@@ -626,7 +624,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
       ElastomerTypeManager.getInstance().addNewElastomerType(
               type, deDim, teDim);
 
-      ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerInsertDimension);
+      ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerTypeDimension);
     } catch (NumberFormatException ex) {
       JOptionPane.showMessageDialog(null, "Nipoprawne dane", "Błąd",
               JOptionPane.ERROR_MESSAGE);
@@ -638,15 +636,15 @@ public class FrmKKCreator extends javax.swing.JFrame {
   }//GEN-LAST:event_btnAddNewElastomerTypeActionPerformed
 
   // Odświeżenie typów wkładów elastomerowych.
-  private void tblElastomerInsertDimensionComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tblElastomerInsertDimensionComponentShown
+  private void tblElastomerTypeDimensionComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tblElastomerTypeDimensionComponentShown
 
-  }//GEN-LAST:event_tblElastomerInsertDimensionComponentShown
+  }//GEN-LAST:event_tblElastomerTypeDimensionComponentShown
 
   private void jPanel4ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel4ComponentShown
     // TODO add your handling code here:
     try {
       // TODO add your handling code here:
-      ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerInsertDimension);
+      ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerTypeDimension);
     } catch (SQLException ex) {
       JOptionPane.showMessageDialog(null, "Błąd odczytu bazy danych" + ex, "Błąd", JOptionPane.ERROR_MESSAGE);
       Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
@@ -657,19 +655,19 @@ public class FrmKKCreator extends javax.swing.JFrame {
     // TODO add your handling code here:
     try {
       // TODO add your handling code here:
-      ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerInsertDimension);
+      ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerTypeDimension);
     } catch (SQLException ex) {
       JOptionPane.showMessageDialog(null, "Błąd odczytu bazy danych" + ex, "Błąd", JOptionPane.ERROR_MESSAGE);
       Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
     }
   }//GEN-LAST:event_jPanel3ComponentShown
 
-  private void tblElastomerInsertDimensionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblElastomerInsertDimensionMousePressed
+  private void tblElastomerTypeDimensionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblElastomerTypeDimensionMousePressed
     // TODO add your handling code here:
     if (evt.getButton() == 3) {
-      popTblElastomerType.show(tblElastomerInsertDimension, evt.getX(), evt.getY());
+      popTblElastomerType.show(tblElastomerTypeDimension, evt.getX(), evt.getY());
     }
-  }//GEN-LAST:event_tblElastomerInsertDimensionMousePressed
+  }//GEN-LAST:event_tblElastomerTypeDimensionMousePressed
 
   /**
    * @param args the command line arguments
@@ -736,8 +734,8 @@ public class FrmKKCreator extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JTabbedPane jTabbedPane1;
   private javax.swing.JPopupMenu popTblElastomerType;
-  private javax.swing.JTable tblElastomerInsertDimension;
-  private javax.swing.JTable tblKontrakty;
+  private javax.swing.JTable tblElastomerTypeDimension;
+  private javax.swing.JTable tblRejestrLozysk;
   private javax.swing.JTextField tfA;
   private javax.swing.JTextField tfBearingType;
   private javax.swing.JTextField tfBottomPlate;
@@ -753,9 +751,9 @@ public class FrmKKCreator extends javax.swing.JFrame {
     JMenuItem itmTblElastoerType = new JMenuItem("Usuń");
 
     itmTblElastoerType.addActionListener((ActionEvent e) -> {
-      ElastomerTypeManager.getInstance().removeElastomerType(tblElastomerInsertDimension);
+      ElastomerTypeManager.getInstance().removeElastomerType(tblElastomerTypeDimension);
       try {
-        ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerInsertDimension);
+        ElastomerTypeManager.getInstance().refreshElastomerTypeTable(tblElastomerTypeDimension);
       } catch (SQLException ex) {
         Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
       }
@@ -763,6 +761,6 @@ public class FrmKKCreator extends javax.swing.JFrame {
 
     popTblElastomerType.add(itmTblElastoerType);
 
-    tblElastomerInsertDimension.add(popTblElastomerType);
+    tblElastomerTypeDimension.add(popTblElastomerType);
   }
 }
