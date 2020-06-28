@@ -65,7 +65,14 @@ public class ElastomerTypeManager {
       resultSet.first();
 
       do {
-        rowData[0] = resultSet.getString("type");
+        String elastomerType = resultSet.getString("type");
+
+        if (elastomerType.length() < 4) {
+          elastomerType = "0" + elastomerType;
+          rowData[0] = elastomerType;
+        } else {
+          rowData[0] = elastomerType;
+        }
         rowData[1] = resultSet.getString("de");
         rowData[2] = resultSet.getString("te");
         model.addRow(rowData);
@@ -83,8 +90,65 @@ public class ElastomerTypeManager {
     try {
       String type = (String) tblElastomerInsertDimension.getValueAt(tblElastomerInsertDimension.getSelectedRow(), 0);
       DatabaseManager.getInstance().removeElastomerType(type);
-    } catch (IndexOutOfBoundsException ex){
-      JOptionPane.showMessageDialog(null, "Zaznacz type do usunięcia", "Błąd", JOptionPane.ERROR_MESSAGE);
+    } catch (IndexOutOfBoundsException ex) {
+      JOptionPane.showMessageDialog(null, "Zaznacz typ do usunięcia", "Błąd", JOptionPane.ERROR_MESSAGE);
     }
   }
+
+  /**
+   * Zwraca nośność łożyska
+   *
+   * @param bearingSymbol Symbol łożyska
+   * @return Tablica trzyelementowa zawierająca nośność łożyska.
+   */
+  private String getBearingCapacity(String bearingSymbol) {
+
+    String elastomerType = bearingSymbol.substring(3, 7);
+    return elastomerType;
+  }
+
+  /**
+   * Zwraca średnicę elastomeru.
+   *
+   * @param bearingSymbol Symbol łożyska
+   * @param tblElastomerTypeDimension Tabela z typami elastomerów.
+   * @return Średnica wkładu elastomeru.
+   */
+  public String getElastomerDiameter(String bearingSymbol,
+          JTable tblElastomerTypeDimension) {
+
+    DefaultTableModel model = (DefaultTableModel) tblElastomerTypeDimension.getModel();
+
+    String elastomerDiameter = null;
+
+    for (int i = 0; i < model.getRowCount(); i++) {
+      if (getBearingCapacity(bearingSymbol).equals(model.getValueAt(i, 0).toString())) {
+        elastomerDiameter = model.getValueAt(i, 1).toString();
+      }
+    }
+
+    return elastomerDiameter;
+  }
+
+  /**
+   * Zwraca wysokość wkładu elastomerowego
+   * @param bearingSymbol Symbol łożyska
+   * @param tblElastomerTypeDimension Tabela z typami wkładów elastomerowych.
+   * @return Wysokość wkładu elastomerowego
+   */
+  public String getElastomerHeight(String bearingSymbol,
+          JTable tblElastomerTypeDimension) {
+    DefaultTableModel model = (DefaultTableModel) tblElastomerTypeDimension.getModel();
+
+    String elastomerHeight = null;
+
+    for (int i = 0; i < model.getRowCount(); i++) {
+      if (getBearingCapacity(bearingSymbol).equals(model.getValueAt(i, 0).toString())) {
+        elastomerHeight = model.getValueAt(i, 2).toString();
+      }
+    }
+
+    return elastomerHeight;
+  }
+
 }

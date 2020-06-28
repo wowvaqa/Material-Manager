@@ -55,7 +55,7 @@ public class KKCreatorManager {
    * @throws IOException
    */
   public void openFileAndFillTable(JTable tblTable, FrmKKCreator frmKKCreator) throws FileNotFoundException, IOException {
-    int[] sheets = {5, 6, 7};
+    //int[] sheets = {5, 6, 7};
     //int[] sheets = {7};
 
     // Dezaktywacja formy 
@@ -76,7 +76,8 @@ public class KKCreatorManager {
       /* Działania w tle swing workera */
       @Override
       protected Object doInBackground() throws Exception {
-        readExcel(ExcelManager.getInstance().getBearingRegistryPath(), sheets);
+        readExcel(ExcelManager.getInstance().getBearingRegistryPath(),
+                Settings.BEARING_REGISTRY_SHEETS);
         String res = "Finish!";
         return res;
       }
@@ -107,7 +108,7 @@ public class KKCreatorManager {
     ExcelManager.getInstance().getExcelRows().clear();
 
     try (
-            InputStream is = new FileInputStream(new File(filePath)); Workbook workbook = StreamingReader.builder().open(is);) {
+             InputStream is = new FileInputStream(new File(filePath));  Workbook workbook = StreamingReader.builder().open(is);) {
 
       DataFormatter dataFormatter = new DataFormatter();
 
@@ -488,13 +489,16 @@ public class KKCreatorManager {
 
   /**
    * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zapisuje
-   * nową kartę do pliku. Dotyczy łożyska garnkowego jednokierunkowego.
-   * @param tblTable Tabela danych z rejestru łożysk
+   * nową kartę do pliku.Dotyczy łożyska garnkowego jednokierunkowego.
+   *
+   * @param tblRejestrLozysk Tabela danych z rejestru łożysk
+   * @param tblElastomerTypeDimension Tabela z typami wkładów elastomerowych.
    * @param destPath Ścieżka zapisu pliku karty
    * @throws FileNotFoundException
    * @throws IOException
    */
-  public void modifyKKExcelPotOneWayBearing(JTable tblTable, String destPath) 
+  public void modifyKKExcelPotOneWayBearing(JTable tblRejestrLozysk,
+          JTable tblElastomerTypeDimension, String destPath)
           throws FileNotFoundException, IOException {
     File file = new File(Settings.POT_BEARING_ONE_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
@@ -506,22 +510,44 @@ public class KKCreatorManager {
     // Obiekt przechowujący dane nagłówka
     KKExcelHeader excelHeader = new KKExcelHeader();
     // Pobranie danych do obiektu
-    excelHeader.setupBearingExcelHeaderData(tblTable);
+    excelHeader.setupBearingExcelHeaderData(tblRejestrLozysk);
     // Modyfikacja nagłówka arkusza.
     excelHeader.modifyKKSpreadsheetHeaderPotBearing(spreadsheet);
-    
+
+    String diameter = ElastomerTypeManager.getInstance().getElastomerDiameter(
+            tblRejestrLozysk.getValueAt(
+                    tblRejestrLozysk.getSelectedRow(), 2).toString(),
+            tblElastomerTypeDimension);
+
+    String height = ElastomerTypeManager.getInstance().getElastomerHeight(
+            tblRejestrLozysk.getValueAt(
+                    tblRejestrLozysk.getSelectedRow(), 2).toString(),
+            tblElastomerTypeDimension);
+
+    // Ucięcie '.0' ze stringa
+    diameter = diameter.substring(0, diameter.length() - 2);
+    height = height.substring(0, height.length() - 2);
+
+    spreadsheet.getRow(23).getCell(4).setCellValue(diameter);
+    spreadsheet.getRow(23).getCell(5).setCellValue(diameter);
+    spreadsheet.getRow(23).getCell(7).setCellValue(diameter);
+    spreadsheet.getRow(23).getCell(9).setCellValue(height);
+
     saveWorkbook(workbook, excelHeader, "Łożysko Garnkowe", destPath);
   }
-  
+
   /**
    * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zapisuje
-   * nową kartę do pliku. Dotyczy łożyska garnkowego wielokierunkowego.
-   * @param tblTable Tabela danych z rejestru łożysk
+   * nową kartę do pliku.Dotyczy łożyska garnkowego wielokierunkowego.
+   *
+   * @param tblRejestrLozysk Tabela danych z rejestru łożysk
+   * @param tblElastomerTypeDimension Tabela z typami wkładów elastomerowych
    * @param destPath Ścieżka zapisu pliku karty
    * @throws FileNotFoundException
    * @throws IOException
    */
-  public void modifyKKExcelPotManyWayBearing(JTable tblTable, String destPath) 
+  public void modifyKKExcelPotManyWayBearing(JTable tblRejestrLozysk,
+          JTable tblElastomerTypeDimension, String destPath)
           throws FileNotFoundException, IOException {
     File file = new File(Settings.POT_BEARING_MANY_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
@@ -533,22 +559,44 @@ public class KKCreatorManager {
     // Obiekt przechowujący dane nagłówka
     KKExcelHeader excelHeader = new KKExcelHeader();
     // Pobranie danych do obiektu
-    excelHeader.setupBearingExcelHeaderData(tblTable);
+    excelHeader.setupBearingExcelHeaderData(tblRejestrLozysk);
     // Modyfikacja nagłówka arkusza.
     excelHeader.modifyKKSpreadsheetHeaderPotBearing(spreadsheet);
-    
+
+    String diameter = ElastomerTypeManager.getInstance().getElastomerDiameter(
+            tblRejestrLozysk.getValueAt(
+                    tblRejestrLozysk.getSelectedRow(), 2).toString(),
+            tblElastomerTypeDimension);
+
+    String height = ElastomerTypeManager.getInstance().getElastomerHeight(
+            tblRejestrLozysk.getValueAt(
+                    tblRejestrLozysk.getSelectedRow(), 2).toString(),
+            tblElastomerTypeDimension);
+
+    // Ucięcie '.0' ze stringa
+    diameter = diameter.substring(0, diameter.length() - 2);
+    height = height.substring(0, height.length() - 2);
+
+    spreadsheet.getRow(23).getCell(4).setCellValue(diameter);
+    spreadsheet.getRow(23).getCell(5).setCellValue(diameter);
+    spreadsheet.getRow(23).getCell(7).setCellValue(diameter);
+    spreadsheet.getRow(23).getCell(9).setCellValue(height);
+
     saveWorkbook(workbook, excelHeader, "Łożysko Garnkowe", destPath);
   }
-  
+
   /**
    * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zapisuje
-   * nową kartę do pliku. Dotyczy łożyska garnkowego jednokierunkowego.
-   * @param tblTable Tabela danych z rejestru łożysk
+   * nową kartę do pliku.Dotyczy łożyska garnkowego jednokierunkowego.
+   *
+   * @param tblRejestrLozysk Tabela danych z rejestru łożysk
+   * @param tblElastomerTypeDimension Tabela z typami wkładów elastomerowych
    * @param destPath Ścieżka zapisu pliku karty
    * @throws FileNotFoundException
    * @throws IOException
    */
-  public void modifyKKExcelPotConstantBearing(JTable tblTable, String destPath) 
+  public void modifyKKExcelPotConstantBearing(JTable tblRejestrLozysk,
+          JTable tblElastomerTypeDimension, String destPath)
           throws FileNotFoundException, IOException {
     File file = new File(Settings.POT_BEARING_CONSTANT_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
@@ -560,10 +608,29 @@ public class KKCreatorManager {
     // Obiekt przechowujący dane nagłówka
     KKExcelHeader excelHeader = new KKExcelHeader();
     // Pobranie danych do obiektu
-    excelHeader.setupBearingExcelHeaderData(tblTable);
+    excelHeader.setupBearingExcelHeaderData(tblRejestrLozysk);
     // Modyfikacja nagłówka arkusza.
     excelHeader.modifyKKSpreadsheetHeaderPotBearing(spreadsheet);
-    
+
+    String diameter = ElastomerTypeManager.getInstance().getElastomerDiameter(
+            tblRejestrLozysk.getValueAt(
+                    tblRejestrLozysk.getSelectedRow(), 2).toString(),
+            tblElastomerTypeDimension);
+
+    String height = ElastomerTypeManager.getInstance().getElastomerHeight(
+            tblRejestrLozysk.getValueAt(
+                    tblRejestrLozysk.getSelectedRow(), 2).toString(),
+            tblElastomerTypeDimension);
+
+    // Ucięcie '.0' ze stringa
+    diameter = diameter.substring(0, diameter.length() - 2);
+    height = height.substring(0, height.length() - 2);
+
+    spreadsheet.getRow(23).getCell(4).setCellValue(diameter);
+    spreadsheet.getRow(23).getCell(5).setCellValue(diameter);
+    spreadsheet.getRow(23).getCell(7).setCellValue(diameter);
+    spreadsheet.getRow(23).getCell(9).setCellValue(height);
+
     saveWorkbook(workbook, excelHeader, "Łożysko Garnkowe", destPath);
   }
 
@@ -719,7 +786,7 @@ public class KKCreatorManager {
     }
 
     /* Zapis pliku ************************************************************/
-    saveWorkbook(workbook, excelHeader, "Łożysko Elastomerowe" ,destPath);
+    saveWorkbook(workbook, excelHeader, "Łożysko Elastomerowe", destPath);
   }
 
   /**
@@ -738,12 +805,12 @@ public class KKCreatorManager {
             + excelHeader.getKind() + " " + excelHeader.getPillar();
     filename = filename.replaceAll("[^łŁŻżźŻŚśĆćÓóąę \\w.-]", "_");
 
-    try (FileOutputStream out = new FileOutputStream(new File(destPath
+    try ( FileOutputStream out = new FileOutputStream(new File(destPath
             + filename + ".xlsx"))) {
 
       workbook.write(out);
       //System.out.println("Excel written successfully..");
-      
+
       JOptionPane.showMessageDialog(null, "Karta kontroli zapisana pomyślnie");
     }
   }

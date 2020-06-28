@@ -30,9 +30,9 @@ public class FrmKKCreator extends javax.swing.JFrame {
     initPopups();
 
     tblElastomerTypeDimension.setAutoCreateRowSorter(true);
-    
+
     DefaultTableCellRenderer renderer = new KKTableRenderer();
-    
+
     tblElastomerTypeDimension.setDefaultRenderer(Object.class, renderer);
     tblRejestrLozysk.setDefaultRenderer(Object.class, renderer);
 
@@ -528,16 +528,20 @@ public class FrmKKCreator extends javax.swing.JFrame {
           case 1:
             switch (cbBearingKind.getSelectedIndex()) {
               case 0: // Łożysko jednokierunkowe
-                KKCreatorManager.getInstance().modifyKKExcelPotOneWayBearing(tblRejestrLozysk, tfDestPath.getText());
+                KKCreatorManager.getInstance().modifyKKExcelPotOneWayBearing(
+                        tblRejestrLozysk, tblElastomerTypeDimension, tfDestPath.getText());
                 break;
               case 1: // Łożysko stałe
-                KKCreatorManager.getInstance().modifyKKExcelPotConstantBearing(tblRejestrLozysk, tfDestPath.getText());                
+                KKCreatorManager.getInstance().modifyKKExcelPotConstantBearing(
+                        tblRejestrLozysk, tblElastomerTypeDimension, tfDestPath.getText());
                 break;
               case 2: // Łożysko wielokierunkowe
-                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(tblRejestrLozysk, tfDestPath.getText());  
+                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(
+                        tblRejestrLozysk, tblElastomerTypeDimension, tfDestPath.getText());
                 break;
               case 3: // Łożysko wielokierunkowe oblachowane
-                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(tblRejestrLozysk, tfDestPath.getText());  
+                KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(
+                        tblRejestrLozysk, tblElastomerTypeDimension, tfDestPath.getText());
                 break;
               case 4: // Nieznany rodzaj łożyska
                 JOptionPane.showMessageDialog(null, "Nieznany rodzaj łożyska", "Nie można wygenerować karty", JOptionPane.ERROR_MESSAGE);

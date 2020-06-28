@@ -720,7 +720,7 @@ public class FrmMain extends javax.swing.JFrame {
     jMenuItem2 = new javax.swing.JMenuItem();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("Material Manager v. 0.0.5.9");
+    setTitle("Material Manager v. 0.0.6.0");
     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
@@ -1835,7 +1835,6 @@ public class FrmMain extends javax.swing.JFrame {
     });
 
     cbDb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "KPRM", "KPRM_test", "local", "Italy" }));
-    cbDb.setSelectedIndex(1);
     cbDb.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         cbDbActionPerformed(evt);
