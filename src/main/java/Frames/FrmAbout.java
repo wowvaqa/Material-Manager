@@ -40,7 +40,7 @@ public class FrmAbout extends javax.swing.JFrame {
 
     jLabel1.setText("Material Manager");
 
-    jLabel2.setText("wersja 0.0.5.9");
+    jLabel2.setText("wersja 0.0.6.1");
 
     jLabel3.setText("Autor: Łukasz Wawrzyniak dla KPRM INFRASTRUKTURA SP. Z O.O.");
 

@@ -6,6 +6,7 @@
 package Frames;
 
 import ControlCard.FrmKKCreator;
+import MyClasses.CertOperations;
 import MyClasses.ExcelManager;
 import MyClasses.MyTreeRenderer;
 import MyClasses.PkdNumber;
@@ -189,20 +190,21 @@ public class FrmMain extends javax.swing.JFrame {
     popTblPathAtesty.add(itmTblPathAtesty01);
     popTblPathAtesty.add(itmTblPathAtesty03);
     popTblPathAtesty.add(itmTblPathAtesty04);
+    
 
-    JMenuItem itmTblAtesty01 = new JMenuItem("Usuń atest");
-    JMenuItem itmTblAtesty02 = new JMenuItem("Zmień nazwę atestu");
-    JMenuItem itmTblAtesty03 = new JMenuItem("Zmień numer zamówienia");
-    JMenuItem itmTblAtesty04 = new JMenuItem("Zmień numer WZ");
-    JMenuItem itmTblAtesty05 = new JMenuItem("Zmień numer ZP");
-    JMenuItem itmTblAtesty06 = new JMenuItem("Zmień numer PKD");
-    JMenuItem itmTblAtesty07 = new JMenuItem("Zmień nazwę dostawcy");
-    JMenuItem itmTblAtesty10 = new JMenuItem("Kopiuj atest");
-    JMenuItem itmTblAtesty08 = new JMenuItem("Wytnij atest");
-    JMenuItem itmTblAtesty09 = new JMenuItem("Zmień datę dostawy");
+    JMenuItem itmCertDelete = new JMenuItem("Usuń atest");
+    JMenuItem itmCertRename = new JMenuItem("Zmień nazwę atestu");
+    JMenuItem itmCertOrderNumberChange = new JMenuItem("Zmień numer zamówienia");
+    JMenuItem itmCertWzChange = new JMenuItem("Zmień numer WZ");
+    JMenuItem itmCertZpChange = new JMenuItem("Zmień numer ZP");
+    JMenuItem itmCertPkdChange = new JMenuItem("Zmień numer PKD");
+    JMenuItem itmCertSupplierChange = new JMenuItem("Zmień nazwę dostawcy");
+    JMenuItem itmCertCopy = new JMenuItem("Kopiuj atest");
+    JMenuItem itmCertCut = new JMenuItem("Wytnij atest");
+    JMenuItem itmCertDeliveryDateChange = new JMenuItem("Zmień datę dostawy");
 
     // Usuwa atest z tabeli atestów.
-    itmTblAtesty01.addActionListener(new ActionListener() {
+    itmCertDelete.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć atest ?", "Ostrzeżenie!",
@@ -216,7 +218,7 @@ public class FrmMain extends javax.swing.JFrame {
     });
 
     // Zmienia nazwę atestu.
-    itmTblAtesty02.addActionListener(new ActionListener() {
+    itmCertRename.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         AtestManager.getInstance().editCertName(tblAtesty);
@@ -224,7 +226,7 @@ public class FrmMain extends javax.swing.JFrame {
     });
 
     // Zmienia numer zamówienia atestu.
-    itmTblAtesty03.addActionListener(new ActionListener() {
+    itmCertOrderNumberChange.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         AtestManager.getInstance().editCertOrder(tblAtesty);
@@ -232,7 +234,7 @@ public class FrmMain extends javax.swing.JFrame {
     });
 
     // Zmienia numer zamówienia WZ atestu.
-    itmTblAtesty04.addActionListener(new ActionListener() {
+    itmCertWzChange.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         AtestManager.getInstance().editCertWZ(tblAtesty);
@@ -240,7 +242,7 @@ public class FrmMain extends javax.swing.JFrame {
     });
 
     // Zmienia numer Zp atestu.
-    itmTblAtesty05.addActionListener(new ActionListener() {
+    itmCertZpChange.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         AtestManager.getInstance().editCertZp(tblAtesty);
@@ -248,7 +250,7 @@ public class FrmMain extends javax.swing.JFrame {
     });
 
     // Zmienia numer PKD atestu.
-    itmTblAtesty06.addActionListener(new ActionListener() {
+    itmCertPkdChange.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         AtestManager.getInstance().editCertPKD(tblAtesty);
@@ -256,7 +258,7 @@ public class FrmMain extends javax.swing.JFrame {
     });
 
     // Zmienia nazwę dostawcy atestu.
-    itmTblAtesty07.addActionListener(new ActionListener() {
+    itmCertSupplierChange.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         AtestManager.getInstance().editCertSupplier(tblAtesty);
@@ -264,39 +266,39 @@ public class FrmMain extends javax.swing.JFrame {
     });
     
     // Rozpoczyna proces kopiowania atestu
-    itmTblAtesty10.addActionListener(new ActionListener() {
+    itmCertCopy.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().cutCert(tblAtesty);
+        AtestManager.getInstance().cutCopyCert(tblAtesty, CertOperations.COPY);
       }
     });
 
     // Rozpoczyna proces wycinania atestu
-    itmTblAtesty08.addActionListener(new ActionListener() {
+    itmCertCut.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().cutCert(tblAtesty);
+        AtestManager.getInstance().cutCopyCert(tblAtesty, CertOperations.CUT);
       }
     });
 
     // Zmienia datę dostawy.
-    itmTblAtesty09.addActionListener(new ActionListener() {
+    itmCertDeliveryDateChange.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         AtestManager.getInstance().editCertDeliveryDate(tblAtesty);
       }
     });
 
-    popTblAtesty.add(itmTblAtesty01);
-    popTblAtesty.add(itmTblAtesty02);
-    popTblAtesty.add(itmTblAtesty03);
-    popTblAtesty.add(itmTblAtesty04);
-    popTblAtesty.add(itmTblAtesty05);
-    popTblAtesty.add(itmTblAtesty06);
-    popTblAtesty.add(itmTblAtesty07);
-    popTblAtesty.add(itmTblAtesty09);
-    popTblAtesty.add(itmTblAtesty10);
-    popTblAtesty.add(itmTblAtesty08);
+    popTblAtesty.add(itmCertDelete);
+    popTblAtesty.add(itmCertRename);
+    popTblAtesty.add(itmCertOrderNumberChange);
+    popTblAtesty.add(itmCertWzChange);
+    popTblAtesty.add(itmCertZpChange);
+    popTblAtesty.add(itmCertPkdChange);
+    popTblAtesty.add(itmCertSupplierChange);
+    popTblAtesty.add(itmCertDeliveryDateChange);
+    popTblAtesty.add(itmCertCopy);
+    popTblAtesty.add(itmCertCut);
 
     JMenuItem itmTreeMaterialy01 = new JMenuItem("Edytuj nazwę");
     JMenuItem itmTreeMaterialy02 = new JMenuItem("Usuń materiał");
@@ -329,7 +331,8 @@ public class FrmMain extends javax.swing.JFrame {
           if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz wkleić atest "
                   + AtestManager.getInstance().getClipboard().getNazwa() + " ?", "Ostrzeżenie!",
                   JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            AtestManager.getInstance().pasteCert(treeMaterialy);
+            AtestManager.getInstance().pasteCert(
+                    treeMaterialy, AtestManager.getInstance().getCertOperations());
 
             AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy, 0, null);
             ((DefaultTableModel) tblPathAtesty.getModel()).setRowCount(0);
@@ -720,7 +723,7 @@ public class FrmMain extends javax.swing.JFrame {
     jMenuItem2 = new javax.swing.JMenuItem();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("Material Manager v. 0.0.6.0");
+    setTitle("Material Manager v. 0.0.6.1");
     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 

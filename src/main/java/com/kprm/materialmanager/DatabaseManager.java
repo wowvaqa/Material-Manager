@@ -8,7 +8,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -325,6 +324,37 @@ public class DatabaseManager {
   }
 
   /**
+   * Zwraca ID ostatnio dodanego atestu
+   *
+   * @return ID ostatniego atestu który został dodany do tabeli atestów
+   */
+  public String getLastInsertIdInAtests() {
+
+    String result = "";
+    String statment;
+
+    statment = "SELECT * FROM " + DatabaseManager.getInstance().getDbName() + ".atesty WHERE id=(SELECT LAST_INSERT_ID())";
+
+    try {
+      resultSet = statement.executeQuery(statment);
+
+      if (getSizeOfResuleSet(resultSet) > 0) {
+        resultSet.first();
+        result = resultSet.getString("id");
+      } else {
+        return null;
+      }
+    } catch (SQLException ex) {
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    return result;
+  }
+
+  /**
    * Zwraca atesty wg podanej nazwy
    *
    * @param filter słowo do szukania
@@ -461,6 +491,35 @@ public class DatabaseManager {
               "INSERT INTO `" + DatabaseManager.getInstance().getDbName()
               + "`.`atesty_pliki` (`sciezka`, `id_atest`, `nazwa`) VALUES ('"
               + sciezka3 + "', '" + id_atestu + "', '" + opis + "');"
+      );
+      preparedStatement.executeUpdate();
+
+      lackClearFromCert(id_atestu);
+
+    } catch (SQLException ex) {
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+      return -1;
+    }
+    return 1;
+  }
+
+  /**
+   * Dodaje ścieżkę do pliku z atestem
+   *
+   * @param id_atestu Id atestu którego dotyczy dodawany plik
+   * @param path Ścieżka do fizycznego pliku certyfikatu
+   * @param opis Opis certyfikatu wyświetalny w tabeli dostępnych plików
+   * @return -1 jeżeli błąd
+   */
+  public int addCertFilePath(int id_atestu, String path, String opis) {
+    try {
+      preparedStatement = connect.prepareStatement(
+              "INSERT INTO `" + DatabaseManager.getInstance().getDbName()
+              + "`.`atesty_pliki` (`sciezka`, `id_atest`, `nazwa`) VALUES ('"
+              + path + "', '" + id_atestu + "', '" + opis + "');"
       );
       preparedStatement.executeUpdate();
 
@@ -1355,7 +1414,7 @@ public class DatabaseManager {
     } catch (SQLException ex) {
 
       if (ex.getErrorCode() == 1451) {
-        JOptionPane.showMessageDialog(null, "Atest użyty w Bomie, nie można usunąć. ");
+        JOptionPane.showMessageDialog(null, "Atest użyty w Bomie, nie można usunąć. " + ex);        
         return -1;
       }
       if (ex.getErrorCode() != 0) {
@@ -1366,19 +1425,20 @@ public class DatabaseManager {
     }
     return 1;
   }
-  
+
   /**
    * Usuwa zadany typ elastomeru
-   * @param type Typ elastomeru 
+   *
+   * @param type Typ elastomeru
    * @return -1 jeżeli błąd
    */
-  public int removeElastomerType(String type){
+  public int removeElastomerType(String type) {
     try {
       preparedStatement = connect.prepareStatement(
               "DELETE FROM `" + DatabaseManager.getInstance().getDbName() + "`.`elastomer_types` WHERE (`type` = '" + type + "');"
       );
       preparedStatement.executeUpdate();
-    } catch (SQLException ex) {     
+    } catch (SQLException ex) {
       if (ex.getErrorCode() != 0) {
         JOptionPane.showMessageDialog(null, ex);
       }
@@ -1398,6 +1458,27 @@ public class DatabaseManager {
     try {
       preparedStatement = connect.prepareStatement(
               "DELETE FROM `" + DatabaseManager.getInstance().getDbName() + "`.`atesty_pliki` WHERE (`id` = '" + id + "');"
+      );
+      preparedStatement.executeUpdate();
+    } catch (SQLException ex) {
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+      return -1;
+    }
+    return 1;
+  }
+  
+  /**
+   * Usuwa wszystkie ścieżki do plików z certyfikatami podanego atestu
+   * @param atestId Id atestu
+   * @return -1 jeżeli błąd.
+   */
+  public int removeAllCertFiles(int atestId){
+    try {
+      preparedStatement = connect.prepareStatement(
+              "DELETE FROM `" + DatabaseManager.getInstance().getDbName() + "`.`atesty_pliki` WHERE (`id_atest` = '" + atestId + "');"
       );
       preparedStatement.executeUpdate();
     } catch (SQLException ex) {
