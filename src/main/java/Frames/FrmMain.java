@@ -1838,6 +1838,7 @@ public class FrmMain extends javax.swing.JFrame {
     });
 
     cbDb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "KPRM", "KPRM_test", "local", "Italy" }));
+    cbDb.setSelectedIndex(1);
     cbDb.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         cbDbActionPerformed(evt);
