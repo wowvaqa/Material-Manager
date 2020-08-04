@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,8 +25,10 @@ import javax.swing.table.DefaultTableModel;
 public class AtestIndicatorManager {
 
   // Tablica przechowująca atesty.
-  //private Atest[] atesty;
   private ArrayList<Atest> atesty;
+
+  // Zmienna przechowuje materiał z BOM do automatycznego przypożądkowania atestu.
+  private String bomMaterial;
 
   public void sortCerts(JTable tblAtesty, SortModes mode) {
     DefaultTableModel model = (DefaultTableModel) tblAtesty.getModel();
@@ -300,6 +305,85 @@ public class AtestIndicatorManager {
     JOptionPane.showMessageDialog(null, "Dodawanie atestów zakończone powodzeniem.");
   }
 
+  /**
+   * Odszukuje materiał w drzewie wg podanego materiału z bom
+   *
+   * @param bomMaterial Materiał z boma
+   * @param treeMaterialy Drzewo z materiałami
+   */
+  public void autoMaterial(String bomMaterial, JTree treeMaterialy) {
+    //ArrayList<String> bomMaterialWords = new ArrayList<>();
+
+    String[] words = bomMaterial.split(" ");
+    for (String i : words) {
+      System.out.println("Word: " + i);
+    }
+  }
+
+  /**
+   * Odczytuje typy materiałów i wyświetla je na liście.
+   *
+   * @param lstMaterialTypes Lista typów materiałów.
+   */
+  public void refreshMaterialTypes(JList lstMaterialTypes) {
+    ResultSet resultSet = DatabaseManager.getInstance().getMaterialTypes();
+    DefaultListModel<String> model = new DefaultListModel<>();
+    try {
+      resultSet.first();
+
+      do {
+        String materialType;
+
+        materialType = resultSet.getString("material_type");
+        model.addElement(materialType);
+      } while (resultSet.next());
+
+      lstMaterialTypes.setModel(model);
+
+    } catch (SQLException ex) {
+      Logger.getLogger(AtestIndicatorManager.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  }
+
+  /**
+   * Dodaje nowy typ materiału
+   *
+   * @param materialType typ materiału
+   */
+  public void addMaterialType(String materialType) {
+    DatabaseManager.getInstance().addNewMaterialType(materialType.toUpperCase());
+  }
+
+  /**
+   * Usuwa zadany typ materiału
+   *
+   * @param materialType Nazwa typu materiału
+   */
+  public void removeMaterialType(String materialType) {
+    DatabaseManager.getInstance().removeMaterialType(materialType);
+  }
+
+  /**
+   * Zmienia nazwę typu materiału
+   *
+   * @param materialType Nazwa typu materiału który ma zostać zmieniony
+   * @param newMaterialType Nowa nazwa typu materiału
+   */
+  public void renameMaterialType(String materialType, String newMaterialType) {
+    DatabaseManager.getInstance().renameMaterialType(
+            materialType.toUpperCase(), newMaterialType.toUpperCase());
+  }
+
+  /**
+   * Dodaje nowe słowo kluczowe do zadanego typu materiału
+   *
+   * @param keyWord Słowo kluczowe
+   * @param materialType Typ materiału
+   */
+  public void addMaterialTypeKeyWord(String keyWord, String materialType) {
+    System.out.println(DatabaseManager.getInstance().getMaterialTypeId(materialType));
+  }
+
   private AtestIndicatorManager() {
   }
 
@@ -310,5 +394,13 @@ public class AtestIndicatorManager {
   private static class AtestIndicatorManagerHolder {
 
     private static final AtestIndicatorManager INSTANCE = new AtestIndicatorManager();
+  }
+
+  public String getBomMaterial() {
+    return bomMaterial;
+  }
+
+  public void setBomMaterial(String bomMaterial) {
+    this.bomMaterial = bomMaterial;
   }
 }

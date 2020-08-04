@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -204,6 +205,42 @@ public class DatabaseManager {
       Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE,
               null, ex);
     }
+  }
+
+  /**
+   * Dodaje nowy typ materiału do listy typów, w oknie konfiguracji typów
+   *
+   * @param materialType Nazwa typu materiału
+   */
+  public void addNewMaterialType(String materialType) {
+    try {
+      preparedStatement = connect.prepareStatement(
+              "INSERT INTO `" + DatabaseManager.getInstance().getDbName()
+              + "`.`material_types` (`material_type`) VALUES ('"
+              + materialType + "');");
+
+      preparedStatement.execute("SET NAMES 'UTF8'");
+      preparedStatement.executeUpdate();
+    } catch (SQLIntegrityConstraintViolationException ex) {
+      JOptionPane.showMessageDialog(null, "Podany typ materiału już istnieje");
+    } catch (SQLException ex) {
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE,
+              null, ex);
+    }
+  }
+
+  /**
+   * Dodaje nowe słowo kluczowe do zadanego typu materiału
+   *
+   * @param keyWord Słowo kluczowe
+   * @param materialType Typ materiału
+   * @return -1 jeżeli błąd.
+   */
+  public int addNewMaterialTypeKeyWord(String keyWord, String materialType) {
+    return -1;
   }
 
   /**
@@ -650,6 +687,31 @@ public class DatabaseManager {
   }
 
   /**
+   * Zwraca id typu materiału
+   *
+   * @param materialType Nazwa typu materiału
+   * @return -1 jeżeli błąd
+   */
+  public int getMaterialTypeId(String materialType) {
+
+    try {
+      statement = connect.createStatement();
+      resultSet = statement.executeQuery("SELECT id FROM " + DatabaseManager.getInstance().getDbName() + ".material_types WHERE material_type = " + materialType + " ");
+      
+      resultSet.first();
+      return resultSet.getInt("id");
+
+    } catch (SQLException ex) {
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    return -1;
+  }
+
+  /**
    * Zwraca rekordy za ścieżkami do atestów dla zadanego atestu.
    *
    * @param atest_id ID atestu
@@ -659,6 +721,33 @@ public class DatabaseManager {
     try {
       statement = connect.createStatement();
       resultSet = statement.executeQuery("SELECT * FROM " + DatabaseManager.getInstance().getDbName() + ".atesty_pliki WHERE id_atest = '" + atest_id + "'");
+
+      if (getSizeOfResuleSet(resultSet) > 0) {
+        return resultSet;
+      } else {
+        return null;
+      }
+
+    } catch (SQLException ex) {
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    return null;
+  }
+
+  /**
+   * Zwraca rekordy zawierające typy materiałów.
+   *
+   * @return Typy materiałów.
+   */
+  public ResultSet getMaterialTypes() {
+
+    try {
+      statement = connect.createStatement();
+      resultSet = statement.executeQuery("SELECT * FROM " + DatabaseManager.getInstance().getDbName() + ".material_types");
 
       if (getSizeOfResuleSet(resultSet) > 0) {
         return resultSet;
@@ -1378,6 +1467,31 @@ public class DatabaseManager {
   }
 
   /**
+   * Zmienia nazwę typu materiału w bazie danych
+   *
+   * @param materialType Nazwa typu materiału który ma zostać zmieniony
+   * @param newMaterialType Nazwa nowego typu materiału
+   * @return -1 jeżeli błąd
+   */
+  public int renameMaterialType(String materialType, String newMaterialType) {
+    try {
+      preparedStatement = connect.prepareStatement(
+              "UPDATE `" + DatabaseManager.getInstance().getDbName()
+              + "`.`material_types` SET `material_type` = '" + newMaterialType
+              + "' WHERE (`material_type` = '" + materialType + "');"
+      );
+      preparedStatement.executeUpdate();
+    } catch (SQLException ex) {
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+      return -1;
+    }
+    return 1;
+  }
+
+  /**
    * Usuwa materiał z bazy danych.
    *
    * @param nazwa Nazwa materiału do usunięcia.
@@ -1414,7 +1528,7 @@ public class DatabaseManager {
     } catch (SQLException ex) {
 
       if (ex.getErrorCode() == 1451) {
-        JOptionPane.showMessageDialog(null, "Atest użyty w Bomie, nie można usunąć. " + ex);        
+        JOptionPane.showMessageDialog(null, "Atest użyty w Bomie, nie można usunąć. " + ex);
         return -1;
       }
       if (ex.getErrorCode() != 0) {
@@ -1469,13 +1583,14 @@ public class DatabaseManager {
     }
     return 1;
   }
-  
+
   /**
    * Usuwa wszystkie ścieżki do plików z certyfikatami podanego atestu
+   *
    * @param atestId Id atestu
    * @return -1 jeżeli błąd.
    */
-  public int removeAllCertFiles(int atestId){
+  public int removeAllCertFiles(int atestId) {
     try {
       preparedStatement = connect.prepareStatement(
               "DELETE FROM `" + DatabaseManager.getInstance().getDbName() + "`.`atesty_pliki` WHERE (`id_atest` = '" + atestId + "');"
@@ -1611,6 +1726,37 @@ public class DatabaseManager {
   }
 
   /**
+   * Usuwa typ materiału z bazy danych
+   *
+   * @param materialType Nazwa typu materiału
+   * @return -1 jeżeli błąd
+   */
+  public int removeMaterialType(String materialType) {
+    try {
+      preparedStatement = connect.prepareStatement(
+              "DELETE FROM `"
+              + DatabaseManager.getInstance().getDbName()
+              + "`.`material_types` WHERE (`material_type` = '"
+              + materialType + "');");
+
+      preparedStatement.executeUpdate();
+    } catch (SQLException ex) {
+
+      if (ex.getErrorCode() == 1451) {
+        JOptionPane.showMessageDialog(null,
+                "Podany typ materiału zawiera słowa kluczowe - nie można usunąć" + ex);
+        return -1;
+      }
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+      return -1;
+    }
+    return 1;
+  }
+
+  /**
    * Zwraca Id ostatniego dodanego do bazy danych węzła.
    *
    * @return Id węzła
@@ -1621,7 +1767,7 @@ public class DatabaseManager {
       statement = connect.createStatement();
       resultSet = statement.executeQuery("SELECT * FROM " + DatabaseManager.getInstance().getDbName() + ".wezel");
       resultSet.last();
-      System.out.println("Ostani id w tabeli wezly:" + resultSet.getInt("id"));
+      //System.out.println("Ostani id w tabeli wezly:" + resultSet.getInt("id"));
       return resultSet.getInt("id");
 
     } catch (SQLException ex) {
