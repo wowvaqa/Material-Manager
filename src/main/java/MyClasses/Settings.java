@@ -23,7 +23,7 @@ public class Settings {
   public static final String POT_BEARING_CONSTANT_PATH = ".\\data\\wzor_PF.xlsx";
   
   /* Arkusze które program wczyta z rejestru łożysk 7 - 2020, 6 - 2019, 5 - 2018 */
-  public static final int[] BEARING_REGISTRY_SHEETS = {7};
+  public static final int[] BEARING_REGISTRY_SHEETS = {5,6,7};
   
   /* Ścieżka do pliku z rejestrem łożysk. */
   private String bearingRegistryPath;

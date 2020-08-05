@@ -240,6 +240,23 @@ public class DatabaseManager {
    * @return -1 jeżeli błąd.
    */
   public int addNewMaterialTypeKeyWord(String keyWord, String materialType) {
+    try {
+      int materialTypeId = this.getMaterialTypeId(materialType);
+
+      preparedStatement = connect.prepareStatement(
+              "INSERT INTO `" + DatabaseManager.getInstance().getDbName()
+              + "`.`material_types_key_words` (`key_word`, `material_type_id`) VALUES ('" + keyWord + "', '" + materialTypeId + "');");
+
+      preparedStatement.execute("SET NAMES 'UTF8'");
+      preparedStatement.executeUpdate();
+    } catch (SQLException ex) {
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE,
+              null, ex);
+    }
+
     return -1;
   }
 
@@ -328,8 +345,8 @@ public class DatabaseManager {
 
 //        int brak_dok = 0;
 //        /* Sprawdza czy kolumny zawierające informacje dot. wz, zp są puste */
-//        if (nrZamowienia.trim().length() < 1 || nrWZ.trim().length() < 1 
-//                || zp.trim().length() < 1 || dostawca.trim().length() < 1 
+//        if (nrZamowienia.trim().length() < 1 || nrWZ.trim().length() < 1
+//                || zp.trim().length() < 1 || dostawca.trim().length() < 1
 //                || pkd.trim().length() < 1){
 //            brak_dok = 1;
 //        }
@@ -696,9 +713,9 @@ public class DatabaseManager {
 
     try {
       statement = connect.createStatement();
-      resultSet = statement.executeQuery("SELECT id FROM " + DatabaseManager.getInstance().getDbName() + ".material_types WHERE material_type = " + materialType + " ");
-      
-      resultSet.first();
+      resultSet = statement.executeQuery("SELECT id FROM " + DatabaseManager.getInstance().getDbName() + ".material_types WHERE material_type = '" + materialType + "'");
+
+      resultSet.first();      
       return resultSet.getInt("id");
 
     } catch (SQLException ex) {
@@ -748,6 +765,39 @@ public class DatabaseManager {
     try {
       statement = connect.createStatement();
       resultSet = statement.executeQuery("SELECT * FROM " + DatabaseManager.getInstance().getDbName() + ".material_types");
+
+      if (getSizeOfResuleSet(resultSet) > 0) {
+        return resultSet;
+      } else {
+        return null;
+      }
+
+    } catch (SQLException ex) {
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    return null;
+  }
+
+  /**
+   * Zwraca listę z słowami kluczowy zadanego typu materiału.
+   *
+   * @param materialType Nazwa typu materiału
+   * @return Lista z słowami kluczowymi typu materiału
+   */
+  public ResultSet getMaterialTypesKeyWords(String materialType) {
+    try {
+
+      int materialTypeId = this.getMaterialTypeId(materialType);
+
+      statement = connect.createStatement();
+      resultSet = statement.executeQuery("SELECT * FROM "
+              + DatabaseManager.getInstance().getDbName()
+              + ".material_types_key_words WHERE material_type_id = '"
+              + materialTypeId + "';");
 
       if (getSizeOfResuleSet(resultSet) > 0) {
         return resultSet;
@@ -1747,6 +1797,35 @@ public class DatabaseManager {
                 "Podany typ materiału zawiera słowa kluczowe - nie można usunąć" + ex);
         return -1;
       }
+      if (ex.getErrorCode() != 0) {
+        JOptionPane.showMessageDialog(null, ex);
+      }
+      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+      return -1;
+    }
+    return 1;
+  }
+
+  /**
+   * Uwuwa z bazy danych zadanye słowo kluczowe z listy typu materiału
+   *
+   * @param materialType Nazwa typu materiału dla którego ma zostać usunięte
+   * słowo kluczowe
+   * @param keyWord Słowo kluczowe do usunięcia
+   * @return -1 jeżeli błąd
+   */
+  public int removeMaterialTypeKeyWord(String materialType, String keyWord) {
+    try {
+      int materialTypeId = this.getMaterialTypeId(materialType);
+
+      preparedStatement = connect.prepareStatement(
+              "DELETE FROM `" + DatabaseManager.getInstance().getDbName()
+              + "`.`material_types_key_words` WHERE (`key_word` = '"
+              + keyWord + "' AND `material_type_id` = '"
+              + materialTypeId + "');");
+
+      preparedStatement.executeUpdate();
+    } catch (SQLException ex) {      
       if (ex.getErrorCode() != 0) {
         JOptionPane.showMessageDialog(null, ex);
       }

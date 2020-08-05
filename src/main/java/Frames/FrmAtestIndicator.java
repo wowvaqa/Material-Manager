@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -117,6 +118,59 @@ public class FrmAtestIndicator extends javax.swing.JFrame {
 
     JMenuItem itmMaterialTypesKeyWordsAdd = new JMenuItem("Dodaj");
     JMenuItem itmMaterialTypesKeyWordsRemove = new JMenuItem("Usuń");
+
+    // Dodanie typu materiału.
+    itmMaterialTypesKeyWordsAdd.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+
+        if (!lstMaterialTypes.isSelectionEmpty()) {
+          // Wyświetlenie InputBoxa pytającego o słowo kluczowe
+          String keyWord = JOptionPane.showInputDialog(
+                  null, "Podaj słowo kluczowe dla: "
+                  + lstMaterialTypes.getSelectedValue(),
+                  "Wpisz wartość",
+                  JOptionPane.QUESTION_MESSAGE);
+
+          // Dodanie słowa kluczowego
+          AtestIndicatorManager.getInstance().addMaterialTypeKeyWord(
+                  keyWord, lstMaterialTypes.getSelectedValue());
+
+          // Odświeżenie zawartości listy słów kluczowych
+          AtestIndicatorManager.getInstance().refreshMaterialTypeKeyWord(
+                  lstMaterialTypes.getSelectedValue(), lstMaterialTypesKeyWords);
+
+        } else {
+          JOptionPane.showMessageDialog(null, "Zaznacz typ materiału", "BŁĄD", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    });
+
+    // Usunięcie typu materiału
+    itmMaterialTypesKeyWordsRemove.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (!lstMaterialTypes.isSelectionEmpty()
+                || !lstMaterialTypesKeyWords.isSelectionEmpty()) {
+
+          int question = JOptionPane.showConfirmDialog(
+                  null, "Czy na pewno usunąć?", "Usunięcie słowa kluczowego",
+                  JOptionPane.YES_OPTION, SequenceType.QUESTION);
+
+          if (question == JOptionPane.YES_OPTION) {
+            AtestIndicatorManager.getInstance().removeMaterialTypeKeyWord(
+                    lstMaterialTypes.getSelectedValue(),
+                    lstMaterialTypesKeyWords.getSelectedValue());
+
+            AtestIndicatorManager.getInstance().refreshMaterialTypeKeyWord(
+                    lstMaterialTypes.getSelectedValue(),
+                    lstMaterialTypesKeyWords);
+          }
+        } else {
+          JOptionPane.showMessageDialog(null, "Zaznacz typ materiału/słowo kluczowe", "BŁĄD", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    });
 
     popMaterialTypesKeyWords.add(itmMaterialTypesKeyWordsAdd);
     popMaterialTypesKeyWords.add(itmMaterialTypesKeyWordsRemove);
@@ -613,6 +667,7 @@ public class FrmAtestIndicator extends javax.swing.JFrame {
     }
 
     AtestIndicatorManager.getInstance().refreshMaterialTypes(lstMaterialTypes);
+    this.matchMaterial();
   }//GEN-LAST:event_formComponentShown
 
   private void tfFilterKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfFilterKeyReleased
@@ -628,15 +683,41 @@ public class FrmAtestIndicator extends javax.swing.JFrame {
 
   private void btnAutoAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutoAssignActionPerformed
     // TODO add your handling code here:
-    AtestIndicatorManager.getInstance().autoMaterial(lblBomMaterial.getText(), treeMaterialy);
+
   }//GEN-LAST:event_btnAutoAssignActionPerformed
+
+  public void matchMaterial() {
+    //AtestIndicatorManager.getInstance().autoMaterial(lblBomMaterial.getText(), treeMaterialy);
+    String material = AtestIndicatorManager.getInstance().matchCert(
+            lblBomMaterial.getText().toUpperCase());
+
+    if (material != null) {
+      tfFilter.setText(material);
+      try {
+        // TODO add your handling code here:
+        AtestManager.getInstance().readMaterialsFromDB(treeMaterialy, tfFilter.getText().trim());
+      } catch (SQLException ex) {
+        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+  }
 
   private void lstMaterialTypesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstMaterialTypesMousePressed
     // TODO add your handling code here:
+    // Wyświetlenie POPUP
     if (evt.getButton() == 3) {
       popMaterialTypes.show(lstMaterialTypes, evt.getX(), evt.getY());
-    }
+    } else {
 
+      // Wyczyszczenie listy słów kluczowych
+      DefaultListModel model = new DefaultListModel();
+      model.clear();
+      lstMaterialTypesKeyWords.setModel(model);
+
+      // Odczyt słów kluczowych    
+      AtestIndicatorManager.getInstance().refreshMaterialTypeKeyWord(
+              lstMaterialTypes.getSelectedValue(), lstMaterialTypesKeyWords);
+    }
   }//GEN-LAST:event_lstMaterialTypesMousePressed
 
   private void lstMaterialTypesKeyWordsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstMaterialTypesKeyWordsMousePressed
@@ -689,7 +770,6 @@ public class FrmAtestIndicator extends javax.swing.JFrame {
 
     lblBomMaterial.setText((String) tblBom.getModel().getValueAt(
             tblBom.getSelectedRow(), 0));
-
     super.show(); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -706,10 +786,8 @@ public class FrmAtestIndicator extends javax.swing.JFrame {
 
     lblBomMaterial.setText((String) tblBom.getModel().getValueAt(
             tblBom.getSelectedRow(), 0));
-
     super.show();
   }
-
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton btnAutoAssign;

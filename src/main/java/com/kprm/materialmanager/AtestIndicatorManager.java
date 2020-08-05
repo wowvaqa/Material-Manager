@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -306,6 +308,83 @@ public class AtestIndicatorManager {
   }
 
   /**
+   * Odszukuje typ materiału w zadaym materiale z BOMa.
+   *
+   * @param bomMaterial
+   * @return Typ materiału
+   */
+  public String matchCert(String bomMaterial) {
+
+    // Lista z zgodnymi typami materiałów
+    ArrayList<String> matchedMaterialTypes = new ArrayList<>();
+
+    // Wczytanie typów materiału z bazy danych
+    ResultSet resultSetMaterialTypes = DatabaseManager.getInstance().getMaterialTypes();
+    ArrayList<String> materialTypes = getAllStringsFromResultSet(resultSetMaterialTypes, "material_type");
+
+    System.out.println("-" + bomMaterial + "");
+
+    for (String materialType : materialTypes) {
+      System.out.println("--- SPRAWDZAM TYP MATERIAŁU: " + materialType);
+      ResultSet resultSetKeyWords = DatabaseManager.getInstance().getMaterialTypesKeyWords(materialType);
+
+      if (resultSetKeyWords != null) {
+
+        // Sprawdzenie czy słowo kluczowe występuje w liście słów kluczowych
+        // typu materiału.
+        ArrayList<String> materialTypesKeyWords = getAllStringsFromResultSet(resultSetKeyWords, "key_word");
+        for (String materialTypeKeyWord : materialTypesKeyWords) {
+          System.out.println("------ SPRAWDZAM SŁOWO KLUCZOWE: " + materialTypeKeyWord);
+
+          if (bomMaterial.contains(materialTypeKeyWord)) {
+            matchedMaterialTypes.add(materialType);
+            System.out.println("--------- Słowo kluczowe znalezione w materiale z boma! ROZMIAR LISTY: " + matchedMaterialTypes.size());
+            break;
+            //return materialType;
+          }
+        }
+      }
+    }
+
+//    ArrayList<String> findedDigits = extractDigits(bomMaterial);
+//    String dimension = null;
+//    if (findedDigits.size() > 1) {
+//      dimension = findedDigits.get(0) + "X" + findedDigits.get(1);
+//    } else if (findedDigits.size() == 1) {
+//      dimension = findedDigits.get(0);
+//    }
+    if (matchedMaterialTypes.size() > 0) {
+      return matchedMaterialTypes.get(0);
+    }
+
+    return null;
+  }
+
+  private void matchDimension(String bomMaterial) {
+    extractDigits(bomMaterial);
+  }
+
+  private ArrayList<String> extractDigits(String bomMaterial) {
+
+    ArrayList<String> findedNumbers = new ArrayList<>();
+
+    //Regular expression to match digits in a string
+    String regex = "\\d+";
+    //Creating a pattern object
+    Pattern pattern = Pattern.compile(regex);
+    //Creating a Matcher object
+    Matcher matcher = pattern.matcher(bomMaterial);
+    System.out.println("Digits in the given string are: ");
+    int counter = 1;
+    while (matcher.find()) {
+      findedNumbers.add(matcher.group());
+      System.out.print(" " + counter + ": " + matcher.group());
+      counter += 1;
+    }
+    return findedNumbers;
+  }
+
+  /**
    * Odszukuje materiał w drzewie wg podanego materiału z bom
    *
    * @param bomMaterial Materiał z boma
@@ -327,21 +406,56 @@ public class AtestIndicatorManager {
    */
   public void refreshMaterialTypes(JList lstMaterialTypes) {
     ResultSet resultSet = DatabaseManager.getInstance().getMaterialTypes();
-    DefaultListModel<String> model = new DefaultListModel<>();
+    if (resultSet != null) {
+      DefaultListModel<String> model = new DefaultListModel<>();
+
+      getAllStringsFromResultSet(resultSet, "material_type").forEach((materialType) -> {
+        model.addElement(materialType);
+      });
+      lstMaterialTypes.setModel(model);
+    }
+  }
+
+  /**
+   * Zwraca listę Stringów z zadanego ResultSeta
+   *
+   * @param resultSet ResultSet z bazy danych
+   * @param dbColumnName Nazwa kolumny tabeli bazy danych z której mają zostać
+   * odczytane Stringi.
+   * @return Lista stringów w postaci listy
+   */
+  private ArrayList<String> getAllStringsFromResultSet(ResultSet resultSet, String dbColumnName) {
+    ArrayList<String> stringList = new ArrayList<>();
     try {
       resultSet.first();
-
       do {
-        String materialType;
-
-        materialType = resultSet.getString("material_type");
-        model.addElement(materialType);
+        String string;
+        string = resultSet.getString(dbColumnName);
+        stringList.add(string);
       } while (resultSet.next());
-
-      lstMaterialTypes.setModel(model);
-
     } catch (SQLException ex) {
       Logger.getLogger(AtestIndicatorManager.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return stringList;
+  }
+
+  /**
+   * Odczytuje słowa kluczowe zadanego typu materiału
+   *
+   * @param materialType Typ materiału
+   * @param lstMaterialTypesKeyWords Lista słów kluczowych
+   */
+  public void refreshMaterialTypeKeyWord(String materialType, JList lstMaterialTypesKeyWords) {
+    ResultSet resultSet = DatabaseManager.getInstance().getMaterialTypesKeyWords(materialType);
+
+    if (resultSet != null) {
+      DefaultListModel<String> model = new DefaultListModel<>();
+
+      getAllStringsFromResultSet(resultSet, "key_word").forEach((materialTypeKeyWord) -> {
+        model.addElement(materialTypeKeyWord);
+      });
+
+      lstMaterialTypesKeyWords.setModel(model);
     }
   }
 
@@ -381,7 +495,21 @@ public class AtestIndicatorManager {
    * @param materialType Typ materiału
    */
   public void addMaterialTypeKeyWord(String keyWord, String materialType) {
-    System.out.println(DatabaseManager.getInstance().getMaterialTypeId(materialType));
+    if (!keyWord.isBlank()) {
+      DatabaseManager.getInstance().addNewMaterialTypeKeyWord(
+              keyWord.toUpperCase(), materialType.toUpperCase());
+    }
+  }
+
+  /**
+   * Usuwa zadane słowo kluczowe z listy typu materiału
+   *
+   * @param materialType Typ materiału dla którego ma zostać usunięte słowo
+   * kluczowe
+   * @param materialTypeKeyWord Słowo kluczowe do usunięcia
+   */
+  public void removeMaterialTypeKeyWord(String materialType, String materialTypeKeyWord) {
+    DatabaseManager.getInstance().removeMaterialTypeKeyWord(materialType, materialTypeKeyWord);
   }
 
   private AtestIndicatorManager() {

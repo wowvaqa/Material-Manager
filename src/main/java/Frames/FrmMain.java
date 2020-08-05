@@ -645,9 +645,6 @@ public class FrmMain extends javax.swing.JFrame {
         return false;
       }
     };
-    tfDataDostawy1 = new javax.swing.JFormattedTextField();
-    jLabel27 = new javax.swing.JLabel();
-    jCheckBox1 = new javax.swing.JCheckBox();
     jPanel9 = new javax.swing.JPanel();
     jLabel10 = new javax.swing.JLabel();
     tfNazwaBoma = new javax.swing.JTextField();
@@ -726,7 +723,7 @@ public class FrmMain extends javax.swing.JFrame {
     jMenuItem2 = new javax.swing.JMenuItem();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("Material Manager v. 0.0.6.1");
+    setTitle("Material Manager v. 0.0.6.2");
     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
@@ -1377,22 +1374,6 @@ public class FrmMain extends javax.swing.JFrame {
 
     jSplitPane3.setRightComponent(jSplitPane4);
 
-    tfDataDostawy1.setColumns(10);
-    try {
-      tfDataDostawy1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-##-##")));
-    } catch (java.text.ParseException ex) {
-      ex.printStackTrace();
-    }
-    tfDataDostawy1.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        tfDataDostawy1ActionPerformed(evt);
-      }
-    });
-
-    jLabel27.setText("Data produkcji:");
-
-    jCheckBox1.setText("Auto dopasowanie");
-
     javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
     jPanel8.setLayout(jPanel8Layout);
     jPanel8Layout.setHorizontalGroup(
@@ -1404,12 +1385,6 @@ public class FrmMain extends javax.swing.JFrame {
           .addGroup(jPanel8Layout.createSequentialGroup()
             .addComponent(btnZapiszZmiany)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel27)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(tfDataDostawy1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jCheckBox1)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jButton9)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jButton16)))
@@ -1424,10 +1399,7 @@ public class FrmMain extends javax.swing.JFrame {
         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jButton9)
           .addComponent(btnZapiszZmiany)
-          .addComponent(jButton16)
-          .addComponent(tfDataDostawy1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel27)
-          .addComponent(jCheckBox1))
+          .addComponent(jButton16))
         .addContainerGap())
     );
 
@@ -1866,7 +1838,6 @@ public class FrmMain extends javax.swing.JFrame {
     });
 
     cbDb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "KPRM", "KPRM_test", "local", "Italy" }));
-    cbDb.setSelectedIndex(2);
     cbDb.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         cbDbActionPerformed(evt);
@@ -2674,10 +2645,6 @@ public class FrmMain extends javax.swing.JFrame {
     SettingsManager.getInstance().setupBearingRegistryPath(tfBearingRegistryPath);
   }//GEN-LAST:event_jButton3ActionPerformed
 
-  private void tfDataDostawy1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDataDostawy1ActionPerformed
-    // TODO add your handling code here:
-  }//GEN-LAST:event_tfDataDostawy1ActionPerformed
-
   private void setDatabase() {
     switch (cbDb.getSelectedIndex()) {
       case 2:
@@ -2769,7 +2736,6 @@ public class FrmMain extends javax.swing.JFrame {
   private javax.swing.JButton jButton7;
   private javax.swing.JButton jButton8;
   private javax.swing.JButton jButton9;
-  private javax.swing.JCheckBox jCheckBox1;
   private javax.swing.JComboBox<String> jComboBox1;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel10;
@@ -2790,7 +2756,6 @@ public class FrmMain extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel24;
   private javax.swing.JLabel jLabel25;
   private javax.swing.JLabel jLabel26;
-  private javax.swing.JLabel jLabel27;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
   private javax.swing.JLabel jLabel5;
@@ -2875,7 +2840,6 @@ public class FrmMain extends javax.swing.JFrame {
   private javax.swing.JTextField tfCertPath;
   private javax.swing.JTextField tfDBadress;
   private javax.swing.JFormattedTextField tfDataDostawy;
-  private javax.swing.JFormattedTextField tfDataDostawy1;
   private javax.swing.JTextField tfDb;
   private javax.swing.JTextField tfDostawca;
   private javax.swing.JTextField tfFilter;
