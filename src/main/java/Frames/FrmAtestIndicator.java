@@ -7,6 +7,7 @@ package Frames;
 
 import ControlCard.KKTableRenderer;
 import MyClasses.TableOutputHeaderMouseListener;
+import MyClasses.Utilities;
 import com.kprm.materialmanager.AtestIndicatorManager;
 import com.kprm.materialmanager.AtestManager;
 import com.kprm.materialmanager.BomManager;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -24,6 +26,7 @@ import javax.swing.JTree;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.SequenceType;
 
 /**
@@ -681,11 +684,36 @@ public class FrmAtestIndicator extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_tfFilterKeyReleased
 
+  
   private void btnAutoAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutoAssignActionPerformed
-    // TODO add your handling code here:
-
+    
   }//GEN-LAST:event_btnAutoAssignActionPerformed
 
+  /**
+   * Odświeża drzewko materiałów wg zadanej listy z materiałami.
+   * @param materialList Lista materiałów
+   */
+  private void refreshTreeMaterial(ArrayList<String> materialList) {
+    DefaultTreeModel model = (DefaultTreeModel) treeMaterialy.getModel();
+    DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
+
+    //System.out.println("Dzieci: " + model.getChildCount(rootNode));
+    rootNode.removeAllChildren();
+
+    //ArrayList<Material> materialy = DatabaseManager.getInstance().readMaterials();
+    //this.materials = DatabaseManager.getInstance().readMaterials(nameFilter);
+    //Collections.sort(materials, MmComparators.atestNameComparator);
+    for (String material : materialList) {
+      DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(material);
+      model.insertNodeInto(newNode, rootNode, 0);
+    }
+
+    model.reload();
+  }
+
+  /**
+   * 
+   */
   public void matchMaterial() {
     //AtestIndicatorManager.getInstance().autoMaterial(lblBomMaterial.getText(), treeMaterialy);
     String material = AtestIndicatorManager.getInstance().matchCert(
@@ -700,6 +728,66 @@ public class FrmAtestIndicator extends javax.swing.JFrame {
         Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
       }
     }
+    
+    // TODO add your handling code here:
+    ArrayList<String> digits = AtestIndicatorManager.getInstance().extractDigits(lblBomMaterial.getText());
+
+    ArrayList<String> materialList = Utilities.visitAllNodes(treeMaterialy);
+    System.out.println("SIZE: " + materialList.size());
+
+    ArrayList<String> foundedMaterials = new ArrayList();
+
+    for (String materailFromMaterialList : materialList) {
+      System.out.println("---MATERIAL FROM LIST: " + materailFromMaterialList);
+      for (String digit : digits) {
+        System.out.println("------DIGIT: " + digit);
+        if (materailFromMaterialList.contains(digit)) {
+          System.out.println("--------- FOUND: " + materailFromMaterialList);
+          foundedMaterials.add(materailFromMaterialList);
+        }
+      }
+    }
+
+    System.out.println("SIZE OF FOUNDED MATERIALS BEFORE REMOVING DUPS: " + foundedMaterials.size());
+
+    ArrayList<String> afterRemove = Utilities.removeDuplicates(foundedMaterials);
+
+    System.out.println("SIZE OF FOUNDED MATERIALS AFTER REMOVING DUPS: " + afterRemove.size());
+
+//    for (String digit : digits) {
+//      System.out.println("---DIGIT: " + digit);
+//      for (String materailFromMaterialList : materialList) {
+//        System.out.println("------MATERIAL FROM LIST: " + materailFromMaterialList);
+//        if (materailFromMaterialList.contains(digit)) {
+//          System.out.println("--------- FOUND: " + materailFromMaterialList);
+//          foundedMaterials.add(materailFromMaterialList);
+//        }
+//      }
+//      materialList = new ArrayList<>();
+//      
+//      for (String foundMaterial: foundedMaterials){
+//        String item = foundMaterial;
+//        materialList.add(item);
+//      }
+//      
+//      foundedMaterials.clear();
+//    }
+//    for (String digit: digits){
+//      for (String materailFromMaterialList : materialList) {
+//        if (!materailFromMaterialList.contains(digit)){
+//          materialList.remove(materailFromMaterialList);
+//        }
+//      }
+//    }
+
+    if (afterRemove.size() > 0){
+      refreshTreeMaterial(afterRemove);
+    }
+
+//    if (materialList.size() > 0) {
+//      tfFilter.setText(materialList.get(0));
+//    }
+
   }
 
   private void lstMaterialTypesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstMaterialTypesMousePressed

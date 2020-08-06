@@ -322,10 +322,10 @@ public class AtestIndicatorManager {
     ResultSet resultSetMaterialTypes = DatabaseManager.getInstance().getMaterialTypes();
     ArrayList<String> materialTypes = getAllStringsFromResultSet(resultSetMaterialTypes, "material_type");
 
-    System.out.println("-" + bomMaterial + "");
+    //System.out.println("-" + bomMaterial + "");
 
     for (String materialType : materialTypes) {
-      System.out.println("--- SPRAWDZAM TYP MATERIAŁU: " + materialType);
+      //System.out.println("--- SPRAWDZAM TYP MATERIAŁU: " + materialType);
       ResultSet resultSetKeyWords = DatabaseManager.getInstance().getMaterialTypesKeyWords(materialType);
 
       if (resultSetKeyWords != null) {
@@ -334,11 +334,11 @@ public class AtestIndicatorManager {
         // typu materiału.
         ArrayList<String> materialTypesKeyWords = getAllStringsFromResultSet(resultSetKeyWords, "key_word");
         for (String materialTypeKeyWord : materialTypesKeyWords) {
-          System.out.println("------ SPRAWDZAM SŁOWO KLUCZOWE: " + materialTypeKeyWord);
+          //System.out.println("------ SPRAWDZAM SŁOWO KLUCZOWE: " + materialTypeKeyWord);
 
           if (bomMaterial.contains(materialTypeKeyWord)) {
             matchedMaterialTypes.add(materialType);
-            System.out.println("--------- Słowo kluczowe znalezione w materiale z boma! ROZMIAR LISTY: " + matchedMaterialTypes.size());
+            //System.out.println("--------- Słowo kluczowe znalezione w materiale z boma! ROZMIAR LISTY: " + matchedMaterialTypes.size());
             break;
             //return materialType;
           }
@@ -364,7 +364,7 @@ public class AtestIndicatorManager {
     extractDigits(bomMaterial);
   }
 
-  private ArrayList<String> extractDigits(String bomMaterial) {
+  public ArrayList<String> extractDigits(String bomMaterial) {
 
     ArrayList<String> findedNumbers = new ArrayList<>();
 
