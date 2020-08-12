@@ -166,6 +166,8 @@ public class AtestManager {
               selectedNode.toString());
 
       resultSet = DatabaseManager.getInstance().getAtestOfMaterial(idMaterialu);
+      //resultSet = DatabaseManager.getInstance().getAtestOfMaterial2(
+      //        selectedNode.toString());
     }
 
     // Dane wiersza w tabeli

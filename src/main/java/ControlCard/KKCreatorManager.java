@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -435,6 +436,7 @@ public class KKCreatorManager {
 
     spreadsheet.getRow(18).getCell(2).setCellValue("---");
     spreadsheet.getRow(18).getCell(3).setCellValue("---");
+    spreadsheet.getRow(18).getCell(4).setCellType(CellType.STRING);
     spreadsheet.getRow(18).getCell(4).setCellValue("---");
 
     // Wygenerowanie wymiarów jeżeli odpowiednia opcja została zaznaczona

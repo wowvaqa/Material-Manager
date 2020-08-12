@@ -489,6 +489,37 @@ public class DatabaseManager {
     return null;
   }
 
+//  public ResultSet getAtestOfMaterial2(String nameOfMaterial) {
+//    //checkConnection();
+//    String dbName = DatabaseManager.getInstance().getDbName();
+//    try {
+//      statement = connect.createStatement();
+//      resultSet = statement.executeQuery(
+//              "SELECT * FROM " +
+//                      dbName + ".atesty INNER JOIN " + 
+//                      dbName + ".materialy ON " + 
+//                      dbName + ".atesty.id_materialu = " + 
+//                      dbName + ".materialy.id WHERE " + 
+//                      dbName + ".materialy.nazwa = '" 
+//                      + nameOfMaterial + "';");
+//
+//      if (getSizeOfResuleSet(resultSet) > 0) {
+//        return resultSet;
+//      } else {
+//        return null;
+//      }
+//
+//    } catch (SQLException ex) {
+//      if (ex.getErrorCode() != 0) {
+//        JOptionPane.showMessageDialog(null, ex);
+//      }
+//      Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE,
+//              null, ex);
+//    }
+//
+//    return null;
+//  }
+
   /**
    * Dodaje nowy węzeł do bazy danych.
    *
@@ -715,7 +746,7 @@ public class DatabaseManager {
       statement = connect.createStatement();
       resultSet = statement.executeQuery("SELECT id FROM " + DatabaseManager.getInstance().getDbName() + ".material_types WHERE material_type = '" + materialType + "'");
 
-      resultSet.first();      
+      resultSet.first();
       return resultSet.getInt("id");
 
     } catch (SQLException ex) {
@@ -1825,7 +1856,7 @@ public class DatabaseManager {
               + materialTypeId + "');");
 
       preparedStatement.executeUpdate();
-    } catch (SQLException ex) {      
+    } catch (SQLException ex) {
       if (ex.getErrorCode() != 0) {
         JOptionPane.showMessageDialog(null, ex);
       }
