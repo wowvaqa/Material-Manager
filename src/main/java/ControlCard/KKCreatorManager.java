@@ -254,11 +254,13 @@ public class KKCreatorManager {
    * @param tblTable Tabela z łożyskami
    * @param destPath Ścieżka zapisu pliku karty kontroli
    * @param genMesure Jeżeli TRUE funkcja generuje pomiary
+   * @param kjDate Data podpisania dokumentu przez kierownika jakości
+   * @param kpDate Data podpisania dokumentu przez kierownika produkcji
    * @throws FileNotFoundException
    * @throws IOException
    */
   public void modifyKKexcelManyWayBearing(JTable tblTable, String destPath,
-          boolean genMesure)
+          boolean genMesure, String kjDate, String kpDate)
           throws FileNotFoundException, IOException {
 
     File file = new File(Settings.ELASTOMER_BEARING_MANY_WAY_PATH);
@@ -356,6 +358,9 @@ public class KKCreatorManager {
       spreadsheet.getRow(26).getCell(5).setCellValue(" ");
     }
 
+    /* Modyfikacja dat w arkuszu **********************************************/
+    modifyDates(spreadsheet, kjDate, kpDate, BearingTypes.ELASTOMER_MANY_WAYS);
+
     /* Zapis pliku ************************************************************/
     saveWorkbook(workbook, excelHeader, "Łożysko Elastomerowe", destPath);
   }
@@ -369,11 +374,14 @@ public class KKCreatorManager {
    * @param h Wysokość łożyska
    * @param destPath Ścieżka zapisu karty kontroli
    * @param genMesure Jeżeli TRUE funkcja generuje pomiary
+   * @param kjDate Data podpisania dokumentu przez kierownika jakości
+   * @param kpDate Data podpisania dokumentu przez kierownika produkcji
    * @throws FileNotFoundException
    * @throws IOException
    */
   public void modifyKKexcelConstantBearing(JTable tblTable, String a, String h,
-          String destPath, boolean genMesure) throws FileNotFoundException, IOException {
+          String destPath, boolean genMesure, String kjDate, String kpDate)
+          throws FileNotFoundException, IOException {
 
     File file = new File(Settings.ELASTOMER_BEARING_ONE_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
@@ -484,6 +492,9 @@ public class KKCreatorManager {
     }
     spreadsheet.getRow(31).getCell(5).setCellValue("n.d.");
 
+    /* Modyfikacja dat w arkuszu **********************************************/
+    modifyDates(spreadsheet, kjDate, kpDate, BearingTypes.ELASTOMER_CONSTANT);
+
     /* Zapis pliku ************************************************************/
     saveWorkbook(workbook, excelHeader, "Łożysko Elastomerowe", destPath);
   }
@@ -495,11 +506,14 @@ public class KKCreatorManager {
    * @param tblRejestrLozysk Tabela danych z rejestru łożysk
    * @param tblElastomerTypeDimension Tabela z typami wkładów elastomerowych.
    * @param destPath Ścieżka zapisu pliku karty
+   * @param kjDate Data podpisania dokumentu przez kierownika jakości
+   * @param kpDate Data podpisania dokumentu przez kierownika produkcji
    * @throws FileNotFoundException
    * @throws IOException
    */
   public void modifyKKExcelPotOneWayBearing(JTable tblRejestrLozysk,
-          JTable tblElastomerTypeDimension, String destPath)
+          JTable tblElastomerTypeDimension, String destPath, String kjDate,
+          String kpDate)
           throws FileNotFoundException, IOException {
     File file = new File(Settings.POT_BEARING_ONE_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
@@ -534,6 +548,9 @@ public class KKCreatorManager {
     spreadsheet.getRow(23).getCell(7).setCellValue(diameter);
     spreadsheet.getRow(23).getCell(9).setCellValue(height);
 
+    /* Modyfikacja dat w arkuszu **********************************************/
+    modifyDates(spreadsheet, kjDate, kpDate, BearingTypes.POT_ONE_WAY);
+    
     saveWorkbook(workbook, excelHeader, "Łożysko Garnkowe", destPath);
   }
 
@@ -544,11 +561,14 @@ public class KKCreatorManager {
    * @param tblRejestrLozysk Tabela danych z rejestru łożysk
    * @param tblElastomerTypeDimension Tabela z typami wkładów elastomerowych
    * @param destPath Ścieżka zapisu pliku karty
+   * @param kjDate Data podpisania dokumentu przez kierownika jakości
+   * @param kpDate Data podpisania dokumentu przez kierownika produkcji
    * @throws FileNotFoundException
    * @throws IOException
    */
   public void modifyKKExcelPotManyWayBearing(JTable tblRejestrLozysk,
-          JTable tblElastomerTypeDimension, String destPath)
+          JTable tblElastomerTypeDimension, String destPath, String kjDate,
+          String kpDate)
           throws FileNotFoundException, IOException {
     File file = new File(Settings.POT_BEARING_MANY_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
@@ -583,6 +603,9 @@ public class KKCreatorManager {
     spreadsheet.getRow(23).getCell(7).setCellValue(diameter);
     spreadsheet.getRow(23).getCell(9).setCellValue(height);
 
+    /* Modyfikacja dat w arkuszu **********************************************/
+    modifyDates(spreadsheet, kjDate, kpDate, BearingTypes.POT_MANY_WAY);
+    
     saveWorkbook(workbook, excelHeader, "Łożysko Garnkowe", destPath);
   }
 
@@ -593,11 +616,14 @@ public class KKCreatorManager {
    * @param tblRejestrLozysk Tabela danych z rejestru łożysk
    * @param tblElastomerTypeDimension Tabela z typami wkładów elastomerowych
    * @param destPath Ścieżka zapisu pliku karty
+   * @param kjDate Data podpisania dokumentu przez kierownika jakości
+   * @param kpDate Data podpisania dokumentu przez kierownika produkcji
    * @throws FileNotFoundException
    * @throws IOException
    */
   public void modifyKKExcelPotConstantBearing(JTable tblRejestrLozysk,
-          JTable tblElastomerTypeDimension, String destPath)
+          JTable tblElastomerTypeDimension, String destPath, String kjDate,
+          String kpDate)
           throws FileNotFoundException, IOException {
     File file = new File(Settings.POT_BEARING_CONSTANT_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
@@ -632,12 +658,15 @@ public class KKCreatorManager {
     spreadsheet.getRow(23).getCell(7).setCellValue(diameter);
     spreadsheet.getRow(23).getCell(9).setCellValue(height);
 
+    /* Modyfikacja dat w arkuszu **********************************************/
+    modifyDates(spreadsheet, kjDate, kpDate, BearingTypes.POT_CONSTANT);
+    
     saveWorkbook(workbook, excelHeader, "Łożysko Garnkowe", destPath);
   }
 
   /**
    * Modyfikuje wzór karty kontroli wg zaznaczonego wiersza w tabeli i zpaisuje
-   * nową kartę do pliku. Dotyczy łożyska elastomeroweg jednokierunkowego.
+   * nową kartę do pliku.Dotyczy łożyska elastomeroweg jednokierunkowego.
    *
    * @param tblTable Tabela danych z rejestru łożysk
    * @param a Wysokość A łożyska
@@ -645,11 +674,14 @@ public class KKCreatorManager {
    * @param bottomPlateDimension Wymiar płyty dolnej.
    * @param destPath Ścieżka zapisu pliku karty
    * @param genMesure Jeżeli TRUE funkcja generuje pomiary
+   * @param kjDate Data podpisania dokumentu przez kierownika jakości
+   * @param kpDate Data podpisania dokumentu przez kierownika produkcji
    * @throws FileNotFoundException
    * @throws IOException
    */
   public void modifyKKexcelOneWayBaring(JTable tblTable, String a, String h,
-          String bottomPlateDimension, String destPath, boolean genMesure)
+          String bottomPlateDimension, String destPath, boolean genMesure,
+          String kjDate, String kpDate)
           throws FileNotFoundException, IOException {
 
     File file = new File(Settings.ELASTOMER_BEARING_ONE_WAY_PATH);
@@ -786,8 +818,54 @@ public class KKCreatorManager {
       spreadsheet.getRow(31).getCell(5).setCellValue(" ");
     }
 
+    /* Modyfikacja dat w arkuszu **********************************************/
+    modifyDates(spreadsheet, kjDate, kpDate, BearingTypes.ELASTOMER_ONE_WAY);
+
     /* Zapis pliku ************************************************************/
     saveWorkbook(workbook, excelHeader, "Łożysko Elastomerowe", destPath);
+  }
+
+  /**
+   * Modyfikuje daty podpisów w zadanym arkuszu
+   *
+   * @param spreadsheet Arkusz
+   * @param kjDate Data podpisu kierownika jakości
+   * @param kpDate Data podpisu kierownika produkcji
+   * @param bearingType Typ łożyska
+   */
+  private void modifyDates(XSSFSheet spreadsheet, String kjDate, String kpDate,
+          BearingTypes bearingType) {
+
+    switch (bearingType) {
+      case ELASTOMER_ONE_WAY:
+      case ELASTOMER_MANY_WAYS:
+      case ELASTOMER_CONSTANT:
+        spreadsheet.getRow(39).getCell(0).setCellType(CellType.STRING);
+        spreadsheet.getRow(39).getCell(0).setCellValue(kjDate);
+        spreadsheet.getRow(39).getCell(5).setCellType(CellType.STRING);
+        spreadsheet.getRow(39).getCell(5).setCellValue(kpDate);
+        break;
+      case POT_CONSTANT:
+      case POT_MANY_WAY:
+      case POT_ONE_WAY:
+        spreadsheet.getRow(55).getCell(0).setCellType(CellType.STRING);
+        spreadsheet.getRow(55).getCell(0).setCellValue(kjDate);
+        spreadsheet.getRow(55).getCell(9).setCellType(CellType.STRING);
+        spreadsheet.getRow(55).getCell(9).setCellValue(kpDate);
+        break;
+
+//        spreadsheet.getRow(39).getCell(0).setCellType(CellType.STRING);
+//        spreadsheet.getRow(39).getCell(0).setCellValue(kjDate);
+//        spreadsheet.getRow(39).getCell(5).setCellType(CellType.STRING);
+//        spreadsheet.getRow(39).getCell(5).setCellValue(kpDate);        
+//        break;
+//     
+//        spreadsheet.getRow(39).getCell(0).setCellType(CellType.STRING);
+//        spreadsheet.getRow(39).getCell(0).setCellValue(kjDate);
+//        spreadsheet.getRow(39).getCell(5).setCellType(CellType.STRING);
+//        spreadsheet.getRow(39).getCell(5).setCellValue(kpDate);        
+//        break;
+    }
   }
 
   /**
@@ -901,4 +979,5 @@ public class KKCreatorManager {
 
     return elastomerHeight;
   }
+
 }

@@ -64,16 +64,23 @@ public class FrmKKCreator extends javax.swing.JFrame {
     jScrollPane1 = new javax.swing.JScrollPane();
     tblRejestrLozysk = new javax.swing.JTable();
     jPanel1 = new javax.swing.JPanel();
+    jPanel6 = new javax.swing.JPanel();
     cbBearingKind = new javax.swing.JComboBox<>();
     jLabel8 = new javax.swing.JLabel();
-    jLabel4 = new javax.swing.JLabel();
-    tfA = new javax.swing.JTextField();
-    jLabel5 = new javax.swing.JLabel();
+    cbBearingType = new javax.swing.JComboBox<>();
+    jLabel9 = new javax.swing.JLabel();
+    jPanel7 = new javax.swing.JPanel();
     tfH = new javax.swing.JTextField();
     jLabel6 = new javax.swing.JLabel();
+    tfA = new javax.swing.JTextField();
     tfBottomPlate = new javax.swing.JTextField();
-    jLabel9 = new javax.swing.JLabel();
-    cbBearingType = new javax.swing.JComboBox<>();
+    jLabel4 = new javax.swing.JLabel();
+    jLabel5 = new javax.swing.JLabel();
+    jPanel8 = new javax.swing.JPanel();
+    tfDateKP = new javax.swing.JTextField();
+    jLabel14 = new javax.swing.JLabel();
+    jLabel15 = new javax.swing.JLabel();
+    tfDateKJ = new javax.swing.JTextField();
     jPanel2 = new javax.swing.JPanel();
     jLabel7 = new javax.swing.JLabel();
     tfDestPath = new javax.swing.JTextField();
@@ -157,14 +164,40 @@ public class FrmKKCreator extends javax.swing.JFrame {
     jLabel8.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
     jLabel8.setText("Typ łożyska:");
 
-    jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-    jLabel4.setText("Szerokość (A):");
+    cbBearingType.setFont(new java.awt.Font("DialogInput", 1, 14)); // NOI18N
+    cbBearingType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elastomerowe", "Garnkowe", "Soczewkowe", "(!) TYP NIEZNANY (!)" }));
 
-    tfA.setBackground(new java.awt.Color(224, 255, 255));
-    tfA.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+    jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    jLabel9.setText("Rodzaj łożyska:");
 
-    jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-    jLabel5.setText("Wysokość (H):");
+    javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+    jPanel6.setLayout(jPanel6Layout);
+    jPanel6Layout.setHorizontalGroup(
+      jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel6Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jLabel9)
+          .addComponent(jLabel8))
+        .addGap(14, 14, 14)
+        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(cbBearingType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(cbBearingKind, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap())
+    );
+    jPanel6Layout.setVerticalGroup(
+      jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel6Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel8)
+          .addComponent(cbBearingType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(cbBearingKind, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel9))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
 
     tfH.setBackground(new java.awt.Color(224, 255, 255));
     tfH.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
@@ -172,14 +205,92 @@ public class FrmKKCreator extends javax.swing.JFrame {
     jLabel6.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
     jLabel6.setText("Wymiar płyty dolnej:");
 
+    tfA.setBackground(new java.awt.Color(224, 255, 255));
+    tfA.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+
     tfBottomPlate.setBackground(new java.awt.Color(224, 255, 255));
     tfBottomPlate.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
 
-    jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-    jLabel9.setText("Rodzaj łożyska:");
+    jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    jLabel4.setText("Szerokość (A):");
 
-    cbBearingType.setFont(new java.awt.Font("DialogInput", 1, 14)); // NOI18N
-    cbBearingType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elastomerowe", "Garnkowe", "Soczewkowe", "(!) TYP NIEZNANY (!)" }));
+    jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    jLabel5.setText("Wysokość (H):");
+
+    javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+    jPanel7.setLayout(jPanel7Layout);
+    jPanel7Layout.setHorizontalGroup(
+      jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel7Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jLabel4)
+        .addGap(18, 18, 18)
+        .addComponent(tfA, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(26, 26, 26)
+        .addComponent(jLabel5)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(tfH, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(48, 48, 48)
+        .addComponent(jLabel6)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(tfBottomPlate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+    jPanel7Layout.setVerticalGroup(
+      jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel7Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel4)
+          .addComponent(tfA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel5)
+          .addComponent(tfH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel6)
+          .addComponent(tfBottomPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
+    tfDateKP.setBackground(new java.awt.Color(224, 255, 255));
+    tfDateKP.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+
+    jLabel14.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    jLabel14.setText("Data KP:");
+
+    jLabel15.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    jLabel15.setText("Data KJ:");
+
+    tfDateKJ.setBackground(new java.awt.Color(224, 255, 255));
+    tfDateKJ.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+
+    javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+    jPanel8.setLayout(jPanel8Layout);
+    jPanel8Layout.setHorizontalGroup(
+      jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel8Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jLabel15)
+        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel8Layout.createSequentialGroup()
+            .addGap(217, 217, 217)
+            .addComponent(jLabel14)
+            .addGap(46, 46, 46)
+            .addComponent(tfDateKP, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(jPanel8Layout.createSequentialGroup()
+            .addGap(61, 61, 61)
+            .addComponent(tfDateKJ, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        .addGap(520, 520, 520))
+    );
+    jPanel8Layout.setVerticalGroup(
+      jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel8Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel14)
+          .addComponent(tfDateKP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(tfDateKJ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel15))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
@@ -189,48 +300,21 @@ public class FrmKKCreator extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel4)
-              .addComponent(jLabel8))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(cbBearingType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addComponent(jLabel9)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(tfA, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfH, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfBottomPlate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-              .addComponent(cbBearingKind, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel8)
-          .addComponent(cbBearingType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap()
+        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(cbBearingKind, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel9))
+        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel4)
-          .addComponent(tfA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel5)
-          .addComponent(tfH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel6)
-          .addComponent(tfBottomPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
 
@@ -328,8 +412,8 @@ public class FrmKKCreator extends javax.swing.JFrame {
           .addComponent(jLabel2)
           .addComponent(tfObjectNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+        .addGap(18, 18, 18)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -456,7 +540,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
         .addGap(8, 8, 8)
         .addComponent(jLabel10)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
@@ -506,18 +590,19 @@ public class FrmKKCreator extends javax.swing.JFrame {
               case 0: // Łożysko jednokierunkowe
                 KKCreatorManager.getInstance().modifyKKexcelOneWayBaring(tblRejestrLozysk, tfA.getText(), tfH.getText(),
                         tfBottomPlate.getText(), tfDestPath.getText(),
-                        cbGenMesure.isSelected());
+                        cbGenMesure.isSelected(), tfDateKJ.getText(), tfDateKP.getText());
                 break;
               case 1: // Łożysko stałe
                 KKCreatorManager.getInstance().modifyKKexcelConstantBearing(tblRejestrLozysk, tfA.getText(), tfH.getText(),
-                        tfDestPath.getText(), cbGenMesure.isSelected());
+                        tfDestPath.getText(), cbGenMesure.isSelected(), tfDateKJ.getText(), tfDateKP.getText());
                 break;
               case 2: // Łożysko wielokierunkowe
-                KKCreatorManager.getInstance().modifyKKexcelManyWayBearing(tblRejestrLozysk, tfDestPath.getText(), cbGenMesure.isSelected());
+                KKCreatorManager.getInstance().modifyKKexcelManyWayBearing(tblRejestrLozysk, tfDestPath.getText(), cbGenMesure.isSelected(),
+                        tfDateKJ.getText(), tfDateKP.getText());
                 break;
               case 3: // Łożysko wielokierunkowe oblachowane
                 KKCreatorManager.getInstance().modifyKKexcelConstantBearing(tblRejestrLozysk, tfA.getText(), tfH.getText(),
-                        tfDestPath.getText(), cbGenMesure.isSelected());
+                        tfDestPath.getText(), cbGenMesure.isSelected(), tfDateKJ.getText(), tfDateKP.getText());
                 break;
               case 4: // Nieznany rodzaj łożyska
                 JOptionPane.showMessageDialog(null, "Nieznany rodzaj łożyska", "Nie można wygenerować karty", JOptionPane.ERROR_MESSAGE);
@@ -529,19 +614,23 @@ public class FrmKKCreator extends javax.swing.JFrame {
             switch (cbBearingKind.getSelectedIndex()) {
               case 0: // Łożysko jednokierunkowe
                 KKCreatorManager.getInstance().modifyKKExcelPotOneWayBearing(
-                        tblRejestrLozysk, tblElastomerTypeDimension, tfDestPath.getText());
+                        tblRejestrLozysk, tblElastomerTypeDimension, 
+                        tfDestPath.getText(), tfDateKJ.getText(), tfDateKP.getText());
                 break;
               case 1: // Łożysko stałe
                 KKCreatorManager.getInstance().modifyKKExcelPotConstantBearing(
-                        tblRejestrLozysk, tblElastomerTypeDimension, tfDestPath.getText());
+                        tblRejestrLozysk, tblElastomerTypeDimension,
+                        tfDestPath.getText(), tfDateKJ.getText(), tfDateKP.getText());
                 break;
               case 2: // Łożysko wielokierunkowe
                 KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(
-                        tblRejestrLozysk, tblElastomerTypeDimension, tfDestPath.getText());
+                        tblRejestrLozysk, tblElastomerTypeDimension,
+                        tfDestPath.getText(), tfDateKJ.getText(), tfDateKP.getText());
                 break;
               case 3: // Łożysko wielokierunkowe oblachowane
                 KKCreatorManager.getInstance().modifyKKExcelPotManyWayBearing(
-                        tblRejestrLozysk, tblElastomerTypeDimension, tfDestPath.getText());
+                        tblRejestrLozysk, tblElastomerTypeDimension,
+                        tfDestPath.getText(), tfDateKJ.getText(), tfDateKP.getText());
                 break;
               case 4: // Nieznany rodzaj łożyska
                 JOptionPane.showMessageDialog(null, "Nieznany rodzaj łożyska", "Nie można wygenerować karty", JOptionPane.ERROR_MESSAGE);
@@ -721,6 +810,8 @@ public class FrmKKCreator extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel11;
   private javax.swing.JLabel jLabel12;
   private javax.swing.JLabel jLabel13;
+  private javax.swing.JLabel jLabel14;
+  private javax.swing.JLabel jLabel15;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
@@ -734,6 +825,9 @@ public class FrmKKCreator extends javax.swing.JFrame {
   private javax.swing.JPanel jPanel3;
   private javax.swing.JPanel jPanel4;
   private javax.swing.JPanel jPanel5;
+  private javax.swing.JPanel jPanel6;
+  private javax.swing.JPanel jPanel7;
+  private javax.swing.JPanel jPanel8;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JTabbedPane jTabbedPane1;
@@ -744,6 +838,8 @@ public class FrmKKCreator extends javax.swing.JFrame {
   private javax.swing.JTextField tfBearingType;
   private javax.swing.JTextField tfBottomPlate;
   private javax.swing.JTextField tfContractNumber;
+  private javax.swing.JTextField tfDateKJ;
+  private javax.swing.JTextField tfDateKP;
   private javax.swing.JTextField tfDestPath;
   private javax.swing.JTextField tfDimensionDe;
   private javax.swing.JTextField tfDimensionTe;
