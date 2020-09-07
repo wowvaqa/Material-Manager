@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Material Manager"
-#define MyAppVersion "0.0.6.2"
+#define MyAppVersion "0.0.6.2a"
 #define MyAppPublisher "£ukasz Wawrzyniak"
 #define MyAppURL "none"
 #define MyAppExeName "MaterialManager-0.042.exe"

@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\wakan\Dropbox\java\MaterialManager\target\MaterialManager-0.0.6.2.jar</jar>
+  <jar>C:\Users\wakan\Dropbox\java\MaterialManager\target\MaterialManager-0.0.6.2a.jar</jar>
   <outfile>C:\Users\wakan\Dropbox\java\MaterialManager\exe\MaterialManager-0.042.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
@@ -31,11 +31,11 @@
   </splash>
   <versionInfo>
     <fileVersion>0.0.6.2</fileVersion>
-    <txtFileVersion>0.0.6.2</txtFileVersion>
+    <txtFileVersion>0.0.6.2a</txtFileVersion>
     <fileDescription>Executable file Material Manager application</fileDescription>
     <copyright>Łukasz Wawrzyniak</copyright>
     <productVersion>0.0.6.2</productVersion>
-    <txtProductVersion>0.0.6.2</txtProductVersion>
+    <txtProductVersion>0.0.6.2a</txtProductVersion>
     <productName>Material Manager</productName>
     <companyName></companyName>
     <internalName>MaterialManager-0.042</internalName>
