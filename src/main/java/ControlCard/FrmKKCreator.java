@@ -71,11 +71,11 @@ public class FrmKKCreator extends javax.swing.JFrame {
     jLabel9 = new javax.swing.JLabel();
     jPanel7 = new javax.swing.JPanel();
     tfH = new javax.swing.JTextField();
-    jLabel6 = new javax.swing.JLabel();
+    lbl02 = new javax.swing.JLabel();
     tfA = new javax.swing.JTextField();
     tfBottomPlate = new javax.swing.JTextField();
-    jLabel4 = new javax.swing.JLabel();
-    jLabel5 = new javax.swing.JLabel();
+    lbl00 = new javax.swing.JLabel();
+    lbl01 = new javax.swing.JLabel();
     jPanel8 = new javax.swing.JPanel();
     tfDateKP = new javax.swing.JTextField();
     jLabel14 = new javax.swing.JLabel();
@@ -202,8 +202,8 @@ public class FrmKKCreator extends javax.swing.JFrame {
     tfH.setBackground(new java.awt.Color(224, 255, 255));
     tfH.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
 
-    jLabel6.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-    jLabel6.setText("Wymiar płyty dolnej:");
+    lbl02.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    lbl02.setText("Wymiar płyty dolnej:");
 
     tfA.setBackground(new java.awt.Color(224, 255, 255));
     tfA.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
@@ -211,11 +211,11 @@ public class FrmKKCreator extends javax.swing.JFrame {
     tfBottomPlate.setBackground(new java.awt.Color(224, 255, 255));
     tfBottomPlate.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
 
-    jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-    jLabel4.setText("Szerokość (A):");
+    lbl00.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    lbl00.setText("Szerokość (A):");
 
-    jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-    jLabel5.setText("Wysokość (H):");
+    lbl01.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    lbl01.setText("Wysokość (H):");
 
     javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
     jPanel7.setLayout(jPanel7Layout);
@@ -223,16 +223,16 @@ public class FrmKKCreator extends javax.swing.JFrame {
       jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel7Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabel4)
+        .addComponent(lbl00, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(18, 18, 18)
         .addComponent(tfA, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(26, 26, 26)
-        .addComponent(jLabel5)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGap(18, 18, 18)
+        .addComponent(lbl01, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(18, 18, 18)
         .addComponent(tfH, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(48, 48, 48)
-        .addComponent(jLabel6)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGap(18, 18, 18)
+        .addComponent(lbl02, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(18, 18, 18)
         .addComponent(tfBottomPlate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
@@ -241,11 +241,11 @@ public class FrmKKCreator extends javax.swing.JFrame {
       .addGroup(jPanel7Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel4)
+          .addComponent(lbl00)
           .addComponent(tfA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel5)
+          .addComponent(lbl01)
           .addComponent(tfH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel6)
+          .addComponent(lbl02)
           .addComponent(tfBottomPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
@@ -268,17 +268,14 @@ public class FrmKKCreator extends javax.swing.JFrame {
       jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel8Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabel15)
-        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(jPanel8Layout.createSequentialGroup()
-            .addGap(217, 217, 217)
-            .addComponent(jLabel14)
-            .addGap(46, 46, 46)
-            .addComponent(tfDateKP, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addGroup(jPanel8Layout.createSequentialGroup()
-            .addGap(61, 61, 61)
-            .addComponent(tfDateKJ, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        .addGap(520, 520, 520))
+        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(18, 18, 18)
+        .addComponent(tfDateKJ, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(18, 18, 18)
+        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(18, 18, 18)
+        .addComponent(tfDateKP, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
     );
     jPanel8Layout.setVerticalGroup(
       jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -357,7 +354,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
         .addComponent(tfDestPath, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(btnChooseFolder)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
         .addComponent(cbGenMesure)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(btnGenerateCard)
@@ -395,7 +392,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tfObjectNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGap(0, 699, Short.MAX_VALUE))
+            .addGap(0, 0, Short.MAX_VALUE))
           .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
@@ -501,7 +498,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
         .addComponent(jLabel13)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(tfDimensionTe, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
         .addComponent(btnAddNewElastomerType, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
@@ -666,9 +663,13 @@ public class FrmKKCreator extends javax.swing.JFrame {
         break;
       case "2":
         cbBearingType.setSelectedIndex(1);
+        lbl00.setText("Wysokość (hT):");
+        lbl02.setText("Średnica (L):");
         break;
       case "3":
         cbBearingType.setSelectedIndex(0);
+        lbl02.setText("Wymiar płyty dolnej:");
+        lbl00.setText("Szerokość (A):");
         break;
       default:
         cbBearingType.setSelectedIndex(3);
@@ -814,9 +815,6 @@ public class FrmKKCreator extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel15;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
-  private javax.swing.JLabel jLabel4;
-  private javax.swing.JLabel jLabel5;
-  private javax.swing.JLabel jLabel6;
   private javax.swing.JLabel jLabel7;
   private javax.swing.JLabel jLabel8;
   private javax.swing.JLabel jLabel9;
@@ -831,6 +829,9 @@ public class FrmKKCreator extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JTabbedPane jTabbedPane1;
+  private javax.swing.JLabel lbl00;
+  private javax.swing.JLabel lbl01;
+  private javax.swing.JLabel lbl02;
   private javax.swing.JPopupMenu popTblElastomerType;
   private javax.swing.JTable tblElastomerTypeDimension;
   private javax.swing.JTable tblRejestrLozysk;
