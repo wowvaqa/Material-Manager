@@ -4,7 +4,7 @@ import Frames.FrmWaiting;
 import MyClasses.ExcelManager;
 import MyClasses.ExcelRow;
 import MyClasses.Settings;
-import com.kprm.materialmanager.ZpCreatorManager;
+import ZpCreator.ZpCreatorManager;
 import com.monitorjbl.xlsx.StreamingReader;
 import java.io.File;
 import java.io.FileInputStream;
