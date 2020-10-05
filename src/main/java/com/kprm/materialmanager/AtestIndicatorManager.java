@@ -495,7 +495,7 @@ public class AtestIndicatorManager {
    * @param materialType Typ materiału
    */
   public void addMaterialTypeKeyWord(String keyWord, String materialType) {
-    if (!keyWord.isBlank()) {
+    if (!keyWord.isEmpty()) {
       DatabaseManager.getInstance().addNewMaterialTypeKeyWord(
               keyWord.toUpperCase(), materialType.toUpperCase());
     }
