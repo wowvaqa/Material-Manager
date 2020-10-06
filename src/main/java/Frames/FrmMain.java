@@ -5,14 +5,14 @@
  */
 package Frames;
 
+import Configuration.MmConfigManager;
 import ZpCreator.FrmZpCreator;
 import ControlCard.FrmKKCreator;
 import MyClasses.CertOperations;
-import MyClasses.ExcelManager;
 import MyClasses.MyTreeRenderer;
 import MyClasses.PkdNumber;
 import MyClasses.TableAtestyHeaderMouseListener;
-import com.kprm.materialmanager.SettingsManager;
+import Configuration.DatabaseConfigManager;
 import com.kprm.materialmanager.AtestManager;
 import com.kprm.materialmanager.BomManager;
 import com.kprm.materialmanager.DatabaseManager;
@@ -23,7 +23,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -37,7 +36,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.xml.stream.XMLStreamException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
@@ -46,506 +44,502 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
  */
 public class FrmMain extends javax.swing.JFrame {
 
-  public static final DefaultTableCellRenderer DEFAULT_RENDERER
-          = new DefaultTableCellRenderer();
+    public static final DefaultTableCellRenderer DEFAULT_RENDERER
+            = new DefaultTableCellRenderer();
 
-  public static final DefaultTreeCellRenderer DEFAULT_TREE_RENDERER
-          = new DefaultTreeCellRenderer();
+    public static final DefaultTreeCellRenderer DEFAULT_TREE_RENDERER
+            = new DefaultTreeCellRenderer();
 
-  /**
-   * Creates new form FrmMain
-   */
-  public FrmMain() {
-    initComponents();
-    initPopups();
-    createTableHeadersClickListeners();
-    setDatabase();
+    /**
+     * Creates new form FrmMain
+     */
+    public FrmMain() {
+        initComponents();
+        initPopups();
+        createTableHeadersClickListeners();
+        setDatabase();
 
-    this.setExtendedState(MAXIMIZED_BOTH);
+        this.setExtendedState(MAXIMIZED_BOTH);
 
-    treeMaterialy.setCellRenderer(new MyTreeRenderer());
+        treeMaterialy.setCellRenderer(new MyTreeRenderer());
 
-    tblAtesty.setDefaultRenderer(Object.class, new TableCellRenderer() {
-      @Override
-      public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        tblAtesty.setDefaultRenderer(Object.class, new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
-        Component c = DEFAULT_RENDERER.getTableCellRendererComponent(
-                table, value, isSelected, hasFocus, row, column);
+                Component c = DEFAULT_RENDERER.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
 
-        if (AtestManager.getInstance().getAtesty() != null) {
-          if (AtestManager.getInstance().getAtesty().get(row).isRedStatus()) /*if (AtestManager.getInstance().getAtesty()[row].isRedStatus())*/ {
-            c.setBackground(Color.red);
-            c.setForeground(Color.white);
-          } else {
-            c.setBackground(Color.white);
-            c.setForeground(Color.black);
-          }
+                if (AtestManager.getInstance().getAtesty() != null) {
+                    if (AtestManager.getInstance().getAtesty().get(row).isRedStatus()) /*if (AtestManager.getInstance().getAtesty()[row].isRedStatus())*/ {
+                        c.setBackground(Color.red);
+                        c.setForeground(Color.white);
+                    } else {
+                        c.setBackground(Color.white);
+                        c.setForeground(Color.black);
+                    }
 
-          if (table.isRowSelected(row)) {
-            c.setBackground(Color.blue);
-            c.setForeground(Color.white);
-          }
+                    if (table.isRowSelected(row)) {
+                        c.setBackground(Color.blue);
+                        c.setForeground(Color.white);
+                    }
+                }
+
+                //c.setBackground(Color.red);
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return c;
+            }
+        });
+
+        /* Tworzy folder przechowujący pliki konfiguracyjne programu */
+        MmConfigManager.createConfigurationDirectory();
+        /* Ładuje ustawienia programu z pliku konfiguracyjnego */
+        MmConfigManager.setMmConfig(MmConfigManager.loadConfigFile());
+
+        if (MmConfigManager.getMmConfig() != null) {
+            tfBearingRegistryPath.setText(
+                    MmConfigManager.getMmConfig().getBearingRegistryFilePath());
         }
-       
-        //c.setBackground(Color.red);
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        return c;
-      }
-    });
-    
-    SettingsManager.getInstance().createMmConfigFolder();
-    SettingsManager.getInstance().createConfigFile();
-    
-    try {
-      SettingsManager.getInstance().readBearingRegistryPath(tfBearingRegistryPath);
-    } catch (FileNotFoundException ex) {
-      Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-      JOptionPane.showMessageDialog(null, "Błąd odczytu pliku konfiguracyjnego");
-    } catch (XMLStreamException ex) {
-      Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-      JOptionPane.showMessageDialog(null, "Błąd odczytu ścieżki pliku rejestru łożysk. Ustaw i zapisz ścieżkę do pliku w zakładce Ustawienia");
+
+        try {
+            connectDatabase();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Błąd połączenia z bazą danych, " + ex);
+        }
+
+        DatabaseConfigManager.getInstance().readCertDirectory(tfCertPath);
     }
 
-    try {
-      connectDatabase();
-    } catch (ClassNotFoundException | SQLException ex) {
-      Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-      JOptionPane.showMessageDialog(null, "Błąd połączenia z bazą danych, " + ex);
+    /**
+     * Tworzy menu popup
+     */
+    private void initPopups() {
+        initMaterialyPopups();
+        initAtestyPopups();
+        initKontraktyPopups();
     }
 
-    SettingsManager.getInstance().readCertDirectory(tfCertPath);
-  }
+    /**
+     * Tworzy nasłuch w którym program wykrywa kliknięcie w nagłówku tabeli
+     * atestów.
+     */
+    private void createTableHeadersClickListeners() {
+        JTableHeader headTblAtesty = tblAtesty.getTableHeader();
+        headTblAtesty.addMouseListener(new TableAtestyHeaderMouseListener(tblAtesty));
+    }
 
-  /**
-   * Tworzy menu popup
-   */
-  private void initPopups() {
-    initMaterialyPopups();
-    initAtestyPopups();
-    initKontraktyPopups();
-  }
+    /**
+     * Tworzy Popupry dla atestów.
+     */
+    private void initAtestyPopups() {
 
-  /**
-   * Tworzy nasłuch w którym program wykrywa kliknięcie w nagłówku tabeli
-   * atestów.
-   */
-  private void createTableHeadersClickListeners() {
-    JTableHeader headTblAtesty = tblAtesty.getTableHeader();
-    headTblAtesty.addMouseListener(new TableAtestyHeaderMouseListener(tblAtesty));
-  }
+        JMenuItem itmTblPathAtesty01 = new JMenuItem("Usuń");
+        JMenuItem itmTblPathAtesty02 = new JMenuItem("Zmień Opis");
+        JMenuItem itmTblPathAtesty03 = new JMenuItem("Pokaż ścieżkę");
+        JMenuItem itmTblPathAtesty04 = new JMenuItem("Otwórz folder z atestm");
 
-  /**
-   * Tworzy Popupry dla atestów.
-   */
-  private void initAtestyPopups() {
+        // Usuwa ścieżke do pliku z atestem z tabeli oraz bazy danych.
+        itmTblPathAtesty01.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć ścieżkę ?", "Ostrzeżenie!",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    AtestManager.getInstance().removeCertFile(tblPathAtesty);
+                    AtestManager.getInstance().readCertsFiles(
+                            tblAtesty, tblPathAtesty,
+                            AtestManager.getInstance().getAtesty(),
+                            tfCertPath.getText());
+                }
+            }
+        });
 
-    JMenuItem itmTblPathAtesty01 = new JMenuItem("Usuń");
-    JMenuItem itmTblPathAtesty02 = new JMenuItem("Zmień Opis");
-    JMenuItem itmTblPathAtesty03 = new JMenuItem("Pokaż ścieżkę");
-    JMenuItem itmTblPathAtesty04 = new JMenuItem("Otwórz folder z atestm");
+        // Zmiana opisu pliku atestu.
+        itmTblPathAtesty02.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (AtestManager.getInstance().editCertFileDiscription(tblPathAtesty) == 1) {
+                    AtestManager.getInstance().readCertsFiles(tblAtesty, tblPathAtesty,
+                            AtestManager.getInstance().getAtesty(), tfCertPath.getText());
+                }
+            }
+        });
 
-    // Usuwa ścieżke do pliku z atestem z tabeli oraz bazy danych.
-    itmTblPathAtesty01.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć ścieżkę ?", "Ostrzeżenie!",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-          AtestManager.getInstance().removeCertFile(tblPathAtesty);
-          AtestManager.getInstance().readCertsFiles(
-                  tblAtesty, tblPathAtesty,
-                  AtestManager.getInstance().getAtesty(),
-                  tfCertPath.getText());
-        }
-      }
-    });
+        // Otwiera okno z ścieżką do pliku.
+        itmTblPathAtesty03.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().showCertPath(tblPathAtesty, tfCertPath.getText());
+            }
+        });
 
-    // Zmiana opisu pliku atestu.
-    itmTblPathAtesty02.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (AtestManager.getInstance().editCertFileDiscription(tblPathAtesty) == 1) {
-          AtestManager.getInstance().readCertsFiles(tblAtesty, tblPathAtesty,
-                  AtestManager.getInstance().getAtesty(), tfCertPath.getText());
-        }
-      }
-    });
+        // Otwiera folder z plikiem atestu.
+        itmTblPathAtesty04.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().openFolder(tblPathAtesty, tfCertPath.getText());
 
-    // Otwiera okno z ścieżką do pliku.
-    itmTblPathAtesty03.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().showCertPath(tblPathAtesty, tfCertPath.getText());
-      }
-    });
+            }
+        });
 
-    // Otwiera folder z plikiem atestu.
-    itmTblPathAtesty04.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().openFolder(tblPathAtesty, tfCertPath.getText());
+        popTblPathAtesty.add(itmTblPathAtesty02);
+        popTblPathAtesty.add(itmTblPathAtesty01);
+        popTblPathAtesty.add(itmTblPathAtesty03);
+        popTblPathAtesty.add(itmTblPathAtesty04);
 
-      }
-    });
+        JMenuItem itmCertDelete = new JMenuItem("Usuń atest");
+        JMenuItem itmCertRename = new JMenuItem("Zmień nazwę atestu");
+        JMenuItem itmCertOrderNumberChange = new JMenuItem("Zmień numer zamówienia");
+        JMenuItem itmCertWzChange = new JMenuItem("Zmień numer WZ");
+        JMenuItem itmCertZpChange = new JMenuItem("Zmień numer ZP");
+        JMenuItem itmCertPkdChange = new JMenuItem("Zmień numer PKD");
+        JMenuItem itmCertSupplierChange = new JMenuItem("Zmień nazwę dostawcy");
+        JMenuItem itmCertCopy = new JMenuItem("Kopiuj atest");
+        JMenuItem itmCertCut = new JMenuItem("Wytnij atest");
+        JMenuItem itmCertDeliveryDateChange = new JMenuItem("Zmień datę dostawy");
 
-    popTblPathAtesty.add(itmTblPathAtesty02);
-    popTblPathAtesty.add(itmTblPathAtesty01);
-    popTblPathAtesty.add(itmTblPathAtesty03);
-    popTblPathAtesty.add(itmTblPathAtesty04);
-    
+        // Usuwa atest z tabeli atestów.
+        itmCertDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć atest ?", "Ostrzeżenie!",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
-    JMenuItem itmCertDelete = new JMenuItem("Usuń atest");
-    JMenuItem itmCertRename = new JMenuItem("Zmień nazwę atestu");
-    JMenuItem itmCertOrderNumberChange = new JMenuItem("Zmień numer zamówienia");
-    JMenuItem itmCertWzChange = new JMenuItem("Zmień numer WZ");
-    JMenuItem itmCertZpChange = new JMenuItem("Zmień numer ZP");
-    JMenuItem itmCertPkdChange = new JMenuItem("Zmień numer PKD");
-    JMenuItem itmCertSupplierChange = new JMenuItem("Zmień nazwę dostawcy");
-    JMenuItem itmCertCopy = new JMenuItem("Kopiuj atest");
-    JMenuItem itmCertCut = new JMenuItem("Wytnij atest");
-    JMenuItem itmCertDeliveryDateChange = new JMenuItem("Zmień datę dostawy");
+                    //((DefaultTableModel) tblPathMaterialy.getModel()).setRowCount(0);
+                    AtestManager.getInstance().removeCert(tblAtesty);
+                    AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy, 0, null);
+                }
+            }
+        });
 
-    // Usuwa atest z tabeli atestów.
-    itmCertDelete.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć atest ?", "Ostrzeżenie!",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        // Zmienia nazwę atestu.
+        itmCertRename.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().editCertName(tblAtesty);
+            }
+        });
 
-          //((DefaultTableModel) tblPathMaterialy.getModel()).setRowCount(0);
-          AtestManager.getInstance().removeCert(tblAtesty);
-          AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy, 0, null);
-        }
-      }
-    });
+        // Zmienia numer zamówienia atestu.
+        itmCertOrderNumberChange.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().editCertOrder(tblAtesty);
+            }
+        });
 
-    // Zmienia nazwę atestu.
-    itmCertRename.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().editCertName(tblAtesty);
-      }
-    });
+        // Zmienia numer zamówienia WZ atestu.
+        itmCertWzChange.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().editCertWZ(tblAtesty);
+            }
+        });
 
-    // Zmienia numer zamówienia atestu.
-    itmCertOrderNumberChange.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().editCertOrder(tblAtesty);
-      }
-    });
+        // Zmienia numer Zp atestu.
+        itmCertZpChange.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().editCertZp(tblAtesty);
+            }
+        });
 
-    // Zmienia numer zamówienia WZ atestu.
-    itmCertWzChange.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().editCertWZ(tblAtesty);
-      }
-    });
+        // Zmienia numer PKD atestu.
+        itmCertPkdChange.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().editCertPKD(tblAtesty);
+            }
+        });
 
-    // Zmienia numer Zp atestu.
-    itmCertZpChange.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().editCertZp(tblAtesty);
-      }
-    });
+        // Zmienia nazwę dostawcy atestu.
+        itmCertSupplierChange.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().editCertSupplier(tblAtesty);
+            }
+        });
 
-    // Zmienia numer PKD atestu.
-    itmCertPkdChange.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().editCertPKD(tblAtesty);
-      }
-    });
+        // Rozpoczyna proces kopiowania atestu
+        itmCertCopy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().cutCopyCert(tblAtesty, CertOperations.COPY);
+            }
+        });
 
-    // Zmienia nazwę dostawcy atestu.
-    itmCertSupplierChange.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().editCertSupplier(tblAtesty);
-      }
-    });
-    
-    // Rozpoczyna proces kopiowania atestu
-    itmCertCopy.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().cutCopyCert(tblAtesty, CertOperations.COPY);
-      }
-    });
+        // Rozpoczyna proces wycinania atestu
+        itmCertCut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().cutCopyCert(tblAtesty, CertOperations.CUT);
+            }
+        });
 
-    // Rozpoczyna proces wycinania atestu
-    itmCertCut.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().cutCopyCert(tblAtesty, CertOperations.CUT);
-      }
-    });
+        // Zmienia datę dostawy.
+        itmCertDeliveryDateChange.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().editCertDeliveryDate(tblAtesty);
+            }
+        });
 
-    // Zmienia datę dostawy.
-    itmCertDeliveryDateChange.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().editCertDeliveryDate(tblAtesty);
-      }
-    });
+        popTblAtesty.add(itmCertDelete);
+        popTblAtesty.add(itmCertRename);
+        popTblAtesty.add(itmCertOrderNumberChange);
+        popTblAtesty.add(itmCertWzChange);
+        popTblAtesty.add(itmCertZpChange);
+        popTblAtesty.add(itmCertPkdChange);
+        popTblAtesty.add(itmCertSupplierChange);
+        popTblAtesty.add(itmCertDeliveryDateChange);
+        popTblAtesty.add(itmCertCopy);
+        popTblAtesty.add(itmCertCut);
 
-    popTblAtesty.add(itmCertDelete);
-    popTblAtesty.add(itmCertRename);
-    popTblAtesty.add(itmCertOrderNumberChange);
-    popTblAtesty.add(itmCertWzChange);
-    popTblAtesty.add(itmCertZpChange);
-    popTblAtesty.add(itmCertPkdChange);
-    popTblAtesty.add(itmCertSupplierChange);
-    popTblAtesty.add(itmCertDeliveryDateChange);
-    popTblAtesty.add(itmCertCopy);
-    popTblAtesty.add(itmCertCut);
+        JMenuItem itmTreeMaterialy01 = new JMenuItem("Edytuj nazwę");
+        JMenuItem itmTreeMaterialy02 = new JMenuItem("Usuń materiał");
+        JMenuItem itmTreeMaterialy03 = new JMenuItem("Wklej atest");
 
-    JMenuItem itmTreeMaterialy01 = new JMenuItem("Edytuj nazwę");
-    JMenuItem itmTreeMaterialy02 = new JMenuItem("Usuń materiał");
-    JMenuItem itmTreeMaterialy03 = new JMenuItem("Wklej atest");
+        // Edycja nazwy materiału w drzewku materiałów.
+        itmTreeMaterialy01.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AtestManager.getInstance().renameMaterialName(treeMaterialy);
+            }
+        });
 
-    // Edycja nazwy materiału w drzewku materiałów.
-    itmTreeMaterialy01.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        AtestManager.getInstance().renameMaterialName(treeMaterialy);
-      }
-    });
+        // Usunięcie materiału z drzewka materiałów.
+        itmTreeMaterialy02.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć materiał ?", "Ostrzeżenie!",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    AtestManager.getInstance().removeMaterialNode(treeMaterialy);
+                }
+            }
+        });
 
-    // Usunięcie materiału z drzewka materiałów.
-    itmTreeMaterialy02.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć materiał ?", "Ostrzeżenie!",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-          AtestManager.getInstance().removeMaterialNode(treeMaterialy);
-        }
-      }
-    });
+        // Usunięcie materiału z drzewka materiałów.
+        itmTreeMaterialy03.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (AtestManager.getInstance().getClipboard() != null) {
+                    if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz wkleić atest "
+                            + AtestManager.getInstance().getClipboard().getNazwa() + " ?", "Ostrzeżenie!",
+                            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        AtestManager.getInstance().pasteCert(
+                                treeMaterialy, AtestManager.getInstance().getCertOperations());
 
-    // Usunięcie materiału z drzewka materiałów.
-    itmTreeMaterialy03.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (AtestManager.getInstance().getClipboard() != null) {
-          if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz wkleić atest "
-                  + AtestManager.getInstance().getClipboard().getNazwa() + " ?", "Ostrzeżenie!",
-                  JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            AtestManager.getInstance().pasteCert(
-                    treeMaterialy, AtestManager.getInstance().getCertOperations());
+                        AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy, 0, null);
+                        ((DefaultTableModel) tblPathAtesty.getModel()).setRowCount(0);
+                        AtestManager.getInstance().setClipboard(null);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Schowek pusty");
+                }
+            }
+        });
 
-            AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy, 0, null);
-            ((DefaultTableModel) tblPathAtesty.getModel()).setRowCount(0);
-            AtestManager.getInstance().setClipboard(null);
-          }
-        } else {
-          JOptionPane.showMessageDialog(null, "Schowek pusty");
-        }
-      }
-    });
+        popTreeMaterialy.add(itmTreeMaterialy01);
+        popTreeMaterialy.add(itmTreeMaterialy02);
+        popTreeMaterialy.add(itmTreeMaterialy03);
 
-    popTreeMaterialy.add(itmTreeMaterialy01);
-    popTreeMaterialy.add(itmTreeMaterialy02);
-    popTreeMaterialy.add(itmTreeMaterialy03);
+        JMenuItem itmTblBomImport01 = new JMenuItem("Wyczyść tabelę");
+        itmTblBomImport01.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultTableModel model = (DefaultTableModel) tblBOMImport.getModel();
+                model.setColumnCount(0);
+                model.setRowCount(0);
+            }
+        });
 
-    JMenuItem itmTblBomImport01 = new JMenuItem("Wyczyść tabelę");
-    itmTblBomImport01.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        DefaultTableModel model = (DefaultTableModel) tblBOMImport.getModel();
-        model.setColumnCount(0);
-        model.setRowCount(0);
-      }
-    });
+        popTableBomImport.add(itmTblBomImport01);
+    }
 
-    popTableBomImport.add(itmTblBomImport01);
-  }
+    /**
+     * Tworzy Popupy dla zakładki materiały.
+     */
+    private void initMaterialyPopups() {
 
-  /**
-   * Tworzy Popupy dla zakładki materiały.
-   */
-  private void initMaterialyPopups() {
-
-    /*
+        /*
             Popupy dla tabeli z bomem.
-     */
-    JMenuItem itmTblBom01 = new JMenuItem("Usuń materiał");
-    JMenuItem itmTblBom02 = new JMenuItem("Dodaj materiał");
-    JMenuItem itmTblBom05 = new JMenuItem("Dodaj materiały pomocnicze");
-    JMenuItem itmTblBom03 = new JMenuItem("Zmień nazwę materiału");
-    JMenuItem itmTblBom04 = new JMenuItem("Usuń wszystkie materiały");
+         */
+        JMenuItem itmTblBom01 = new JMenuItem("Usuń materiał");
+        JMenuItem itmTblBom02 = new JMenuItem("Dodaj materiał");
+        JMenuItem itmTblBom05 = new JMenuItem("Dodaj materiały pomocnicze");
+        JMenuItem itmTblBom03 = new JMenuItem("Zmień nazwę materiału");
+        JMenuItem itmTblBom04 = new JMenuItem("Usuń wszystkie materiały");
 
-    // Usunięcie materiału z BOMA
-    itmTblBom01.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć materiał?", "Ostrzeżenie!",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-          BomManager.getInstance().removeMaterialFromBomTable(tblBom);
+        // Usunięcie materiału z BOMA
+        itmTblBom01.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć materiał?", "Ostrzeżenie!",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    BomManager.getInstance().removeMaterialFromBomTable(tblBom);
 
-          ((DefaultTableModel) tblAtest.getModel()).setRowCount(0);
-          ((DefaultTableModel) tblBom.getModel()).setRowCount(0);
-          ((DefaultTableModel) tblPathMaterialy.getModel()).setRowCount(0);
+                    ((DefaultTableModel) tblAtest.getModel()).setRowCount(0);
+                    ((DefaultTableModel) tblBom.getModel()).setRowCount(0);
+                    ((DefaultTableModel) tblPathMaterialy.getModel()).setRowCount(0);
 
-          BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
-        }
-      }
-    });
+                    BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
+                }
+            }
+        });
 
-    // Dodaje nowy materiał do Boma
-    itmTblBom02.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        BomManager.getInstance().addMaterialIntoBomTable(tblBom, treeKontraktyMaterialy);
-      }
-    });
+        // Dodaje nowy materiał do Boma
+        itmTblBom02.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BomManager.getInstance().addMaterialIntoBomTable(tblBom, treeKontraktyMaterialy);
+            }
+        });
 
-    // Dodaje materiały pomocnicze do Boma - ścierniwo, drut spawalniczy, drut do metalizacji, Farby.
-    itmTblBom05.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        BomManager.getInstance().addAuixilaryMaterialsIntoBomTable(tblBom, treeKontraktyMaterialy);
-      }
-    });
+        // Dodaje materiały pomocnicze do Boma - ścierniwo, drut spawalniczy, drut do metalizacji, Farby.
+        itmTblBom05.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BomManager.getInstance().addAuixilaryMaterialsIntoBomTable(tblBom, treeKontraktyMaterialy);
+            }
+        });
 
-    // Zmiana nazwy materiału w BOMie
-    itmTblBom03.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        BomManager.getInstance().renameMaterialInBomTable(tblBom);
-      }
-    });
+        // Zmiana nazwy materiału w BOMie
+        itmTblBom03.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BomManager.getInstance().renameMaterialInBomTable(tblBom);
+            }
+        });
 
-    // Usunięcie wszystkich materiałów z BOMA
-    itmTblBom04.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć wszystkie materiały?", "Ostrzeżenie!",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-          BomManager.getInstance().removeAllMaterialsFromBomTable(treeKontraktyMaterialy, tblBom);
-        }
-      }
-    });
+        // Usunięcie wszystkich materiałów z BOMA
+        itmTblBom04.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć wszystkie materiały?", "Ostrzeżenie!",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    BomManager.getInstance().removeAllMaterialsFromBomTable(treeKontraktyMaterialy, tblBom);
+                }
+            }
+        });
 
-    popBomTable.add(itmTblBom01);
-    popBomTable.add(itmTblBom04);
-    popBomTable.add(itmTblBom02);
-    popBomTable.add(itmTblBom05);
-    popBomTable.add(itmTblBom03);
-    tblBom.add(popBomTable);
+        popBomTable.add(itmTblBom01);
+        popBomTable.add(itmTblBom04);
+        popBomTable.add(itmTblBom02);
+        popBomTable.add(itmTblBom05);
+        popBomTable.add(itmTblBom03);
+        tblBom.add(popBomTable);
 
-    /*
+        /*
             Popupy dla drzewka kontraktów
-     */
-    JMenuItem itmTreeKontraktyMaterialy01 = new JMenuItem("Zmień nazwę węzła");
-    JMenuItem itmTreeKontraktyMaterialy02 = new JMenuItem("Usuń węzeł");
-    JMenuItem itmTreeKontraktyMaterialy03 = new JMenuItem("Kopiuj BOM");
-    JMenuItem itmTreeKontraktyMaterialy04 = new JMenuItem("Wklej BOM");
+         */
+        JMenuItem itmTreeKontraktyMaterialy01 = new JMenuItem("Zmień nazwę węzła");
+        JMenuItem itmTreeKontraktyMaterialy02 = new JMenuItem("Usuń węzeł");
+        JMenuItem itmTreeKontraktyMaterialy03 = new JMenuItem("Kopiuj BOM");
+        JMenuItem itmTreeKontraktyMaterialy04 = new JMenuItem("Wklej BOM");
 
-    itmTreeKontraktyMaterialy01.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        NodeManager.getInstance().renameNode(treeKontraktyMaterialy);
-      }
-    });
+        itmTreeKontraktyMaterialy01.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NodeManager.getInstance().renameNode(treeKontraktyMaterialy);
+            }
+        });
 
-    itmTreeKontraktyMaterialy02.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć węzeł?", "Ostrzeżenie!",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-          NodeManager.getInstance().removeNode(treeKontraktyMaterialy);
-        }
-      }
-    });
+        itmTreeKontraktyMaterialy02.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć węzeł?", "Ostrzeżenie!",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    NodeManager.getInstance().removeNode(treeKontraktyMaterialy);
+                }
+            }
+        });
 
-    itmTreeKontraktyMaterialy03.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        BomManager.getInstance().copyBom(treeKontraktyMaterialy);
-      }
-    });
+        itmTreeKontraktyMaterialy03.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BomManager.getInstance().copyBom(treeKontraktyMaterialy);
+            }
+        });
 
-    itmTreeKontraktyMaterialy04.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        BomManager.getInstance().psateBom(treeKontraktyMaterialy);
-        BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
-      }
-    });
-    popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy01);
-    popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy02);
-    popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy03);
-    popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy04);
-    treeKontraktyMaterialy.add(popTreeKontraktyMaterialy);
+        itmTreeKontraktyMaterialy04.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BomManager.getInstance().psateBom(treeKontraktyMaterialy);
+                BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
+            }
+        });
+        popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy01);
+        popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy02);
+        popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy03);
+        popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy04);
+        treeKontraktyMaterialy.add(popTreeKontraktyMaterialy);
 
-    /*
+        /*
             Popupy dla tablie atestów boma.
+         */
+        JMenuItem itmTblAtest01 = new JMenuItem("Usuń");
+
+        itmTblAtest01.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć atest?", "Ostrzeżenie!",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    BomManager.getInstance().removeAtestFromAtestTable(tblAtest);
+                    BomManager.getInstance().refreshAtestTable(tblAtest,
+                            BomManager.getInstance().getBomMaterials()[BomManager.getInstance().getSelectedBomMaterial()].getId());
+                    BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
+                }
+            }
+        });
+        popTblAtest.add(itmTblAtest01);
+        tblAtest.add(popTblAtest);
+    }
+
+    /**
+     * Inicjalizacja popupów dla głównego drzewka kontraktów.
      */
-    JMenuItem itmTblAtest01 = new JMenuItem("Usuń");
-
-    itmTblAtest01.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć atest?", "Ostrzeżenie!",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-          BomManager.getInstance().removeAtestFromAtestTable(tblAtest);
-          BomManager.getInstance().refreshAtestTable(tblAtest,
-                  BomManager.getInstance().getBomMaterials()[BomManager.getInstance().getSelectedBomMaterial()].getId());
-          BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
-        }
-      }
-    });
-    popTblAtest.add(itmTblAtest01);
-    tblAtest.add(popTblAtest);
-  }
-
-  /**
-   * Inicjalizacja popupów dla głównego drzewka kontraktów.
-   */
-  private void initKontraktyPopups() {
-    /*
+    private void initKontraktyPopups() {
+        /*
             Popupy dla drzewka kontraktów
+         */
+        JMenuItem itmTreeKontrakty01 = new JMenuItem("Zmień nazwę węzła");
+        JMenuItem itmTreeKontrakty02 = new JMenuItem("Usuń węzeł");
+
+        itmTreeKontrakty01.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NodeManager.getInstance().renameNode(treeKontrakty);
+            }
+        });
+
+        itmTreeKontrakty02.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć węzeł?", "Ostrzeżenie!",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    NodeManager.getInstance().removeNode(treeKontrakty);
+                }
+            }
+        });
+        popTreeKontrakty.add(itmTreeKontrakty01);
+        popTreeKontrakty.add(itmTreeKontrakty02);
+        treeKontrakty.add(popTreeKontrakty);
+    }
+
+    private void connectDatabase() throws ClassNotFoundException, SQLException {
+        DatabaseManager.getInstance().setDbAdress(tfDBadress.getText());
+        DatabaseManager.getInstance().setDbName(tfDb.getText());
+        DatabaseManager.getInstance().setLogin(tfLogin.getText());
+        DatabaseManager.getInstance().setPass(tfPassword.getText());
+        DatabaseManager.getInstance().connectDatabase(tfLogin.getText(), tfPassword.getText(), tfDBadress.getText() + tfDb.getText());
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
-    JMenuItem itmTreeKontrakty01 = new JMenuItem("Zmień nazwę węzła");
-    JMenuItem itmTreeKontrakty02 = new JMenuItem("Usuń węzeł");
-
-    itmTreeKontrakty01.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        NodeManager.getInstance().renameNode(treeKontrakty);
-      }
-    });
-
-    itmTreeKontrakty02.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć węzeł?", "Ostrzeżenie!",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-          NodeManager.getInstance().removeNode(treeKontrakty);
-        }
-      }
-    });
-    popTreeKontrakty.add(itmTreeKontrakty01);
-    popTreeKontrakty.add(itmTreeKontrakty02);
-    treeKontrakty.add(popTreeKontrakty);
-  }
-
-  private void connectDatabase() throws ClassNotFoundException, SQLException {
-    DatabaseManager.getInstance().setDbAdress(tfDBadress.getText());
-    DatabaseManager.getInstance().setDbName(tfDb.getText());
-    DatabaseManager.getInstance().setLogin(tfLogin.getText());
-    DatabaseManager.getInstance().setPass(tfPassword.getText());
-    DatabaseManager.getInstance().connectDatabase(tfLogin.getText(), tfPassword.getText(), tfDBadress.getText() + tfDb.getText());
-  }
-
-  /**
-   * This method is called from within the constructor to initialize the form.
-   * WARNING: Do NOT modify this code. The content of this method is always
-   * regenerated by the Form Editor.
-   */
-  @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -709,6 +703,8 @@ public class FrmMain extends javax.swing.JFrame {
         jPanel20 = new javax.swing.JPanel();
         tfBearingRegistryPath = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jPanel21 = new javax.swing.JPanel();
+        jButton10 = new javax.swing.JButton();
         jPanel19 = new javax.swing.JPanel();
         lblStatus = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -1936,7 +1932,7 @@ public class FrmMain extends javax.swing.JFrame {
                         .addComponent(jButton17)
                         .addGap(5, 5, 5)
                         .addComponent(jButton15)))
-                .addContainerGap(437, Short.MAX_VALUE))
+                .addContainerGap(434, Short.MAX_VALUE))
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1983,6 +1979,30 @@ public class FrmMain extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jButton10.setText("jButton10");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
+        jPanel21.setLayout(jPanel21Layout);
+        jPanel21Layout.setHorizontalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton10)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel21Layout.setVerticalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton10)
+                .addContainerGap(66, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanelUstawieniaLayout = new javax.swing.GroupLayout(jPanelUstawienia);
         jPanelUstawienia.setLayout(jPanelUstawieniaLayout);
         jPanelUstawieniaLayout.setHorizontalGroup(
@@ -1992,7 +2012,8 @@ public class FrmMain extends javax.swing.JFrame {
                 .addGroup(jPanelUstawieniaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelUstawieniaLayout.setVerticalGroup(
@@ -2004,7 +2025,9 @@ public class FrmMain extends javax.swing.JFrame {
                 .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Ustawienia", jPanelUstawienia);
@@ -2125,328 +2148,328 @@ public class FrmMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-      // TODO add your handling code here:
-      System.exit(0);
+        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-      // TODO add your handling code here:
-      FrmAbout frmAbout = new FrmAbout();
-      frmAbout.show();
+        // TODO add your handling code here:
+        FrmAbout frmAbout = new FrmAbout();
+        frmAbout.show();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
-      // TODO add your handling code here:
-      SettingsManager.getInstance().setupCertDirectory(tfCertPath);
+        // TODO add your handling code here:
+        DatabaseConfigManager.getInstance().setupCertDirectory(tfCertPath);
     }//GEN-LAST:event_jButton17ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-      // TODO add your handling code here:
-      SettingsManager.getInstance().saveCertDirectory(tfCertPath.getText());
+        // TODO add your handling code here:
+        DatabaseConfigManager.getInstance().saveCertDirectory(tfCertPath.getText());
     }//GEN-LAST:event_jButton15ActionPerformed
 
     private void cbDbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDbActionPerformed
-      // TODO add your handling code here:
-      setDatabase();
+        // TODO add your handling code here:
+        setDatabase();
     }//GEN-LAST:event_cbDbActionPerformed
 
     private void tfDBadressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDBadressActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_tfDBadressActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-      try {
-        // TODO add your handling code here:
-        DatabaseManager.getInstance().setDbAdress(tfDBadress.getText());
-        DatabaseManager.getInstance().setDbName(tfDb.getText());
-        DatabaseManager.getInstance().setLogin(tfLogin.getText());
-        DatabaseManager.getInstance().setPass(tfPassword.getText());
+        try {
+            // TODO add your handling code here:
+            DatabaseManager.getInstance().setDbAdress(tfDBadress.getText());
+            DatabaseManager.getInstance().setDbName(tfDb.getText());
+            DatabaseManager.getInstance().setLogin(tfLogin.getText());
+            DatabaseManager.getInstance().setPass(tfPassword.getText());
 
-        DatabaseManager.getInstance().connectDatabase(tfLogin.getText(),
-                tfPassword.getText(), tfDBadress.getText() + tfDb.getText());
-      } catch (ClassNotFoundException ex) {
-        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-      }
+            DatabaseManager.getInstance().connectDatabase(tfLogin.getText(),
+                    tfPassword.getText(), tfDBadress.getText() + tfDb.getText());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jPanelMaterialyComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanelMaterialyComponentShown
-      // TODO add your handling code here:
-      if (NodeManager.treeKontraktyMaterialyRead) {
-        NodeManager.getInstance().refresthNodesTree(treeKontraktyMaterialy);
-        NodeManager.treeKontraktyMaterialyRead = false;
-      }
+        // TODO add your handling code here:
+        if (NodeManager.treeKontraktyMaterialyRead) {
+            NodeManager.getInstance().refresthNodesTree(treeKontraktyMaterialy);
+            NodeManager.treeKontraktyMaterialyRead = false;
+        }
     }//GEN-LAST:event_jPanelMaterialyComponentShown
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-      // TODO add your handling code here:
-      BomManager.getInstance().copySelectedDataToBomTable(tblBOMImport, tblBom);
+        // TODO add your handling code here:
+        BomManager.getInstance().copySelectedDataToBomTable(tblBOMImport, tblBom);
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-      BomManager.getInstance().importBomFromExcel(tblBOMImport);
+        BomManager.getInstance().importBomFromExcel(tblBOMImport);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
 
-      if (treeKontraktyMaterialy.getSelectionCount() > 0) {
-        if (tfNazwaBoma.getText().trim().length() > 0) {
-          NodeManager.getInstance().addNode(tfNazwaBoma, treeKontraktyMaterialy);
+        if (treeKontraktyMaterialy.getSelectionCount() > 0) {
+            if (tfNazwaBoma.getText().trim().length() > 0) {
+                NodeManager.getInstance().addNode(tfNazwaBoma, treeKontraktyMaterialy);
+            } else {
+                JOptionPane.showMessageDialog(null, "Wpisz nazwę BOMa");
+            }
         } else {
-          JOptionPane.showMessageDialog(null, "Wpisz nazwę BOMa");
+            JOptionPane.showMessageDialog(null, "Zaznacz węzeł");
         }
-      } else {
-        JOptionPane.showMessageDialog(null, "Zaznacz węzeł");
-      }
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void tblPathMaterialyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPathMaterialyMousePressed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
 
-      if (evt.getClickCount() == 2) {
-        if (tblPathMaterialy.getSelectedRowCount() > 0) {
-          AtestManager.getInstance().openCertFile(tblPathMaterialy, tfCertPath.getText());
+        if (evt.getClickCount() == 2) {
+            if (tblPathMaterialy.getSelectedRowCount() > 0) {
+                AtestManager.getInstance().openCertFile(tblPathMaterialy, tfCertPath.getText());
 //                AtestManager.getInstance().openCertFile(
 //                        tblPathMaterialy.getValueAt(tblPathMaterialy.getSelectedRow(), 1).toString());
-        } else {
-          JOptionPane.showMessageDialog(null, "Zaznacz atest.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Zaznacz atest.");
+            }
         }
-      }
     }//GEN-LAST:event_tblPathMaterialyMousePressed
 
     private void tblAtestMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAtestMousePressed
-      // TODO add your handling code here:
-      if (evt.getButton() == 3) {
-        popTblAtest.show(tblAtest, evt.getX(), evt.getY());
-      }
+        // TODO add your handling code here:
+        if (evt.getButton() == 3) {
+            popTblAtest.show(tblAtest, evt.getX(), evt.getY());
+        }
 
-      AtestManager.getInstance().readCertsFiles(tblAtest, tblPathMaterialy,
-              BomManager.getInstance().getAtesty(), tfCertPath.getText());
+        AtestManager.getInstance().readCertsFiles(tblAtest, tblPathMaterialy,
+                BomManager.getInstance().getAtesty(), tfCertPath.getText());
     }//GEN-LAST:event_tblAtestMousePressed
 
     private void tblBomMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBomMousePressed
 
-      ((DefaultTableModel) tblPathMaterialy.getModel()).setRowCount(0);
+        ((DefaultTableModel) tblPathMaterialy.getModel()).setRowCount(0);
 
-      if (tblBom.getSelectedRowCount() > 0) {
-        BomManager.getInstance().setSelectedBomMaterial(tblBom.getSelectedRow());
-        DefaultTableModel model = (DefaultTableModel) tblAtest.getModel();
-        model.setRowCount(0);
+        if (tblBom.getSelectedRowCount() > 0) {
+            BomManager.getInstance().setSelectedBomMaterial(tblBom.getSelectedRow());
+            DefaultTableModel model = (DefaultTableModel) tblAtest.getModel();
+            model.setRowCount(0);
 
-        BomManager.getInstance().refreshAtestTable(tblAtest,
-                BomManager.getInstance().getBomMaterials()[BomManager.getInstance().getSelectedBomMaterial()].getId());
+            BomManager.getInstance().refreshAtestTable(tblAtest,
+                    BomManager.getInstance().getBomMaterials()[BomManager.getInstance().getSelectedBomMaterial()].getId());
 
-        if (evt.getButton() == 3) {
-          popBomTable.show(tblBom, evt.getX(), evt.getY());
+            if (evt.getButton() == 3) {
+                popBomTable.show(tblBom, evt.getX(), evt.getY());
+            }
         }
-      }
     }//GEN-LAST:event_tblBomMousePressed
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
-      // TODO add your handling code here:
-      //        if (tblAtest.getSelectedRowCount() > 0) {
-      //            AtestManager.getInstance().openCertFile(
-      //                    tblAtest.getValueAt(tblAtest.getSelectedRow(), 1).toString());
-      //        } else {
-      //            JOptionPane.showMessageDialog(null, "Zaznacz atest.");
-      //        }
+        // TODO add your handling code here:
+        //        if (tblAtest.getSelectedRowCount() > 0) {
+        //            AtestManager.getInstance().openCertFile(
+        //                    tblAtest.getValueAt(tblAtest.getSelectedRow(), 1).toString());
+        //        } else {
+        //            JOptionPane.showMessageDialog(null, "Zaznacz atest.");
+        //        }
 
-      if (tblPathMaterialy.getSelectedRowCount() > 0) {
+        if (tblPathMaterialy.getSelectedRowCount() > 0) {
 
-        AtestManager.getInstance().openCertFile(tblPathMaterialy, tfCertPath.getText());
+            AtestManager.getInstance().openCertFile(tblPathMaterialy, tfCertPath.getText());
 //            AtestManager.getInstance().openCertFile(
 //                    tblPathMaterialy.getValueAt(tblPathMaterialy.getSelectedRow(), 1).toString());
-      } else {
-        JOptionPane.showMessageDialog(null, "Zaznacz atest.");
-      }
+        } else {
+            JOptionPane.showMessageDialog(null, "Zaznacz atest.");
+        }
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void btnZapiszZmianyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnZapiszZmianyActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
 
-      BomManager.getInstance().addBomIntoDB(tblBom, treeKontraktyMaterialy);
-      BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
+        BomManager.getInstance().addBomIntoDB(tblBom, treeKontraktyMaterialy);
+        BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
     }//GEN-LAST:event_btnZapiszZmianyActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-      if (tblBom.getSelectedRowCount() > 0) {
-        FrmAtestIndicator frmAtestIndicator = new FrmAtestIndicator();
-        frmAtestIndicator.show(tblBom, tblAtest, treeKontraktyMaterialy);
-      } else {
-        JOptionPane.showMessageDialog(null, "Zaznacz materiał");
-      }
+        if (tblBom.getSelectedRowCount() > 0) {
+            FrmAtestIndicator frmAtestIndicator = new FrmAtestIndicator();
+            frmAtestIndicator.show(tblBom, tblAtest, treeKontraktyMaterialy);
+        } else {
+            JOptionPane.showMessageDialog(null, "Zaznacz materiał");
+        }
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void treeKontraktyMaterialyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_treeKontraktyMaterialyMousePressed
-      if (evt.getButton() == 3) {
-        popTreeKontraktyMaterialy.show(treeKontraktyMaterialy, evt.getX(), evt.getY());
-      }
+        if (evt.getButton() == 3) {
+            popTreeKontraktyMaterialy.show(treeKontraktyMaterialy, evt.getX(), evt.getY());
+        }
 
-      ((DefaultTableModel) tblAtest.getModel()).setRowCount(0);
-      ((DefaultTableModel) tblBom.getModel()).setRowCount(0);
-      ((DefaultTableModel) tblPathMaterialy.getModel()).setRowCount(0);
+        ((DefaultTableModel) tblAtest.getModel()).setRowCount(0);
+        ((DefaultTableModel) tblBom.getModel()).setRowCount(0);
+        ((DefaultTableModel) tblPathMaterialy.getModel()).setRowCount(0);
 
-      BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
+        BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
 
 
     }//GEN-LAST:event_treeKontraktyMaterialyMousePressed
 
     private void jPanelAtestyComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanelAtestyComponentShown
 
-      jScrollPane2.setVerticalScrollBarPolicy(jScrollPane1.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane2.setVerticalScrollBarPolicy(jScrollPane1.VERTICAL_SCROLLBAR_ALWAYS);
 
-      try {
-        AtestManager.getInstance().readMaterialsFromDB(treeMaterialy, null);
-      } catch (SQLException ex) {
-        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-      }
+        try {
+            AtestManager.getInstance().readMaterialsFromDB(treeMaterialy, null);
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jPanelAtestyComponentShown
 
     private void tblPathAtestyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPathAtestyMousePressed
-      // TODO add your handling code here:
-      if (evt.getButton() == 3 && tblPathAtesty.getSelectedRowCount() > 0) {
-        popTblPathAtesty.show(tblPathAtesty, evt.getX(), evt.getY());
-      }
+        // TODO add your handling code here:
+        if (evt.getButton() == 3 && tblPathAtesty.getSelectedRowCount() > 0) {
+            popTblPathAtesty.show(tblPathAtesty, evt.getX(), evt.getY());
+        }
 
-      if (evt.getClickCount() == 2 && evt.getButton() == 1) {
-        if (tblPathAtesty.getSelectedRowCount() > 0) {
-          AtestManager.getInstance().openCertFile(tblPathAtesty, tfCertPath.getText());
+        if (evt.getClickCount() == 2 && evt.getButton() == 1) {
+            if (tblPathAtesty.getSelectedRowCount() > 0) {
+                AtestManager.getInstance().openCertFile(tblPathAtesty, tfCertPath.getText());
 //                AtestManager.getInstance().openCertFile(
 //                        tblPathAtesty.getValueAt(tblPathAtesty.getSelectedRow(), 1).toString());
-        } else {
-          JOptionPane.showMessageDialog(null, "Zaznacz atest.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Zaznacz atest.");
+            }
         }
-      }
     }//GEN-LAST:event_tblPathAtestyMousePressed
 
     private void tblAtestyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAtestyMousePressed
-      // TODO add your handling code here:
-      if (evt.getButton() == 3) {
-        popTblAtesty.show(tblAtesty, evt.getX(), evt.getY());
-      }
+        // TODO add your handling code here:
+        if (evt.getButton() == 3) {
+            popTblAtesty.show(tblAtesty, evt.getX(), evt.getY());
+        }
 
-      AtestManager.getInstance().readCertsFiles(tblAtesty, tblPathAtesty,
-              AtestManager.getInstance().getAtesty(), tfCertPath.getText());
+        AtestManager.getInstance().readCertsFiles(tblAtesty, tblPathAtesty,
+                AtestManager.getInstance().getAtesty(), tfCertPath.getText());
     }//GEN-LAST:event_tblAtestyMousePressed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-      // TODO add your handling code here:
-      if (tblAtesty.getSelectedRowCount() > 0) {
-        AtestManager.getInstance().addPath(tfCertPath.getText(), lbSciezka);
-        AtestManager.getInstance().addFilePathIntoTable(tblAtesty,
-                tblPathAtesty, tfCertPath.getText());
-        AtestManager.getInstance().readCertsFiles(tblAtesty, tblPathAtesty,
-                AtestManager.getInstance().getAtesty(), tfCertPath.getText());
-      } else {
-        JOptionPane.showMessageDialog(null, "Wybierz atest");
-      }
+        // TODO add your handling code here:
+        if (tblAtesty.getSelectedRowCount() > 0) {
+            AtestManager.getInstance().addPath(tfCertPath.getText(), lbSciezka);
+            AtestManager.getInstance().addFilePathIntoTable(tblAtesty,
+                    tblPathAtesty, tfCertPath.getText());
+            AtestManager.getInstance().readCertsFiles(tblAtesty, tblPathAtesty,
+                    AtestManager.getInstance().getAtesty(), tfCertPath.getText());
+        } else {
+            JOptionPane.showMessageDialog(null, "Wybierz atest");
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
-  /**
-   * Uruchamia dodawanie nowego atestu.
-   *
-   * @param evt
-   */
+    /**
+     * Uruchamia dodawanie nowego atestu.
+     *
+     * @param evt
+     */
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-      AtestManager.getInstance().addNewCert(
-              tfNazwaAtestu.getText(), tfNrZamowienia.getText(),
-              tfNrWZ.getText(), lbSciezka.getText(), tfZp.getText(),
-              tfDostawca.getText(), tfPkd.getText(),
-              tfDataDostawy.getText(), treeMaterialy);
+        AtestManager.getInstance().addNewCert(
+                tfNazwaAtestu.getText(), tfNrZamowienia.getText(),
+                tfNrWZ.getText(), lbSciezka.getText(), tfZp.getText(),
+                tfDostawca.getText(), tfPkd.getText(),
+                tfDataDostawy.getText(), treeMaterialy);
 
-      if (cbClearFields.isSelected()) {
-        tfNazwaAtestu.setText("");
-        tfNrZamowienia.setText("");
-        tfNrWZ.setText("");
-        tfZp.setText("");
-        tfDostawca.setText("");
-        tfPkd.setText("");
-        tfDataDostawy.setText("");
-      }
+        if (cbClearFields.isSelected()) {
+            tfNazwaAtestu.setText("");
+            tfNrZamowienia.setText("");
+            tfNrWZ.setText("");
+            tfZp.setText("");
+            tfDostawca.setText("");
+            tfPkd.setText("");
+            tfDataDostawy.setText("");
+        }
 
-      if (treeMaterialy.getSelectionCount() > 0) {
-        AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy, 0, null);
-      }
+        if (treeMaterialy.getSelectionCount() > 0) {
+            AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy, 0, null);
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
 
-      if (tblPathAtesty.getSelectedRowCount() > 0) {
-        AtestManager.getInstance().openCertFile(tblPathAtesty, tfCertPath.getText());
+        if (tblPathAtesty.getSelectedRowCount() > 0) {
+            AtestManager.getInstance().openCertFile(tblPathAtesty, tfCertPath.getText());
 //            AtestManager.getInstance().openCertFile(
 //                    tblPathAtesty.getValueAt(tblPathAtesty.getSelectedRow(), 1).toString());
-      } else {
-        JOptionPane.showMessageDialog(null, "Zaznacz atest.");
-      }
+        } else {
+            JOptionPane.showMessageDialog(null, "Zaznacz atest.");
+        }
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void tfFilterKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfFilterKeyReleased
-      ((DefaultTableModel) tblAtesty.getModel()).setRowCount(0);
-      try {
-        // TODO add your handling code here:
-        AtestManager.getInstance().readMaterialsFromDB(treeMaterialy, tfFilter.getText().trim());
-      } catch (SQLException ex) {
-        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-      }
+        ((DefaultTableModel) tblAtesty.getModel()).setRowCount(0);
+        try {
+            // TODO add your handling code here:
+            AtestManager.getInstance().readMaterialsFromDB(treeMaterialy, tfFilter.getText().trim());
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_tfFilterKeyReleased
 
-  /**
-   * Uruchamia dodawanie nowego materiału
-   *
-   * @param evt
-   */
+    /**
+     * Uruchamia dodawanie nowego materiału
+     *
+     * @param evt
+     */
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-      AtestManager.getInstance().addNewMaterial(tfNazwaMaterialu.getText(),
-              treeMaterialy);
+        AtestManager.getInstance().addNewMaterial(tfNazwaMaterialu.getText(),
+                treeMaterialy);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void treeMaterialyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_treeMaterialyMousePressed
-      AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy, 0, null);
+        AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy, 0, null);
 
-      if (evt.getButton() == 3) {
-        popTreeMaterialy.show(treeMaterialy, evt.getX(), evt.getY());
-      }
+        if (evt.getButton() == 3) {
+            popTreeMaterialy.show(treeMaterialy, evt.getX(), evt.getY());
+        }
 
-      ((DefaultTableModel) tblPathAtesty.getModel()).setRowCount(0);
+        ((DefaultTableModel) tblPathAtesty.getModel()).setRowCount(0);
     }//GEN-LAST:event_treeMaterialyMousePressed
 
     private void jPanelKontraktyComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanelKontraktyComponentShown
-      // TODO add your handling code here:
-      //JOptionPane.showMessageDialog(null, "Pokazanie panelu Kontrakty.");
+        // TODO add your handling code here:
+        //JOptionPane.showMessageDialog(null, "Pokazanie panelu Kontrakty.");
 
-      NodeManager.getInstance().refresthNodesTree(treeKontrakty);
+        NodeManager.getInstance().refresthNodesTree(treeKontrakty);
     }//GEN-LAST:event_jPanelKontraktyComponentShown
 
-  /**
-   * Dodanie nowego węzła do drzewa kontraktów.
-   *
-   * @param evt
-   */
+    /**
+     * Dodanie nowego węzła do drzewa kontraktów.
+     *
+     * @param evt
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      //NodeManager.getInstance().addNode(tfNazwaWezla, treeKontrakty);
-      NodeManager.getInstance().addNode(tfNazwaWezla, treeKontrakty);
+        //NodeManager.getInstance().addNode(tfNazwaWezla, treeKontrakty);
+        NodeManager.getInstance().addNode(tfNazwaWezla, treeKontrakty);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void treeKontraktyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_treeKontraktyMousePressed
-      if (evt.getButton() == 3) {
-        popTreeKontrakty.show(treeKontrakty, evt.getX(), evt.getY());
-      }
+        if (evt.getButton() == 3) {
+            popTreeKontrakty.show(treeKontrakty, evt.getX(), evt.getY());
+        }
     }//GEN-LAST:event_treeKontraktyMousePressed
 
     private void tfAtestySzukajKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfAtestySzukajKeyReleased
-      // TODO add your handling code here:
-      /* 1 - nazwa, 2 - zamówienie, 3 - zp, 4 - dostawca*/
+        // TODO add your handling code here:
+        /* 1 - nazwa, 2 - zamówienie, 3 - zp, 4 - dostawca*/
 
-      int key = evt.getKeyCode();
-      if (evt.getSource() == tfAtestySzukaj) {
-        if (key == KeyEvent.VK_ENTER) {
-          int indeks = cbAtestySzukaj.getSelectedIndex() + 1;
-          ((DefaultTableModel) tblPathAtesty.getModel()).setRowCount(0);
-          AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy,
-                  indeks, tfAtestySzukaj.getText().trim());
+        int key = evt.getKeyCode();
+        if (evt.getSource() == tfAtestySzukaj) {
+            if (key == KeyEvent.VK_ENTER) {
+                int indeks = cbAtestySzukaj.getSelectedIndex() + 1;
+                ((DefaultTableModel) tblPathAtesty.getModel()).setRowCount(0);
+                AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy,
+                        indeks, tfAtestySzukaj.getText().trim());
+            }
         }
-      }
 
 //        int indeks = cbAtestySzukaj.getSelectedIndex() + 1;
 //
@@ -2457,257 +2480,273 @@ public class FrmMain extends javax.swing.JFrame {
     }//GEN-LAST:event_tfAtestySzukajKeyReleased
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
 
-      // Okdreśla tryb wg którego mają być wyszukiwane atesty.
-      int mode = cbAtestySzukaj.getSelectedIndex() + 1;
+        // Okdreśla tryb wg którego mają być wyszukiwane atesty.
+        int mode = cbAtestySzukaj.getSelectedIndex() + 1;
 
-      ((DefaultTableModel) tblPathAtesty.getModel()).setRowCount(0);
+        ((DefaultTableModel) tblPathAtesty.getModel()).setRowCount(0);
 
-      AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy,
-              mode, tfAtestySzukaj.getText().trim());
+        AtestManager.getInstance().readCerts(tblAtesty, treeMaterialy,
+                mode, tfAtestySzukaj.getText().trim());
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jPanelPkdComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanelPkdComponentShown
-      // TODO add your handling code here:
+        // TODO add your handling code here:
 
-      DatabaseManager.getInstance().pingDb();
+        DatabaseManager.getInstance().pingDb();
 
-      /* Wyciągnięcie numeru pkd z bazy i wrzucenie go w odpowiednie
+        /* Wyciągnięcie numeru pkd z bazy i wrzucenie go w odpowiednie
          * text fieldy. */
-      PkdNumber pkdNumber = DatabaseManager.getInstance().readPkdNumber();
+        PkdNumber pkdNumber = DatabaseManager.getInstance().readPkdNumber();
 
-      /* Sprawdzenie roku i miesiąca - aktualizacja numeru PKD (miesiąc, rok)
+        /* Sprawdzenie roku i miesiąca - aktualizacja numeru PKD (miesiąc, rok)
            jeżeli ów numery są inne niżeli w numerze PKD z bazy danych */
-      LocalDate today = LocalDate.now();
-      int month = today.getMonthValue();
-      int year = today.getYear();
+        LocalDate today = LocalDate.now();
+        int month = today.getMonthValue();
+        int year = today.getYear();
 
-      if (month != pkdNumber.getActualPkdMonthNumber()) {
-        pkdNumber.setActualPkdMonthNumber(month);
-        pkdNumber.setActualPkdNumber(1);
-      }
+        if (month != pkdNumber.getActualPkdMonthNumber()) {
+            pkdNumber.setActualPkdMonthNumber(month);
+            pkdNumber.setActualPkdNumber(1);
+        }
 
-      if (year != pkdNumber.getActualPkdYearNumber()) {
-        pkdNumber.setActualPkdYearNumber(year);
-        pkdNumber.setActualPkdNumber(1);
-      }
+        if (year != pkdNumber.getActualPkdYearNumber()) {
+            pkdNumber.setActualPkdYearNumber(year);
+            pkdNumber.setActualPkdNumber(1);
+        }
 
-      tfPkdNr.setText(String.valueOf(pkdNumber.getActualPkdNumber()));
-      tfPkdMonthNr.setText(String.valueOf(pkdNumber.getActualPkdMonthNumber()));
-      tfPkdYearNr.setText(String.valueOf(pkdNumber.getActualPkdYearNumber()));
+        tfPkdNr.setText(String.valueOf(pkdNumber.getActualPkdNumber()));
+        tfPkdMonthNr.setText(String.valueOf(pkdNumber.getActualPkdMonthNumber()));
+        tfPkdYearNr.setText(String.valueOf(pkdNumber.getActualPkdYearNumber()));
     }//GEN-LAST:event_jPanelPkdComponentShown
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
 
-      int _indeks = cbPkdMode.getSelectedIndex() + 1;
+        int _indeks = cbPkdMode.getSelectedIndex() + 1;
 
-      PkdMgr.getInstance().fillPkdResultTable(tblPdkResult,
-              tfPkdFilter.getText().trim(), _indeks);
+        PkdMgr.getInstance().fillPkdResultTable(tblPdkResult,
+                tfPkdFilter.getText().trim(), _indeks);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
 
-      if (tblPdkResult.getSelectedRows().length > 0) {
-        PkdMgr.getInstance().moveData(tblPdkResult, tblPkd);
-      }
+        if (tblPdkResult.getSelectedRows().length > 0) {
+            PkdMgr.getInstance().moveData(tblPdkResult, tblPkd);
+        }
     }//GEN-LAST:event_jButton18ActionPerformed
 
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
-      // TODO add your handling code here:
-      PkdMgr.getInstance().clearCertInToPkdTable();
-      ((DefaultTableModel) tblPkd.getModel()).setRowCount(0);
+        // TODO add your handling code here:
+        PkdMgr.getInstance().clearCertInToPkdTable();
+        ((DefaultTableModel) tblPkd.getModel()).setRowCount(0);
     }//GEN-LAST:event_jButton19ActionPerformed
 
     private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
-      // TODO add your handling code here:
-      ((DefaultTableModel) tblPkd.getModel()).addRow(new Object[11]);
+        // TODO add your handling code here:
+        ((DefaultTableModel) tblPkd.getModel()).addRow(new Object[11]);
     }//GEN-LAST:event_jButton20ActionPerformed
 
     private void jButton21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton21ActionPerformed
-      // TODO add your handling code here:        
-      PkdMgr.getInstance().removeCertFromToPkdTable(tblPkd.getSelectedRow());
-      ((DefaultTableModel) tblPkd.getModel()).removeRow(tblPkd.getSelectedRow());
+        // TODO add your handling code here:        
+        PkdMgr.getInstance().removeCertFromToPkdTable(tblPkd.getSelectedRow());
+        ((DefaultTableModel) tblPkd.getModel()).removeRow(tblPkd.getSelectedRow());
     }//GEN-LAST:event_jButton21ActionPerformed
 
     private void jButton22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton22ActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
 
-      /* Zmienna przechowująca cały numer pkd */
-      String stringPkdNumber
-              = tfPkdNr.getText() + "."
-              + tfPkdMonthNr.getText() + "."
-              + tfPkdYearNr.getText();
+        /* Zmienna przechowująca cały numer pkd */
+        String stringPkdNumber
+                = tfPkdNr.getText() + "."
+                + tfPkdMonthNr.getText() + "."
+                + tfPkdYearNr.getText();
 
-      /* instancja klasy przechowującej numer pkd do aktualizacji numeru 
+        /* instancja klasy przechowującej numer pkd do aktualizacji numeru 
            Pkd w bazie danych oraz do zwiększenia numeru */
-      PkdNumber pkdNumber = new PkdNumber();
-      pkdNumber.setActualPkdNumber(Integer.valueOf(tfPkdNr.getText()));
-      pkdNumber.setActualPkdMonthNumber(Integer.valueOf(tfPkdMonthNr.getText()));
-      pkdNumber.setActualPkdYearNumber(Integer.valueOf(tfPkdYearNr.getText()));
+        PkdNumber pkdNumber = new PkdNumber();
+        pkdNumber.setActualPkdNumber(Integer.valueOf(tfPkdNr.getText()));
+        pkdNumber.setActualPkdMonthNumber(Integer.valueOf(tfPkdMonthNr.getText()));
+        pkdNumber.setActualPkdYearNumber(Integer.valueOf(tfPkdYearNr.getText()));
 
-      try {
+        try {
 //            if (tfPkdNumber.getText().trim().length() < 1) {
 //                JOptionPane.showMessageDialog(null, "Podaj numer PKD");
-        if (stringPkdNumber.trim().length() < 1) {
-          JOptionPane.showMessageDialog(null, "Podaj numer PKD");
-        } else {
+            if (stringPkdNumber.trim().length() < 1) {
+                JOptionPane.showMessageDialog(null, "Podaj numer PKD");
+            } else {
 
-          PkdMgr.getInstance().readDocx();
+                PkdMgr.getInstance().readDocx();
 
-          PkdMgr._nrPkd = stringPkdNumber;
-          PkdMgr._sprawdzajacy = tfSprawdzajacy.getText();
-          PkdMgr._kontrakt = tfPkdKontrakt.getText();
-          PkdMgr._data = tfPkdData.getText();
-          PkdMgr._tablePkd = tblPkd;
+                PkdMgr._nrPkd = stringPkdNumber;
+                PkdMgr._sprawdzajacy = tfSprawdzajacy.getText();
+                PkdMgr._kontrakt = tfPkdKontrakt.getText();
+                PkdMgr._data = tfPkdData.getText();
+                PkdMgr._tablePkd = tblPkd;
 
-          PkdMgr.getInstance().findAndReplaceInDocX(this);
+                PkdMgr.getInstance().findAndReplaceInDocX(this);
 
-          PkdMgr.getInstance().updatePkdNumbers();
+                PkdMgr.getInstance().updatePkdNumbers();
 
-          /* Zwiększenie numeru PKD */
-          pkdNumber.setActualPkdNumber(pkdNumber.getActualPkdNumber() + 1);
-          tfPkdNr.setText(String.valueOf(pkdNumber.getActualPkdNumber()));
+                /* Zwiększenie numeru PKD */
+                pkdNumber.setActualPkdNumber(pkdNumber.getActualPkdNumber() + 1);
+                tfPkdNr.setText(String.valueOf(pkdNumber.getActualPkdNumber()));
 
-          DatabaseManager.getInstance().renamePkdNumber(pkdNumber, cbDb.getSelectedIndex());
+                DatabaseManager.getInstance().renamePkdNumber(pkdNumber, cbDb.getSelectedIndex());
+            }
+
+        } catch (IOException | InvalidFormatException ex) {
+            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Błąd: " + ex);
         }
-
-      } catch (IOException | InvalidFormatException ex) {
-        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-        JOptionPane.showMessageDialog(null, "Błąd: " + ex);
-      }
     }//GEN-LAST:event_jButton22ActionPerformed
 
     private void tfPkdFilterKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfPkdFilterKeyReleased
-      // TODO add your handling code here:
-      int key = evt.getKeyCode();
-      if (evt.getSource() == tfPkdFilter) {
-        if (key == KeyEvent.VK_ENTER) {
-          int _indeks = cbPkdMode.getSelectedIndex() + 1;
-          PkdMgr.getInstance().fillPkdResultTable(tblPdkResult,
-                  tfPkdFilter.getText().trim(), _indeks);
+        // TODO add your handling code here:
+        int key = evt.getKeyCode();
+        if (evt.getSource() == tfPkdFilter) {
+            if (key == KeyEvent.VK_ENTER) {
+                int _indeks = cbPkdMode.getSelectedIndex() + 1;
+                PkdMgr.getInstance().fillPkdResultTable(tblPdkResult,
+                        tfPkdFilter.getText().trim(), _indeks);
+            }
         }
-      }
 
     }//GEN-LAST:event_tfPkdFilterKeyReleased
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-      // TODO add your handling code here:
-      Raports raports = new Raports();
-      raports.show();
+        // TODO add your handling code here:
+        Raports raports = new Raports();
+        raports.show();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void tblBOMImportMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBOMImportMousePressed
-      // TODO add your handling code here:
-      if (evt.getButton() == 3) {
-        popTableBomImport.show(tblBOMImport, evt.getX(), evt.getY());
-      }
+        // TODO add your handling code here:
+        if (evt.getButton() == 3) {
+            popTableBomImport.show(tblBOMImport, evt.getX(), evt.getY());
+        }
     }//GEN-LAST:event_tblBOMImportMousePressed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-      // TODO add your handling code here:
-      FrmCertToMany _frmCertToMany = new FrmCertToMany();
-      _frmCertToMany.show();
+        // TODO add your handling code here:
+        FrmCertToMany _frmCertToMany = new FrmCertToMany();
+        _frmCertToMany.show();
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void tfDataDostawyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDataDostawyActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_tfDataDostawyActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-      // TODO add your handling code here:
-      ExcelManager.getInstance().setBearingRegistryPath(tfBearingRegistryPath.getText());
-      FrmZpCreator frmZpCreator = new FrmZpCreator();
-      frmZpCreator.show();
+        // TODO add your handling code here:
+        if (MmConfigManager.getMmConfig().getBearingRegistryFilePath() != null) {
+            FrmZpCreator frmZpCreator = new FrmZpCreator();
+            frmZpCreator.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Nie znaleziono pliku rejestru łożysk. Wskaż lokalizację pliku w zakładce Ustawienia");
+        }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-      // TODO add your handling code here:
-      ExcelManager.getInstance().setBearingRegistryPath(tfBearingRegistryPath.getText());
-      FrmTransProtocolCreator frmTransProtocolCreator = new FrmTransProtocolCreator();
-      frmTransProtocolCreator.show();
+        // TODO add your handling code here:
+        if (MmConfigManager.getMmConfig().getBearingRegistryFilePath() != null) {
+            FrmTransProtocolCreator frmTransProtocolCreator = new FrmTransProtocolCreator();
+            frmTransProtocolCreator.show();
+        } else {
+            JOptionPane.showMessageDialog(null, "Nie znaleziono pliku rejestru łożysk. Wskaż lokalizację pliku w zakładce Ustawienia");
+        }
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
   private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-    // TODO add your handling code here:
-    ExcelManager.getInstance().setBearingRegistryPath(tfBearingRegistryPath.getText());
-    FrmKKCreator frmKKCreator = new FrmKKCreator();
-    frmKKCreator.show();
+      // TODO add your handling code here:
+      if (MmConfigManager.getMmConfig().getBearingRegistryFilePath() != null) {
+          FrmKKCreator frmKKCreator = new FrmKKCreator();
+          frmKKCreator.show();
+      } else {
+          JOptionPane.showMessageDialog(null, "Nie znaleziono pliku rejestru łożysk. Wskaż lokalizację pliku w zakładce Ustawienia");
+      }
+
   }//GEN-LAST:event_jMenuItem7ActionPerformed
 
-  /**
-   * Ustawia ścieżkę pliku rejestru łożysk.
-   * @param evt Zdarzenie kliknięcia
-   */  
+    /**
+     * Ustawia ścieżkę pliku rejestru łożysk.
+     *
+     * @param evt Zdarzenie kliknięcia
+     */
   private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    SettingsManager.getInstance().setupBearingRegistryPath(tfBearingRegistryPath);
+      MmConfigManager.saveBearingRegistryPath(tfBearingRegistryPath);
+
   }//GEN-LAST:event_jButton3ActionPerformed
 
-  private void setDatabase() {
-    switch (cbDb.getSelectedIndex()) {
-      case 2:
-        tfDBadress.setText("//localhost/");
-        DatabaseManager.getInstance().setDbName("aspekt_materials");
-        tfDb.setText("aspekt_materials");
-        tfLogin.setText("root");
-        tfPassword.setText("rasengan");
-        break;
-      case 3:
-        tfDBadress.setText("//80.211.31.33/");
-        DatabaseManager.getInstance().setDbName("materials");
-        tfDb.setText("materials");
-        tfLogin.setText("kprmuser01");
-        tfPassword.setText("386Sx20");
-        break;
-      case 0:
-        tfDBadress.setText("//195.114.1.201/");
-        DatabaseManager.getInstance().setDbName("aspekt_materials");
-        tfDb.setText("aspekt_materials");
-        tfLogin.setText("aspekt_sqladmin");
-        tfPassword.setText("tere7-67CS2");
-        break;
-      case 1:
-        tfDBadress.setText("//195.114.1.201/");
-        DatabaseManager.getInstance().setDbName("aspekt_materials_test");
-        tfDb.setText("aspekt_materials_test");
-        tfLogin.setText("aspekt_sqladmin");
-        tfPassword.setText("tere7-67CS2");
-        break;
-      default:
-        break;
-    }
-  }
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton10ActionPerformed
 
-  /**
-   * @param args the command line arguments
-   */
-  public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
-    try {
-      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-        if ("Windows".equals(info.getName())) {
-          javax.swing.UIManager.setLookAndFeel(info.getClassName());
-          break;
+    private void setDatabase() {
+        switch (cbDb.getSelectedIndex()) {
+            case 2:
+                tfDBadress.setText("//localhost/");
+                DatabaseManager.getInstance().setDbName("aspekt_materials");
+                tfDb.setText("aspekt_materials");
+                tfLogin.setText("root");
+                tfPassword.setText("rasengan");
+                break;
+            case 3:
+                tfDBadress.setText("//80.211.31.33/");
+                DatabaseManager.getInstance().setDbName("materials");
+                tfDb.setText("materials");
+                tfLogin.setText("kprmuser01");
+                tfPassword.setText("386Sx20");
+                break;
+            case 0:
+                tfDBadress.setText("//195.114.1.201/");
+                DatabaseManager.getInstance().setDbName("aspekt_materials");
+                tfDb.setText("aspekt_materials");
+                tfLogin.setText("aspekt_sqladmin");
+                tfPassword.setText("tere7-67CS2");
+                break;
+            case 1:
+                tfDBadress.setText("//195.114.1.201/");
+                DatabaseManager.getInstance().setDbName("aspekt_materials_test");
+                tfDb.setText("aspekt_materials_test");
+                tfLogin.setText("aspekt_sqladmin");
+                tfPassword.setText("tere7-67CS2");
+                break;
+            default:
+                break;
         }
-      }
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-      java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
-    //</editor-fold>
 
-    //</editor-fold>
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
 
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(() -> {
-      new FrmMain().setVisible(true);
-    });
-  }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new FrmMain().setVisible(true);
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnZapiszZmiany;
@@ -2716,6 +2755,7 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbDb;
     private javax.swing.JComboBox<String> cbPkdMode;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
@@ -2787,6 +2827,7 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel21;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;

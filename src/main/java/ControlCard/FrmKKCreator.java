@@ -5,7 +5,7 @@
  */
 package ControlCard;
 
-import com.kprm.materialmanager.SettingsManager;
+import Configuration.DatabaseConfigManager;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -699,7 +699,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
 
   private void btnChooseFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseFolderActionPerformed
     // TODO add your handling code here:
-    SettingsManager.getInstance().setupControlCardSavePath(tfDestPath);
+    DatabaseConfigManager.getInstance().setupControlCardSavePath(tfDestPath);
   }//GEN-LAST:event_btnChooseFolderActionPerformed
 
   // Dodanie nowego typu elstomeru.

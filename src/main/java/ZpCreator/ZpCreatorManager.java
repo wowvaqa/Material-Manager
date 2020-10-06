@@ -3,6 +3,7 @@
  */
 package ZpCreator;
 
+import Configuration.MmConfigManager;
 import Frames.FrmWaiting;
 import ZpCreator.FrmZpCreator;
 import MyClasses.ExcelManager;
@@ -220,7 +221,7 @@ public class ZpCreatorManager {
             /* Działania w tle swing workera */
             @Override
             protected Object doInBackground() throws Exception {
-                readExcel(ExcelManager.getInstance().getBearingRegistryPath(), sheets);
+                readExcel(MmConfigManager.getMmConfig().getBearingRegistryFilePath(), sheets);
                 String res = "Finish!";
                 return res;
             }

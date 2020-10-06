@@ -5,6 +5,7 @@
  */
 package com.kprm.materialmanager;
 
+import Configuration.MmConfigManager;
 import Frames.FrmTransProtocolCreator;
 import Frames.FrmWaiting;
 import MyClasses.ExcelManager;
@@ -75,7 +76,7 @@ public class TransProtocolCreatorManager {
             /* Działania w tle swing workera */
             @Override
             protected Object doInBackground() throws Exception {
-                readExcel(ExcelManager.getInstance().getBearingRegistryPath(), sheets);
+                readExcel(MmConfigManager.getMmConfig().getBearingRegistryFilePath(), sheets);
                 String res = "Finish!";
                 return res;
             }

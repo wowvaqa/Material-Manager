@@ -1,9 +1,9 @@
 package ControlCard;
 
+import Configuration.MmConfigManager;
 import Frames.FrmWaiting;
 import MyClasses.ExcelManager;
 import MyClasses.ExcelRow;
-import MyClasses.Settings;
 import ZpCreator.ZpCreatorManager;
 import com.monitorjbl.xlsx.StreamingReader;
 import java.io.File;
@@ -76,8 +76,8 @@ public class KKCreatorManager {
       /* Działania w tle swing workera */
       @Override
       protected Object doInBackground() throws Exception {
-        readExcel(ExcelManager.getInstance().getBearingRegistryPath(),
-                Settings.BEARING_REGISTRY_SHEETS);
+        readExcel(MmConfigManager.getMmConfig().getBearingRegistryFilePath(),
+                MmConfigManager.BEARING_REGISTRY_SHEETS);
         String res = "Finish!";
         return res;
       }
@@ -263,7 +263,7 @@ public class KKCreatorManager {
           boolean genMesure, String kjDate, String kpDate)
           throws FileNotFoundException, IOException {
 
-    File file = new File(Settings.ELASTOMER_BEARING_MANY_WAY_PATH);
+    File file = new File(MmConfigManager.ELASTOMER_BEARING_MANY_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
 
     //Get the workbook instance for XLSX file 
@@ -383,7 +383,7 @@ public class KKCreatorManager {
           String destPath, boolean genMesure, String kjDate, String kpDate)
           throws FileNotFoundException, IOException {
 
-    File file = new File(Settings.ELASTOMER_BEARING_ONE_WAY_PATH);
+    File file = new File(MmConfigManager.ELASTOMER_BEARING_ONE_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
 
     //Get the workbook instance for XLSX file 
@@ -515,7 +515,7 @@ public class KKCreatorManager {
           JTable tblElastomerTypeDimension, String destPath, String kjDate,
           String kpDate)
           throws FileNotFoundException, IOException {
-    File file = new File(Settings.POT_BEARING_ONE_WAY_PATH);
+    File file = new File(MmConfigManager.POT_BEARING_ONE_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
 
     //Get the workbook instance for XLSX file 
@@ -570,7 +570,7 @@ public class KKCreatorManager {
           JTable tblElastomerTypeDimension, String destPath, String kjDate,
           String kpDate)
           throws FileNotFoundException, IOException {
-    File file = new File(Settings.POT_BEARING_MANY_WAY_PATH);
+    File file = new File(MmConfigManager.POT_BEARING_MANY_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
 
     //Get the workbook instance for XLSX file 
@@ -625,7 +625,7 @@ public class KKCreatorManager {
           JTable tblElastomerTypeDimension, String destPath, String kjDate,
           String kpDate)
           throws FileNotFoundException, IOException {
-    File file = new File(Settings.POT_BEARING_CONSTANT_PATH);
+    File file = new File(MmConfigManager.POT_BEARING_CONSTANT_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
 
     //Get the workbook instance for XLSX file 
@@ -684,7 +684,7 @@ public class KKCreatorManager {
           String kjDate, String kpDate)
           throws FileNotFoundException, IOException {
 
-    File file = new File(Settings.ELASTOMER_BEARING_ONE_WAY_PATH);
+    File file = new File(MmConfigManager.ELASTOMER_BEARING_ONE_WAY_PATH);
     FileInputStream fileInputStream = new FileInputStream(file);
 
     //Get the workbook instance for XLSX file 

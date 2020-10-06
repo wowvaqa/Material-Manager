@@ -18,13 +18,10 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 public class ExcelManager {
     
     /* Lista przechowująca wszystkie wiersze z wczytanego pliku Excela */
-    private final ArrayList<ExcelRow> excelRows;
-    /* Ścieżka do pliku Excela */
-    private String bearingRegistryPath;
+    private final ArrayList<ExcelRow> excelRows;    
     
     private ExcelManager() {
         excelRows = new ArrayList<>();
-        bearingRegistryPath = null;
     }
 
     public static ExcelManager getInstance() {
@@ -105,21 +102,5 @@ public class ExcelManager {
      */
     public ArrayList<ExcelRow> getExcelRows() {
         return excelRows;
-    }
-
-    /**
-     * Ścieżka do pliku z Excela
-     * @return Ścieżka do pliku Excela
-     */
-    public String getBearingRegistryPath() {
-        return bearingRegistryPath;
-    }
-
-    /**
-     * Ustala ścieżkę do pliku Excela.
-     * @param bearingRegistryPath Ściezka do pliku Excela.
-     */
-    public void setBearingRegistryPath(String bearingRegistryPath) {
-        this.bearingRegistryPath = bearingRegistryPath;
     }
 }
