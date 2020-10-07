@@ -2342,16 +2342,6 @@ public class FrmMain extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tblPathAtestyMousePressed
 
-    private void tblAtestyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAtestyMousePressed
-        // TODO add your handling code here:
-        if (evt.getButton() == 3) {
-            popTblAtesty.show(tblAtesty, evt.getX(), evt.getY());
-        }
-
-        AtestManager.getInstance().readCertsFiles(tblAtesty, tblPathAtesty,
-                AtestManager.getInstance().getAtesty(), tfCertPath.getText());
-    }//GEN-LAST:event_tblAtestyMousePressed
-
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         if (tblAtesty.getSelectedRowCount() > 0) {
@@ -2683,6 +2673,16 @@ public class FrmMain extends javax.swing.JFrame {
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void tblAtestyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAtestyMousePressed
+        // TODO add your handling code here:
+        if (evt.getButton() == 3) {
+            popTblAtesty.show(tblAtesty, evt.getX(), evt.getY());
+        }
+
+        AtestManager.getInstance().readCertsFiles(tblAtesty, tblPathAtesty,
+            AtestManager.getInstance().getAtesty(), tfCertPath.getText());
+    }//GEN-LAST:event_tblAtestyMousePressed
 
     private void setDatabase() {
         switch (cbDb.getSelectedIndex()) {
