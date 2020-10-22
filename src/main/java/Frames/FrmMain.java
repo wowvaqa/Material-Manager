@@ -720,7 +720,7 @@ public class FrmMain extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Material Manager v. 0.0.6.4");
+        setTitle("Material Manager v. 0.0.6.5");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
@@ -2701,14 +2701,14 @@ public class FrmMain extends javax.swing.JFrame {
                 tfPassword.setText("386Sx20");
                 break;
             case 0:
-                tfDBadress.setText("//195.114.1.201/");
+                tfDBadress.setText("//195.114.1.195/");
                 DatabaseManager.getInstance().setDbName("aspekt_materials");
                 tfDb.setText("aspekt_materials");
                 tfLogin.setText("aspekt_sqladmin");
                 tfPassword.setText("tere7-67CS2");
                 break;
             case 1:
-                tfDBadress.setText("//195.114.1.201/");
+                tfDBadress.setText("//195.114.1.195/");
                 DatabaseManager.getInstance().setDbName("aspekt_materials_test");
                 tfDb.setText("aspekt_materials_test");
                 tfLogin.setText("aspekt_sqladmin");
