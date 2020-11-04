@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Material Manager"
-#define MyAppVersion "0.0.6.4"
+#define MyAppVersion "0.0.6.5"
 #define MyAppPublisher "£ukasz Wawrzyniak"
 #define MyAppURL "none"
 #define MyAppExeName "MaterialManager-0.042.exe"
@@ -21,7 +21,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=MMv0.0.6.4setup
+OutputBaseFilename=MMv0.0.6.5setup
 Compression=lzma
 SolidCompression=yes
 

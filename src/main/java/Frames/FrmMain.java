@@ -13,6 +13,7 @@ import MyClasses.MyTreeRenderer;
 import MyClasses.PkdNumber;
 import MyClasses.TableAtestyHeaderMouseListener;
 import Configuration.DatabaseConfigManager;
+import ControlCard.KKCreatorManager;
 import com.kprm.materialmanager.AtestManager;
 import com.kprm.materialmanager.BomManager;
 import com.kprm.materialmanager.DatabaseManager;
@@ -705,6 +706,39 @@ public class FrmMain extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jPanel21 = new javax.swing.JPanel();
         jButton10 = new javax.swing.JButton();
+        jPanel22 = new javax.swing.JPanel();
+        jSplitPane2 = new javax.swing.JSplitPane();
+        jPanel23 = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        treeMaterialy1 = new javax.swing.JTree();
+        tfContractNumber6 = new javax.swing.JTextField();
+        jLabel34 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel36 = new javax.swing.JLabel();
+        tfContractNumber8 = new javax.swing.JTextField();
+        btnGenerateCard2 = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        jPanel24 = new javax.swing.JPanel();
+        jLabel27 = new javax.swing.JLabel();
+        tfContractNumber = new javax.swing.JTextField();
+        jLabel28 = new javax.swing.JLabel();
+        tfContractNumber1 = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        tfContractNumber2 = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
+        jLabel31 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        tfContractNumber3 = new javax.swing.JTextField();
+        tfContractNumber4 = new javax.swing.JTextField();
+        tfContractNumber5 = new javax.swing.JTextField();
+        jLabel33 = new javax.swing.JLabel();
+        tfDataDostawy1 = new javax.swing.JFormattedTextField();
+        btnGenerateCard = new javax.swing.JButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel35 = new javax.swing.JLabel();
+        tfContractNumber7 = new javax.swing.JTextField();
+        btnGenerateCard1 = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
         jPanel19 = new javax.swing.JPanel();
         lblStatus = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -723,6 +757,9 @@ public class FrmMain extends javax.swing.JFrame {
         setTitle("Material Manager v. 0.0.6.5");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
+
+        jTabbedPane1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jTabbedPane1.setName(""); // NOI18N
 
         jPanelKontrakty.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
@@ -804,14 +841,14 @@ public class FrmMain extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelKontraktyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
                     .addGroup(jPanelKontraktyLayout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 294, Short.MAX_VALUE)))
+                        .addGap(0, 284, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Kontrakty", jPanelKontrakty);
+        jTabbedPane1.addTab("KONTRAKTY", jPanelKontrakty);
 
         jPanelAtesty.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
@@ -916,7 +953,7 @@ public class FrmMain extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -1245,7 +1282,7 @@ public class FrmMain extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Atesty", jPanelAtesty);
+        jTabbedPane1.addTab("ATESTY", jPanelAtesty);
 
         jPanelMaterialy.setPreferredSize(new java.awt.Dimension(1200, 785));
         jPanelMaterialy.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -1501,7 +1538,7 @@ public class FrmMain extends javax.swing.JFrame {
                 .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Materiały", jPanelMaterialy);
+        jTabbedPane1.addTab("MATERIAŁY", jPanelMaterialy);
 
         jPanelPkd.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
@@ -1758,7 +1795,7 @@ public class FrmMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel22)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton22)
                 .addContainerGap())
@@ -1834,6 +1871,7 @@ public class FrmMain extends javax.swing.JFrame {
         });
 
         cbDb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "KPRM", "KPRM_test", "local", "Italy" }));
+        cbDb.setSelectedIndex(2);
         cbDb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbDbActionPerformed(evt);
@@ -2027,10 +2065,283 @@ public class FrmMain extends javax.swing.JFrame {
                 .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Ustawienia", jPanelUstawienia);
+        jTabbedPane1.addTab("USTAWIENIA", jPanelUstawienia);
+
+        jSplitPane2.setDividerLocation(300);
+
+        treeMaterialy1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Materiały");
+        treeMaterialy1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        treeMaterialy1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                treeMaterialy1MousePressed(evt);
+            }
+        });
+        jScrollPane8.setViewportView(treeMaterialy1);
+
+        tfContractNumber6.setBackground(new java.awt.Color(224, 255, 255));
+        tfContractNumber6.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        tfContractNumber6.setName("tfKontrakt"); // NOI18N
+
+        jLabel34.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel34.setText("Filtr:");
+
+        jLabel36.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel36.setText("Nowy materiał");
+
+        tfContractNumber8.setBackground(new java.awt.Color(224, 255, 255));
+        tfContractNumber8.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        tfContractNumber8.setName("tfKontrakt"); // NOI18N
+
+        btnGenerateCard2.setBackground(new java.awt.Color(0, 153, 0));
+        btnGenerateCard2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnGenerateCard2.setText("+");
+        btnGenerateCard2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerateCard2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel23Layout = new javax.swing.GroupLayout(jPanel23);
+        jPanel23.setLayout(jPanel23Layout);
+        jPanel23Layout.setHorizontalGroup(
+            jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel23Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane8)
+                    .addComponent(jSeparator1)
+                    .addGroup(jPanel23Layout.createSequentialGroup()
+                        .addComponent(jLabel34)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfContractNumber6))
+                    .addGroup(jPanel23Layout.createSequentialGroup()
+                        .addComponent(jLabel36)
+                        .addGap(0, 182, Short.MAX_VALUE))
+                    .addGroup(jPanel23Layout.createSequentialGroup()
+                        .addComponent(tfContractNumber8)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnGenerateCard2)))
+                .addContainerGap())
+        );
+        jPanel23Layout.setVerticalGroup(
+            jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel23Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel34)
+                    .addComponent(tfContractNumber6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel36)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfContractNumber8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGenerateCard2))
+                .addContainerGap())
+        );
+
+        jSplitPane2.setLeftComponent(jPanel23);
+
+        jLabel27.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel27.setText("Nazwa atestu:");
+
+        tfContractNumber.setBackground(new java.awt.Color(224, 255, 255));
+        tfContractNumber.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        tfContractNumber.setName("tfKontrakt"); // NOI18N
+
+        jLabel28.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel28.setText("Numer zamówienia:");
+
+        tfContractNumber1.setBackground(new java.awt.Color(224, 255, 255));
+        tfContractNumber1.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        tfContractNumber1.setName("tfKontrakt"); // NOI18N
+
+        jLabel29.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel29.setText("Numer WZ:");
+
+        tfContractNumber2.setBackground(new java.awt.Color(224, 255, 255));
+        tfContractNumber2.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        tfContractNumber2.setName("tfKontrakt"); // NOI18N
+
+        jLabel30.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel30.setText("Numer ZP:");
+
+        jLabel31.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel31.setText("Dostawca:");
+
+        jLabel32.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel32.setText("PKD");
+
+        tfContractNumber3.setBackground(new java.awt.Color(224, 255, 255));
+        tfContractNumber3.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        tfContractNumber3.setName("tfKontrakt"); // NOI18N
+
+        tfContractNumber4.setBackground(new java.awt.Color(224, 255, 255));
+        tfContractNumber4.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        tfContractNumber4.setName("tfKontrakt"); // NOI18N
+
+        tfContractNumber5.setBackground(new java.awt.Color(224, 255, 255));
+        tfContractNumber5.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        tfContractNumber5.setName("tfKontrakt"); // NOI18N
+
+        jLabel33.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel33.setText("Data dostawy:");
+
+        tfDataDostawy1.setBackground(new java.awt.Color(224, 255, 255));
+        tfDataDostawy1.setColumns(10);
+        try {
+            tfDataDostawy1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-##-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        tfDataDostawy1.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+
+        btnGenerateCard.setBackground(new java.awt.Color(0, 153, 0));
+        btnGenerateCard.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnGenerateCard.setText("ZAPISZ");
+        btnGenerateCard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerateCardActionPerformed(evt);
+            }
+        });
+
+        jCheckBox1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jCheckBox1.setSelected(true);
+        jCheckBox1.setText("Wyczyść pola");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        jLabel35.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel35.setText("Plik atestu:");
+
+        tfContractNumber7.setBackground(new java.awt.Color(224, 255, 255));
+        tfContractNumber7.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        tfContractNumber7.setName("tfKontrakt"); // NOI18N
+
+        btnGenerateCard1.setBackground(new java.awt.Color(0, 153, 0));
+        btnGenerateCard1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnGenerateCard1.setText("+");
+        btnGenerateCard1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerateCard1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel24Layout = new javax.swing.GroupLayout(jPanel24);
+        jPanel24.setLayout(jPanel24Layout);
+        jPanel24Layout.setHorizontalGroup(
+            jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel24Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator3)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel24Layout.createSequentialGroup()
+                        .addComponent(jCheckBox1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 444, Short.MAX_VALUE)
+                        .addComponent(btnGenerateCard, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel24Layout.createSequentialGroup()
+                        .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel28)
+                            .addComponent(jLabel27)
+                            .addComponent(jLabel29)
+                            .addComponent(jLabel30)
+                            .addComponent(jLabel31)
+                            .addComponent(jLabel32)
+                            .addComponent(jLabel33)
+                            .addComponent(jLabel35))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel24Layout.createSequentialGroup()
+                                .addComponent(tfContractNumber7)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnGenerateCard1))
+                            .addComponent(tfContractNumber2)
+                            .addComponent(tfContractNumber)
+                            .addComponent(tfContractNumber1)
+                            .addComponent(tfContractNumber3)
+                            .addComponent(tfContractNumber4)
+                            .addComponent(tfContractNumber5)
+                            .addComponent(tfDataDostawy1))))
+                .addContainerGap())
+        );
+        jPanel24Layout.setVerticalGroup(
+            jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel24Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfContractNumber1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfContractNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel28))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel29)
+                    .addComponent(tfContractNumber2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel30)
+                    .addComponent(tfContractNumber3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel31)
+                    .addComponent(tfContractNumber4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel32)
+                    .addComponent(tfContractNumber5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel33)
+                    .addComponent(tfDataDostawy1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfContractNumber7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGenerateCard1)
+                    .addComponent(jLabel35))
+                .addGap(30, 30, 30)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGenerateCard)
+                    .addComponent(jCheckBox1))
+                .addContainerGap())
+        );
+
+        jSplitPane2.setRightComponent(jPanel24);
+
+        javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
+        jPanel22.setLayout(jPanel22Layout);
+        jPanel22Layout.setHorizontalGroup(
+            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel22Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSplitPane2)
+                .addContainerGap())
+        );
+        jPanel22Layout.setVerticalGroup(
+            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel22Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSplitPane2)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("NOWY ATEST", jPanel22);
 
         jPanel19.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -2140,6 +2451,8 @@ public class FrmMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        jTabbedPane1.getAccessibleContext().setAccessibleName("");
 
         getAccessibleContext().setAccessibleName("Material Manager v. 0.0.5.3");
 
@@ -2684,6 +2997,26 @@ public class FrmMain extends javax.swing.JFrame {
             AtestManager.getInstance().getAtesty(), tfCertPath.getText());
     }//GEN-LAST:event_tblAtestyMousePressed
 
+    private void btnGenerateCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateCardActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGenerateCardActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void treeMaterialy1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_treeMaterialy1MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_treeMaterialy1MousePressed
+
+    private void btnGenerateCard1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateCard1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGenerateCard1ActionPerformed
+
+    private void btnGenerateCard2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateCard2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGenerateCard2ActionPerformed
+
     private void setDatabase() {
         switch (cbDb.getSelectedIndex()) {
             case 2:
@@ -2749,6 +3082,9 @@ public class FrmMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGenerateCard;
+    private javax.swing.JButton btnGenerateCard1;
+    private javax.swing.JButton btnGenerateCard2;
     private javax.swing.JButton btnZapiszZmiany;
     private javax.swing.JComboBox<String> cbAtestySzukaj;
     private javax.swing.JCheckBox cbClearFields;
@@ -2776,6 +3112,7 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -2796,7 +3133,17 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -2828,6 +3175,9 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel21;
+    private javax.swing.JPanel jPanel22;
+    private javax.swing.JPanel jPanel23;
+    private javax.swing.JPanel jPanel24;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -2851,8 +3201,13 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JSplitPane jSplitPane4;
     private javax.swing.JSplitPane jSplitPane5;
@@ -2879,8 +3234,18 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JTextField tfAtestySzukaj;
     private javax.swing.JTextField tfBearingRegistryPath;
     private javax.swing.JTextField tfCertPath;
+    private javax.swing.JTextField tfContractNumber;
+    private javax.swing.JTextField tfContractNumber1;
+    private javax.swing.JTextField tfContractNumber2;
+    private javax.swing.JTextField tfContractNumber3;
+    private javax.swing.JTextField tfContractNumber4;
+    private javax.swing.JTextField tfContractNumber5;
+    private javax.swing.JTextField tfContractNumber6;
+    private javax.swing.JTextField tfContractNumber7;
+    private javax.swing.JTextField tfContractNumber8;
     private javax.swing.JTextField tfDBadress;
     private javax.swing.JFormattedTextField tfDataDostawy;
+    private javax.swing.JFormattedTextField tfDataDostawy1;
     private javax.swing.JTextField tfDb;
     private javax.swing.JTextField tfDostawca;
     private javax.swing.JTextField tfFilter;
@@ -2904,5 +3269,6 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JTree treeKontrakty;
     private javax.swing.JTree treeKontraktyMaterialy;
     private javax.swing.JTree treeMaterialy;
+    private javax.swing.JTree treeMaterialy1;
     // End of variables declaration//GEN-END:variables
 }
