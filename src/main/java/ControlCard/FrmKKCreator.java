@@ -564,6 +564,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel4.setText("Wymiary elementów łożysk garnkowych");
 
+        tblBearingElements.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         tblBearingElements.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"PS 01", "1", "2", "3", "44", "55"},
