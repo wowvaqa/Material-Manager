@@ -3055,7 +3055,7 @@ public class FrmMain extends javax.swing.JFrame {
                 tfSupplier.setText("");
                 tfPkdNumber.setText("");
                 tfDeliveryDate.setText("");
-                tableModel.setRowCount(0);
+                tableModel.setRowCount(0);                
             }
             JOptionPane.showMessageDialog(null, "Dodanie atestu: " + tfCertName.getText() + " zakończone sukcesem", "Sukces", JOptionPane.INFORMATION_MESSAGE);
         } catch (HeadlessException | NumberFormatException e) {
