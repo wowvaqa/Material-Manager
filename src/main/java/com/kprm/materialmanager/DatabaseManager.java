@@ -1695,6 +1695,27 @@ public class DatabaseManager {
         }
         return 1;
     }
+    
+    /**
+     * Usuwa zakres wymiarów elementów dla podanego typu lożyska
+     * @param bearingType Typ łożyska (PS 01.0, 03.0 itp)
+     * @return -1 jeżeli błąd
+     */
+    public int removeBearingElemetsDimensions(String bearingType){
+        try {
+            preparedStatement = connect.prepareStatement(
+                    "DELETE FROM `" + DatabaseManager.getInstance().getDbName() + "`.`bearings_element_dim` WHERE (`bearing_type` = '" + bearingType + "');"
+            );
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            if (ex.getErrorCode() != 0) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }
+        return 1;
+    }
 
     /**
      * Usuwa ścieżkę do pliku atestu z bazy danych.

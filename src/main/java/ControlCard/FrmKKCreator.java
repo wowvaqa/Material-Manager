@@ -55,6 +55,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
     private void initComponents() {
 
         popTblElastomerType = new javax.swing.JPopupMenu();
+        popTblBearingElementsDim = new javax.swing.JPopupMenu();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -458,11 +459,6 @@ public class FrmKKCreator extends javax.swing.JFrame {
                 tblElastomerTypeDimensionMousePressed(evt);
             }
         });
-        tblElastomerTypeDimension.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                tblElastomerTypeDimensionComponentShown(evt);
-            }
-        });
         jScrollPane2.setViewportView(tblElastomerTypeDimension);
 
         jLabel10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -561,6 +557,12 @@ public class FrmKKCreator extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Wymiary", jPanel4);
 
+        jPanel9.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                jPanel9ComponentShown(evt);
+            }
+        });
+
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel4.setText("Wymiary elementów łożysk garnkowych");
 
@@ -574,9 +576,14 @@ public class FrmKKCreator extends javax.swing.JFrame {
                 "Typ łożyska", "Ht", "G1", "G2", "L", "H"
             }
         ));
+        tblBearingElements.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tblBearingElementsMousePressed(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblBearingElements);
 
-        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Nowy typ łożyska", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Nowy zakres wymiarów elementów łożyska", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel5.setText("TYP:");
@@ -905,11 +912,6 @@ public class FrmKKCreator extends javax.swing.JFrame {
       }
   }//GEN-LAST:event_btnAddNewElastomerTypeActionPerformed
 
-    // Odświeżenie typów wkładów elastomerowych.
-  private void tblElastomerTypeDimensionComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tblElastomerTypeDimensionComponentShown
-
-  }//GEN-LAST:event_tblElastomerTypeDimensionComponentShown
-
   private void jPanel4ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel4ComponentShown
       // TODO add your handling code here:
       try {
@@ -949,9 +951,26 @@ public class FrmKKCreator extends javax.swing.JFrame {
 
             BearingDimensionsManager.getInstance().refreshBearingDimensionsTable(tblBearingElements);
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Błąd odczytu wymiarów elementów łożysk z bazy danych: " + ex);
             Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jPanel9ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel9ComponentShown
+        try {
+            // TODO add your handling code here:
+            BearingDimensionsManager.getInstance().refreshBearingDimensionsTable(tblBearingElements);
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jPanel9ComponentShown
+
+    private void tblBearingElementsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBearingElementsMousePressed
+        // TODO add your handling code here:
+        if (evt.getButton() == 3) {
+            popTblBearingElementsDim.show(tblBearingElements, evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_tblBearingElementsMousePressed
 
     /**
      * @param args the command line arguments
@@ -1033,6 +1052,7 @@ public class FrmKKCreator extends javax.swing.JFrame {
     private javax.swing.JLabel lbl00;
     private javax.swing.JLabel lbl01;
     private javax.swing.JLabel lbl02;
+    private javax.swing.JPopupMenu popTblBearingElementsDim;
     private javax.swing.JPopupMenu popTblElastomerType;
     private javax.swing.JTable tblBearingElements;
     private javax.swing.JTable tblElastomerTypeDimension;
@@ -1069,7 +1089,20 @@ public class FrmKKCreator extends javax.swing.JFrame {
         });
 
         popTblElastomerType.add(itmTblElastoerType);
-
         tblElastomerTypeDimension.add(popTblElastomerType);
+
+        JMenuItem itmTblBearingElements = new JMenuItem("Usuń");
+
+        itmTblBearingElements.addActionListener((ActionEvent e) -> {
+            BearingDimensionsManager.getInstance().removeBearingElementsDimensions(tblBearingElements);
+            try {
+                BearingDimensionsManager.getInstance().refreshBearingDimensionsTable(tblBearingElements);          
+            } catch (SQLException ex) {
+                Logger.getLogger(FrmKKCreator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
+        popTblBearingElementsDim.add(itmTblBearingElements);
+        tblBearingElements.add(popTblBearingElementsDim);
     }
 }

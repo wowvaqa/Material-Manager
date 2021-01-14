@@ -44,13 +44,41 @@ public class BearingDimensionsManager {
      */
     public void addBearingDimensions(String bearingType, String ht, String g1,
             String g2, String l, String h) {
+
+        int intHt, intG1, intG2, intL, intH;
+
         try {
-            DatabaseManager.getInstance().addBearingDimensions(bearingType,
-                    Integer.parseInt(ht), Integer.parseInt(g1), Integer.parseInt(g2),
-                    Integer.parseInt(l), Integer.parseInt(h));
+            intHt = Integer.parseInt(ht);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Nieoprawne dane");
+            intHt = -1;
         }
+
+        try {
+            intG1 = Integer.parseInt(g1);
+        } catch (NumberFormatException ex) {
+            intG1 = -1;
+        }
+
+        try {
+            intG2 = Integer.parseInt(g2);
+        } catch (NumberFormatException ex) {
+            intG2 = -1;
+        }
+
+        try {
+            intL = Integer.parseInt(l);
+        } catch (NumberFormatException ex) {
+            intL = -1;
+        }
+
+        try {
+            intH = Integer.parseInt(h);
+        } catch (NumberFormatException ex) {
+            intH = -1;
+        }
+
+        DatabaseManager.getInstance().addBearingDimensions(bearingType,
+                intHt, intG1, intG2, intL, intH);
     }
 
     /**
@@ -72,14 +100,55 @@ public class BearingDimensionsManager {
             resultSet.first();
             do {
                 rowData[0] = resultSet.getString("bearing_type");
-                rowData[1] = resultSet.getString("Ht");
-                rowData[2] = resultSet.getString("G1");
-                rowData[3] = resultSet.getString("G2");
-                rowData[4] = resultSet.getString("L");
-                rowData[5] = resultSet.getString("H");
+                
+                if ("-1".equals(resultSet.getString("Ht"))) {
+                    rowData[1] = "";
+                } else {
+                    rowData[1] = resultSet.getString("Ht");
+                }
+                
+                if ("-1".equals(resultSet.getString("G1"))) {
+                    rowData[2] = "";
+                } else {
+                    rowData[2] = resultSet.getString("G1");
+                }
+                
+                if ("-1".equals(resultSet.getString("G2"))) {
+                    rowData[3] = "";
+                } else {
+                    rowData[3] = resultSet.getString("G2");
+                }
+                
+                if ("-1".equals(resultSet.getString("L"))) {
+                    rowData[4] = "";
+                } else {
+                    rowData[4] = resultSet.getString("L");
+                }
+                
+                if ("-1".equals(resultSet.getString("H"))) {
+                    rowData[5] = "";
+                } else {
+                    rowData[5] = resultSet.getString("H");
+                }
+                
                 model.addRow(rowData);
 
             } while (resultSet.next());
+        }
+    }
+
+    /**
+     * Usuwa z tabeli wymirów elementów łożysk garnkowych zaznaczony zakres
+     * wymiarów
+     *
+     * @param tblBearingElements Tabela zawierająca wymiary elementów łożysk
+     */
+    public void removeBearingElementsDimensions(JTable tblBearingElements) {
+        try {
+            String bearingType = (String) tblBearingElements.getValueAt(tblBearingElements.getSelectedRow(), 0);
+            DatabaseManager.getInstance().removeBearingElemetsDimensions(bearingType);
+        } catch (IndexOutOfBoundsException ex) {
+            JOptionPane.showMessageDialog(null, "Zaznacz typ do usunięcia", "Błąd", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
