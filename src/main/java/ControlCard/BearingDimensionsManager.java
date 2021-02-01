@@ -100,41 +100,146 @@ public class BearingDimensionsManager {
             resultSet.first();
             do {
                 rowData[0] = resultSet.getString("bearing_type");
-                
+
                 if ("-1".equals(resultSet.getString("Ht"))) {
                     rowData[1] = "";
                 } else {
                     rowData[1] = resultSet.getString("Ht");
                 }
-                
+
                 if ("-1".equals(resultSet.getString("G1"))) {
                     rowData[2] = "";
                 } else {
                     rowData[2] = resultSet.getString("G1");
                 }
-                
+
                 if ("-1".equals(resultSet.getString("G2"))) {
                     rowData[3] = "";
                 } else {
                     rowData[3] = resultSet.getString("G2");
                 }
-                
+
                 if ("-1".equals(resultSet.getString("L"))) {
                     rowData[4] = "";
                 } else {
                     rowData[4] = resultSet.getString("L");
                 }
-                
+
                 if ("-1".equals(resultSet.getString("H"))) {
                     rowData[5] = "";
                 } else {
                     rowData[5] = resultSet.getString("H");
                 }
-                
+
                 model.addRow(rowData);
 
             } while (resultSet.next());
         }
+    }
+
+    /**
+     * Zwraca wymiar Ht łożyska
+     *
+     * @param bearingType Nazwa łożyska (PS 01.0-S00-A00)
+     * @return Wymiar Ht łożyska
+     * @throws java.sql.SQLException
+     */
+    public String getDimension_Ht(String bearingType) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getInstance().getBearingDimensions();
+
+        if (null != resultSet) {
+            resultSet.first();
+            do {
+                if (resultSet.getString("bearing_type").equals(bearingType)) {
+                    return resultSet.getString("Ht");
+                }
+            } while (resultSet.next());
+        }
+        return null;
+    }
+    
+    /**
+     * Zwraca wymiar Ht łożyska
+     *
+     * @param bearingType Nazwa łożyska (PS 01.0-S00-A00)
+     * @return Wymiar Ht łożyska
+     * @throws java.sql.SQLException
+     */
+    public String getDimension_G1(String bearingType) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getInstance().getBearingDimensions();
+
+        if (null != resultSet) {
+            resultSet.first();
+            do {
+                if (resultSet.getString("bearing_type").equals(bearingType)) {
+                    return resultSet.getString("G1");
+                }
+            } while (resultSet.next());
+        }
+        return null;
+    }
+    
+    /**
+     * Zwraca wymiar Ht łożyska
+     *
+     * @param bearingType Nazwa łożyska (PS 01.0-S00-A00)
+     * @return Wymiar Ht łożyska
+     * @throws java.sql.SQLException
+     */
+    public String getDimension_G2(String bearingType) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getInstance().getBearingDimensions();
+
+        if (null != resultSet) {
+            resultSet.first();
+            do {
+                if (resultSet.getString("bearing_type").equals(bearingType)) {
+                    return resultSet.getString("G2");
+                }
+            } while (resultSet.next());
+        }
+        return null;
+    }
+    
+    /**
+     * Zwraca wymiar Ht łożyska
+     *
+     * @param bearingType Nazwa łożyska (PS 01.0-S00-A00)
+     * @return Wymiar Ht łożyska
+     * @throws java.sql.SQLException
+     */
+    public String getDimension_L(String bearingType) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getInstance().getBearingDimensions();
+
+        if (null != resultSet) {
+            resultSet.first();
+            do {
+                if (resultSet.getString("bearing_type").equals(bearingType)) {
+                    return resultSet.getString("L");
+                }
+            } while (resultSet.next());
+        }
+        return null;
+    }
+    
+    /**
+     * Zwraca wymiar Ht łożyska
+     *
+     * @param bearingType Nazwa łożyska (PS 01.0-S00-A00)
+     * @return Wymiar Ht łożyska
+     * @throws java.sql.SQLException
+     */
+    public String getDimension_H(String bearingType) throws SQLException {
+        ResultSet resultSet = DatabaseManager.getInstance().getBearingDimensions();
+
+        if (null != resultSet) {
+            resultSet.first();
+            do {
+                if (resultSet.getString("bearing_type").equals(bearingType)) {
+                    return resultSet.getString("H");
+                }
+            } while (resultSet.next());
+        }
+        return null;
     }
 
     /**

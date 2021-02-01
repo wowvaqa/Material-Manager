@@ -512,12 +512,18 @@ public class KKCreatorManager {
      * @param destPath Ścieżka zapisu pliku karty
      * @param kjDate Data podpisania dokumentu przez kierownika jakości
      * @param kpDate Data podpisania dokumentu przez kierownika produkcji
+     * @param dimension_HT Wymiar hT
+     * @param dimension_G1 Wymiar G1
+     * @param dimension_G2 Wymiar G2
+     * @param dimension_L Wymiar L
+     * @param dimension_H Wymiar H
      * @throws FileNotFoundException
      * @throws IOException
      */
     public void modifyKKExcelPotOneWayBearing(JTable tblRejestrLozysk,
             JTable tblElastomerTypeDimension, String destPath, String kjDate,
-            String kpDate)
+            String kpDate, String dimension_HT, String dimension_G1,
+            String dimension_G2, String dimension_L, String dimension_H)
             throws FileNotFoundException, IOException {
         File file = new File(MmConfigManager.POT_BEARING_ONE_WAY_PATH);
         FileInputStream fileInputStream = new FileInputStream(file);
@@ -551,6 +557,12 @@ public class KKCreatorManager {
         spreadsheet.getRow(23).getCell(5).setCellValue(diameter);
         spreadsheet.getRow(23).getCell(7).setCellValue(diameter);
         spreadsheet.getRow(23).getCell(9).setCellValue(height);
+        
+        spreadsheet.getRow(23).getCell(10).setCellValue(dimension_HT);
+        spreadsheet.getRow(23).getCell(11).setCellValue(dimension_G1);
+        spreadsheet.getRow(23).getCell(12).setCellValue(dimension_G2);
+        spreadsheet.getRow(23).getCell(14).setCellValue(dimension_L);
+        spreadsheet.getRow(23).getCell(17).setCellValue(dimension_H);
 
         /* Modyfikacja dat w arkuszu **********************************************/
         modifyDates(spreadsheet, kjDate, kpDate, BearingTypes.POT_ONE_WAY);
@@ -568,12 +580,16 @@ public class KKCreatorManager {
      * @param destPath Ścieżka zapisu pliku karty
      * @param kjDate Data podpisania dokumentu przez kierownika jakości
      * @param kpDate Data podpisania dokumentu przez kierownika produkcji
+     * @param dimension_hT Wymiar hT
+     * @param dimension_L Wymiar L
+     * @param dimension_H Wymiar H
      * @throws FileNotFoundException
      * @throws IOException
      */
     public void modifyKKExcelPotManyWayBearing(JTable tblRejestrLozysk,
             JTable tblElastomerTypeDimension, String destPath, String kjDate,
-            String kpDate)
+            String kpDate, String dimension_hT, String dimension_L,
+            String dimension_H)
             throws FileNotFoundException, IOException {
         File file = new File(MmConfigManager.POT_BEARING_MANY_WAY_PATH);
         FileInputStream fileInputStream = new FileInputStream(file);
@@ -607,6 +623,10 @@ public class KKCreatorManager {
         spreadsheet.getRow(23).getCell(5).setCellValue(diameter);
         spreadsheet.getRow(23).getCell(7).setCellValue(diameter);
         spreadsheet.getRow(23).getCell(9).setCellValue(height);
+        
+        spreadsheet.getRow(23).getCell(10).setCellValue(dimension_hT);
+        spreadsheet.getRow(23).getCell(14).setCellValue(dimension_L);
+        spreadsheet.getRow(23).getCell(17).setCellValue(dimension_H);
 
         /* Modyfikacja dat w arkuszu **********************************************/
         modifyDates(spreadsheet, kjDate, kpDate, BearingTypes.POT_MANY_WAY);
@@ -624,12 +644,14 @@ public class KKCreatorManager {
      * @param destPath Ścieżka zapisu pliku karty
      * @param kjDate Data podpisania dokumentu przez kierownika jakości
      * @param kpDate Data podpisania dokumentu przez kierownika produkcji
+     * @param dimension_hT Wymiar hT
+     * @param dimension_H Wymiar H
      * @throws FileNotFoundException
      * @throws IOException
      */
     public void modifyKKExcelPotConstantBearing(JTable tblRejestrLozysk,
             JTable tblElastomerTypeDimension, String destPath, String kjDate,
-            String kpDate)
+            String kpDate, String dimension_hT, String dimension_H)
             throws FileNotFoundException, IOException {
         File file = new File(MmConfigManager.POT_BEARING_CONSTANT_PATH);
         FileInputStream fileInputStream = new FileInputStream(file);
@@ -663,6 +685,9 @@ public class KKCreatorManager {
         spreadsheet.getRow(23).getCell(5).setCellValue(diameter);
         spreadsheet.getRow(23).getCell(7).setCellValue(diameter);
         spreadsheet.getRow(23).getCell(9).setCellValue(height);
+        
+        spreadsheet.getRow(23).getCell(10).setCellValue(dimension_hT);
+        spreadsheet.getRow(23).getCell(17).setCellValue(dimension_H);
 
         /* Modyfikacja dat w arkuszu **********************************************/
         modifyDates(spreadsheet, kjDate, kpDate, BearingTypes.POT_CONSTANT);

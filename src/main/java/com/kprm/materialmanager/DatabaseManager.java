@@ -322,12 +322,13 @@ public class DatabaseManager {
         }
         return 0;
     }
-    
+
     /**
      * Zwraca dane zawierające wymiary elementów łożysk garnkowych.
+     *
      * @return Tablica danych z wymiarami elementó łożysk garnkowych.
      */
-    public ResultSet getBearingDimensions(){
+    public ResultSet getBearingDimensions() {
         try {
             statement = connect.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM " + DatabaseManager.getInstance().getDbName() + ".bearings_element_dim;");
@@ -1695,13 +1696,14 @@ public class DatabaseManager {
         }
         return 1;
     }
-    
+
     /**
      * Usuwa zakres wymiarów elementów dla podanego typu lożyska
+     *
      * @param bearingType Typ łożyska (PS 01.0, 03.0 itp)
      * @return -1 jeżeli błąd
      */
-    public int removeBearingElemetsDimensions(String bearingType){
+    public int removeBearingElemetsDimensions(String bearingType) {
         try {
             preparedStatement = connect.prepareStatement(
                     "DELETE FROM `" + DatabaseManager.getInstance().getDbName() + "`.`bearings_element_dim` WHERE (`bearing_type` = '" + bearingType + "');"
