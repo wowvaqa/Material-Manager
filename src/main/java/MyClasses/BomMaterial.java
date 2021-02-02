@@ -1,5 +1,7 @@
 package MyClasses;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author Łuksz Wawrzyniak
@@ -13,6 +15,8 @@ public class BomMaterial {
     private int id;
     // Id węzła do którego przynależy BOM
     private int id_wezla;
+    // Przechowuje listę atestów.
+    private ArrayList<Atest> listOfCerts = new ArrayList<>();
 
     /**
      * Zwraca nazwę materiału
@@ -77,4 +81,22 @@ public class BomMaterial {
     public void setId_wezla(int id_wezla) {
         this.id_wezla = id_wezla;
     }
+
+    /**
+     * Zwraca listę atestów 
+     * @return Lista atestów
+     */
+    public ArrayList<Atest> getListOfCerts() {
+        return listOfCerts;
+    }
+
+    /**
+     * Zapisuje liste atestów.
+     * @param listOfCerts Lista atestów
+     */
+    public void setListOfCerts(ArrayList<Atest> listOfCerts) {
+        this.listOfCerts = listOfCerts;
+    }
+    
+    
 }

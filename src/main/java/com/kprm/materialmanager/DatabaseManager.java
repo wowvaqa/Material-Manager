@@ -461,6 +461,37 @@ public class DatabaseManager {
 
         return result;
     }
+    
+    /**
+     * Zwraca ID ostatnio dodanego materiału do tabeli bomów
+     *
+     * @return ID ostatniego atestu który został dodany do tabeli atestów
+     */
+    public int getLastInsertIdInBoms() {
+
+        int result = -1;
+        String statment;
+
+        statment = "SELECT * FROM " + DatabaseManager.getInstance().getDbName() + ".bom WHERE id=(SELECT LAST_INSERT_ID())";
+
+        try {
+            resultSet = statement.executeQuery(statment);
+
+            if (getSizeOfResuleSet(resultSet) > 0) {
+                resultSet.first();
+                result = resultSet.getInt("id");
+            } else {
+                return -1;
+            }
+        } catch (SQLException ex) {
+            if (ex.getErrorCode() != 0) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result;
+    }
 
     /**
      * Zwraca atesty wg podanej nazwy

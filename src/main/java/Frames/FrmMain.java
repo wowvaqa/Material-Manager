@@ -433,12 +433,14 @@ public class FrmMain extends javax.swing.JFrame {
         tblBom.add(popBomTable);
 
         /*
-            Popupy dla drzewka kontraktów
+            Popupy dla drzewka kontraktów w zakładce materiałów
          */
         JMenuItem itmTreeKontraktyMaterialy01 = new JMenuItem("Zmień nazwę węzła");
         JMenuItem itmTreeKontraktyMaterialy02 = new JMenuItem("Usuń węzeł");
         JMenuItem itmTreeKontraktyMaterialy03 = new JMenuItem("Kopiuj BOM");
         JMenuItem itmTreeKontraktyMaterialy04 = new JMenuItem("Wklej BOM");
+        JMenuItem itmTreeKontraktyMaterialy05 = new JMenuItem("Kopiuj BOM + Atesty");
+        JMenuItem itmTreeKontraktyMaterialy06 = new JMenuItem("Wklej BOM + Atesty");
 
         itmTreeKontraktyMaterialy01.addActionListener(new ActionListener() {
             @Override
@@ -457,24 +459,30 @@ public class FrmMain extends javax.swing.JFrame {
             }
         });
 
-        itmTreeKontraktyMaterialy03.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BomManager.getInstance().copyBom(treeKontraktyMaterialy);
-            }
+        itmTreeKontraktyMaterialy03.addActionListener((ActionEvent e) -> {
+            BomManager.getInstance().copyBom(treeKontraktyMaterialy);
         });
 
-        itmTreeKontraktyMaterialy04.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BomManager.getInstance().psateBom(treeKontraktyMaterialy);
-                BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
-            }
+        itmTreeKontraktyMaterialy04.addActionListener((ActionEvent e) -> {
+            BomManager.getInstance().pasteBom(treeKontraktyMaterialy);
+            BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
         });
+
+        itmTreeKontraktyMaterialy05.addActionListener((ActionEvent e) -> {
+            BomManager.getInstance().copyBomWithCerts(treeKontraktyMaterialy);
+        });
+
+        itmTreeKontraktyMaterialy06.addActionListener((ActionEvent e) -> {
+            BomManager.getInstance().pasteBomWithCerts(treeKontraktyMaterialy);
+            BomManager.getInstance().importBomFromDB(treeKontraktyMaterialy, tblBom);
+        });
+
         popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy01);
         popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy02);
         popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy03);
         popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy04);
+        popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy05);
+        popTreeKontraktyMaterialy.add(itmTreeKontraktyMaterialy06);
         treeKontraktyMaterialy.add(popTreeKontraktyMaterialy);
 
         /*
@@ -758,7 +766,7 @@ public class FrmMain extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Material Manager v. 0.0.6.8");
+        setTitle("Material Manager v. 0.0.6.9");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/product.png")).getImage());
 
@@ -3055,7 +3063,7 @@ public class FrmMain extends javax.swing.JFrame {
                 tfSupplier.setText("");
                 tfPkdNumber.setText("");
                 tfDeliveryDate.setText("");
-                tableModel.setRowCount(0);                
+                tableModel.setRowCount(0);
             }
             JOptionPane.showMessageDialog(null, "Dodanie atestu: " + tfCertName.getText() + " zakończone sukcesem", "Sukces", JOptionPane.INFORMATION_MESSAGE);
         } catch (HeadlessException | NumberFormatException e) {
@@ -3104,8 +3112,8 @@ public class FrmMain extends javax.swing.JFrame {
         switch (cbDb.getSelectedIndex()) {
             case 2:
                 tfDBadress.setText("//localhost/");
-                DatabaseManager.getInstance().setDbName("aspekt_materials");
-                tfDb.setText("aspekt_materials");
+                DatabaseManager.getInstance().setDbName("local_materials");
+                tfDb.setText("local_materials");
                 tfLogin.setText("root");
                 tfPassword.setText("rasengan");
                 break;

@@ -276,7 +276,7 @@ public class BomManager {
                 resultSet.first();
 
                 do {
-                    model.setValueAt(resultSet.getString("material"), tableIndex, 0);                    
+                    model.setValueAt(resultSet.getString("material"), tableIndex, 0);
 
                     BomMaterial bomMaterial = new BomMaterial();
                     bomMaterial.setId(resultSet.getInt("id"));
@@ -294,7 +294,7 @@ public class BomManager {
                     model.setValueAt(DatabaseManager.getInstance().getSizeOfResuleSet(resultSet1), tableIndex, 1);
                     tableIndex += 1;
                 } while (resultSet.next());
-                
+
                 //System.out.println("Ilość pozycji w _cerrt: " + _certToManyBoms.size());
             } else {
                 return -1;
@@ -308,55 +308,56 @@ public class BomManager {
 
         return -1;
     }
-    
+
     /**
      * Filtruje tabelę bomów wg kryterów z tbFilter (materiał)
+     *
      * @param filter Tekst do wyszukania.
      * @param tblBoms Tabela z bomai
      * @return -1 jeżeli błąd
      */
-    public int filterMaterialsInBomsTable(String filter, JTable tblBoms){
-        
+    public int filterMaterialsInBomsTable(String filter, JTable tblBoms) {
+
         // Wyczyszczenie tabeli.
         DefaultTableModel model = (DefaultTableModel) tblBoms.getModel();
         model.setRowCount(0);
-        
+
         // Tekst którego będziemy szukać w tabeli z bomami.
         String textToFind = filter.trim().toLowerCase();
         String material;
-        
+
         _certToManyBomsFiltered = new ArrayList<>();
-        
+
         int tableIndex = 0;
-        
-        for (BomMaterial bomMaterial: _certToManyBoms){
+
+        for (BomMaterial bomMaterial : _certToManyBoms) {
             //System.out.println("Nazwa materiału: " + bomMaterial.getNazwaMaterialu());
-            
+
             material = bomMaterial.getNazwaMaterialu().trim().toLowerCase();
-            
-            if (material.contains(textToFind)){
+
+            if (material.contains(textToFind)) {
                 //System.out.println("Znaleziono szukany tekst");
                 _certToManyBomsFiltered.add(bomMaterial);
                 bomMaterial.setTabelaPozycja(tableIndex);
-                
+
                 ResultSet resultSet = DatabaseManager.getInstance().findAtestInBom(bomMaterial.getId());
-                
+
                 Vector tableRow = new Vector();
                 tableRow.add(bomMaterial.getNazwaMaterialu());
-                
+
                 try {
                     tableRow.add(DatabaseManager.getInstance().getSizeOfResuleSet(resultSet));
                 } catch (SQLException ex) {
                     Logger.getLogger(BomManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                model.addRow(tableRow);                
-                
+
+                model.addRow(tableRow);
+
                 tableIndex += 1;
             }
-            
+
         }
-        
+
         return -1;
     }
 
@@ -412,12 +413,75 @@ public class BomManager {
     }
 
     /**
+     * Kopiuje Zapisuje zawartość BOM wraz z atestami w 'schowku'
+     *
+     * @param nodes Drzewko z kontraktami
+     * @return -1 jeżeli błąd
+     */
+    public int copyBomWithCerts(JTree nodes) {
+        if (nodes.getLastSelectedPathComponent() != null) {
+            if (nodes.getLastSelectedPathComponent().getClass() != MmMutableTreeNode.class) {
+                JOptionPane.showMessageDialog(null, "Nie można kopiować z węzła głównego.");
+                _toCopy_BomMaterial = null;
+                return -1;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Zaznacz węzeł.");
+            _toCopy_BomMaterial = null;
+            return -1;
+        }
+
+        int id_wezla = ((MmMutableTreeNode) nodes.getLastSelectedPathComponent()).getId();
+        ResultSet resultSet = DatabaseManager.getInstance().importBomFromDB(id_wezla);
+
+        try {
+            int sizeOfResultSet = DatabaseManager.getInstance().getSizeOfResuleSet(resultSet);
+
+            _toCopy_BomMaterial = null;
+
+            if (sizeOfResultSet > 0) {
+                _toCopy_BomMaterial = new ArrayList<>();
+                resultSet.first();
+
+                do {
+                    BomMaterial bomMaterial = new BomMaterial();
+                    bomMaterial.setId(resultSet.getInt("id"));
+                    bomMaterial.setNazwaMaterialu(resultSet.getString("material"));
+
+                    ResultSet reslutSetCartsInBom
+                            = DatabaseManager.getInstance().searchCertInAtestBom(bomMaterial.getId());
+
+                    if (DatabaseManager.getInstance().getSizeOfResuleSet(reslutSetCartsInBom) > 0) {
+                        reslutSetCartsInBom.first();
+
+                        do {
+                            Atest certOfBom = new Atest();
+                            certOfBom.setId(reslutSetCartsInBom.getInt("id_atest"));
+                            bomMaterial.getListOfCerts().add(certOfBom);
+                        } while (reslutSetCartsInBom.next());
+                    }
+
+                    _toCopy_BomMaterial.add(bomMaterial);
+
+                } while (resultSet.next());
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+            Logger.getLogger(BomManager.class.getName()).log(Level.SEVERE, null, ex);
+            _toCopy_BomMaterial = null;
+            return -1;
+        }
+        return 0;
+    }
+
+    /**
      * Wkleja materiały z boma z schowka do zaznaczonego w drzewku węzła
      *
      * @param wezly Drzewko z kontraktami.
      * @return -1 jeżeli błąd.
      */
-    public int psateBom(JTree wezly) {
+    public int pasteBom(JTree wezly) {
 
         if (wezly.getLastSelectedPathComponent() != null) {
             if (wezly.getLastSelectedPathComponent().getClass() != MmMutableTreeNode.class) {
@@ -434,6 +498,43 @@ public class BomManager {
         if (_toCopy_BomMaterial != null) {
             for (BomMaterial bomMaterial : _toCopy_BomMaterial) {
                 DatabaseManager.getInstance().addMaterialIntoBom(bomMaterial.getNazwaMaterialu(), id_wezla);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Schowek jest pusty. Skopiuj BOM");
+            return -1;
+        }
+
+        return 0;
+    }
+    
+    /**
+     * Zapisuje do bazy danych przechowywane w schowku atesty do nowego Boma
+     * @param nodes Drzewko materiałów
+     * @return -1 jeżeli błąd
+     */
+    public int pasteBomWithCerts(JTree nodes){
+        
+        if (nodes.getLastSelectedPathComponent() != null) {
+            if (nodes.getLastSelectedPathComponent().getClass() != MmMutableTreeNode.class) {
+                JOptionPane.showMessageDialog(null, "Nie można wklejać do węzła głównego.");
+                return -1;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Zaznacz węzeł.");
+            return -1;
+        }
+
+        int id_wezla = ((MmMutableTreeNode) nodes.getLastSelectedPathComponent()).getId();
+
+        if (_toCopy_BomMaterial != null) {
+            for (BomMaterial bomMaterial : _toCopy_BomMaterial) {
+                DatabaseManager.getInstance().addMaterialIntoBom(bomMaterial.getNazwaMaterialu(), id_wezla);
+                int lastBomID = DatabaseManager.getInstance().getLastInsertIdInBoms();
+                if (lastBomID != -1){
+                    for (Atest atestIterator: bomMaterial.getListOfCerts()){
+                        DatabaseManager.getInstance().addCertIntoBom(atestIterator.getId(), lastBomID);
+                    }
+                }
             }
         } else {
             JOptionPane.showMessageDialog(null, "Schowek jest pusty. Skopiuj BOM");
@@ -667,7 +768,7 @@ public class BomManager {
         }
         return -1;
     }
-    
+
     /**
      * Dodaje materiały pomocnicze do boma.
      *
@@ -809,7 +910,8 @@ public class BomManager {
 
     /**
      * Zwraca listę z perzefiltrowanymi Bomami.
-     * @return ArrayList 
+     *
+     * @return ArrayList
      */
     public ArrayList<BomMaterial> getCertToManyBomsFiltered() {
         return _certToManyBomsFiltered;
@@ -817,6 +919,7 @@ public class BomManager {
 
     /**
      * Lista zawierająca atesty z wielu materiałów.
+     *
      * @param _certToManyBoms Arraylist
      */
     public void setCertToManyBoms(ArrayList<BomMaterial> _certToManyBoms) {
@@ -825,11 +928,11 @@ public class BomManager {
 
     /**
      * Lista zawierająca przefiltrowaną listę z wieloma materiałami.
+     *
      * @param _certToManyBomsFiltered ArrayList
      */
     public void setCertToManyBomsFiltered(ArrayList<BomMaterial> _certToManyBomsFiltered) {
         this._certToManyBomsFiltered = _certToManyBomsFiltered;
     }
-    
-    
+
 }
